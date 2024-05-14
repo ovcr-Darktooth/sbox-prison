@@ -1,0 +1,60 @@
+{
+  "RootObject": {
+    "__guid": "40d0b8d3-cefb-4421-8f8f-a61b9ec2550f",
+    "Name": "pickup_mp5",
+    "Scale": "1.5,1.5,1.5",
+    "Enabled": true,
+    "NetworkMode": 2,
+    "Components": [
+      {
+        "__type": "Sandbox.ModelRenderer",
+        "__guid": "24b55dbe-e937-43e4-877d-fc96ec209196",
+        "BodyGroups": 3,
+        "Model": "models/weapons/sbox_smg_mp5/w_mp5.vmdl",
+        "RenderType": "On",
+        "Tint": "1,1,1,1"
+      },
+      {
+        "__type": "Facepunch.Arena.WeaponPickup",
+        "__guid": "244e8140-d28b-4b29-bc82-ab111470ed53",
+        "Collider": {
+          "_type": "component",
+          "component_id": "7ab0b802-fea7-45b6-b8c3-96a6a4745301",
+          "go": "40d0b8d3-cefb-4421-8f8f-a61b9ec2550f",
+          "component_type": "SphereCollider"
+        },
+        "PickupSound": "sounds/item.pickup.sound",
+        "WeaponPrefab": {
+          "_type": "gameobject",
+          "prefab": "prefab/weapon_mp5.prefab"
+        }
+      },
+      {
+        "__type": "Sandbox.SphereCollider",
+        "__guid": "7ab0b802-fea7-45b6-b8c3-96a6a4745301",
+        "Center": "0,0,3",
+        "IsTrigger": false,
+        "Radius": 10,
+        "Static": false
+      },
+      {
+        "__type": "Sandbox.HighlightOutline",
+        "__guid": "5fbe26e9-8930-4f8a-9133-817c32b3bc54",
+        "Color": "0.52157,0.72549,0.36471,1",
+        "InsideColor": "0,0,0,0",
+        "InsideObscuredColor": "0,0,0,0",
+        "ObscuredColor": "0,0,0,0",
+        "Width": 0.1
+      }
+    ],
+    "Children": []
+  },
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "ResourceVersion": 1,
+  "__version": 1,
+  "__references": [
+    "facepunch.w_mp5"
+  ]
+}

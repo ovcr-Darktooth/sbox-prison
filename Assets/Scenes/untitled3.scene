@@ -1,0 +1,186 @@
+{
+  "__guid": "3f2bb307-bcda-44f3-8726-2e3c960f0923",
+  "GameObjects": [
+    {
+      "__guid": "af4a1561-96b5-43ce-b42e-c73182de216b",
+      "Name": "Network",
+      "Position": "-1509.113,-2041.443,243.2538",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "Components": [
+        {
+          "__type": "Sandbox.NetworkHelper",
+          "__guid": "6688ae70-6bf0-469c-ae97-17d0d0022efa",
+          "MinePrefab": {
+            "_type": "gameobject",
+            "prefab": "prefab/mine.prefab"
+          },
+          "PlayerPrefab": {
+            "_type": "gameobject",
+            "prefab": "prefab/player.prefab"
+          },
+          "SpawnPoints": [
+            {
+              "_type": "gameobject",
+              "go": "bb917624-1c7b-4934-b2b2-7fddc93e6222"
+            },
+            {
+              "_type": "gameobject",
+              "go": "4d72c128-c871-4482-992b-21facd7605b1"
+            }
+          ],
+          "StartServer": true
+        }
+      ]
+    },
+    {
+      "__guid": "e23163bf-7610-469e-b058-28203fab144c",
+      "Name": "Map",
+      "Position": "-838.8027,-1548.793,55.90669",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "Components": [
+        {
+          "__type": "Sandbox.MapInstance",
+          "__guid": "889757a9-0b2f-4d6e-b1db-ec5975997acf",
+          "MapName": "maps/ma_premiere_map5.vpk",
+          "UseMapFromLaunch": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "b32558a8-7934-4e4b-b158-ac08209f58a1",
+      "Name": "Directional Light",
+      "Position": "0,0,200",
+      "Rotation": "-0.2459842,0.5938582,0.2931525,0.7077327",
+      "Tags": "light_directional,light",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "Components": [
+        {
+          "__type": "Sandbox.DirectionalLight",
+          "__guid": "45b08867-7b28-4c63-982b-020d082b26b0",
+          "FogMode": "Enabled",
+          "FogStrength": 1,
+          "LightColor": "0.91373,0.98039,1,1",
+          "Shadows": true,
+          "SkyColor": "0.05882,0.07451,0.08235,1"
+        }
+      ]
+    },
+    {
+      "__guid": "7ba11b75-3f5a-408e-b079-6070051394bd",
+      "Name": "Terrain",
+      "Position": "-109.7477,-31.45787,45.21332",
+      "NetworkMode": 2,
+      "Components": [
+        {
+          "__type": "Sandbox.Terrain",
+          "__guid": "4379ed43-117e-4636-ab60-d95396724ef7",
+          "ClipMapLodExtentTexels": 128,
+          "ClipMapLodLevels": 7,
+          "DebugView": "None",
+          "RenderType": "Off",
+          "TerrainDataFile": "new terrain.terrain",
+          "TerrainMaterial": "materials/core/terrain.vmat"
+        },
+        {
+          "__type": "Sandbox.TerrainCollider",
+          "__guid": "6b8a4c09-6b25-40f4-9d5e-89ba4a00b757",
+          "IsTrigger": false,
+          "Static": true
+        }
+      ]
+    },
+    {
+      "__guid": "6f234460-f0b9-4bd5-96fc-61caad66036c",
+      "Name": "Cube",
+      "Position": "-1214.893,-1569.62,123.587",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "Components": [
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "ca98e34e-e43d-4013-ad22-cd16558592c0",
+          "BodyGroups": 18446744073709551615,
+          "Model": "models/dev/box.vmdl",
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.BoxCollider",
+          "__guid": "192ff391-32b6-46a7-b19b-fd9dc16fec92",
+          "Center": "0,0,0",
+          "IsTrigger": false,
+          "Scale": "50,50,50",
+          "Static": false
+        }
+      ]
+    },
+    {
+      "__guid": "76dec1f0-9017-4f64-a8fd-716cbdd1bbf6",
+      "Name": "Mines",
+      "Position": "-1509.113,-2041.443,243.2538",
+      "Enabled": true,
+      "NetworkMode": 2
+    },
+    {
+      "__guid": "189cc32a-d23c-4474-8a26-6eeb439a4c61",
+      "Name": "Cube",
+      "Position": "-1265.706,-1883.83,105.5276",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "Components": [
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "0bf2f83e-ee47-4415-8360-4ed5402bb711",
+          "BodyGroups": 18446744073709551615,
+          "Model": "models/dev/box.vmdl",
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.NavMeshAgent",
+          "__guid": "c01909be-1a36-4656-90e3-3f6c783d64cf",
+          "Acceleration": 50,
+          "Height": 64,
+          "MaxSpeed": 120,
+          "Radius": 16,
+          "Separation": 0.25,
+          "UpdatePosition": true,
+          "UpdateRotation": false
+        }
+      ]
+    }
+  ],
+  "SceneProperties": {
+    "FixedUpdateFrequency": 50,
+    "Lerping": true,
+    "MaxFixedUpdates": 5,
+    "NetworkFrequency": 30,
+    "ThreadedAnimation": true,
+    "TimeScale": 1,
+    "UseFixedUpdate": true,
+    "NavMesh": {
+      "Enabled": false,
+      "IncludeStaticBodies": true,
+      "IncludeKeyframedBodies": true,
+      "EditorAutoUpdate": true,
+      "AgentHeight": 64,
+      "AgentRadius": 16,
+      "AgentStepSize": 18,
+      "AgentMaxSlope": 40,
+      "ExcludedBodies": "",
+      "IncludedBodies": ""
+    }
+  },
+  "Title": "untitled8",
+  "Description": "",
+  "LastSaved": "2024-04-16T21:51:28.7727315\u002B02:00",
+  "ResourceVersion": 1,
+  "__version": 1,
+  "__references": [
+    "ambi.myog"
+  ]
+}

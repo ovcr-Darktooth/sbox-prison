@@ -1,0 +1,56 @@
+{
+  "RootObject": {
+    "__guid": "297692c0-fd07-4cee-b3a7-94e0c35c4889",
+    "Flags": 0,
+    "Name": "mine",
+    "Enabled": true,
+    "NetworkMode": 2,
+    "NetworkInterpolation": true,
+    "Components": [
+      {
+        "__type": "MineComponent",
+        "__guid": "992c964b-47c1-458a-892f-9cee1df6fa05",
+        "idMine": 0,
+        "mineVolume": "sdfvol/box.sdfvol"
+      },
+      {
+        "__type": "Sandbox.ModelRenderer",
+        "__guid": "e929a8b8-eade-429d-8bcf-f07f38df9fb0",
+        "__enabled": false,
+        "BodyGroups": 18446744073709551615,
+        "MaterialOverride": "materials/dev/debug_nav_wireframe.vmat",
+        "Model": "models/dev/box.vmdl",
+        "RenderType": "On",
+        "Tint": "0.80138,0.09995,0.97674,0.63"
+      }
+    ],
+    "Children": [
+      {
+        "__guid": "67a9e22b-0ff1-4383-aaa9-7d7469e5ed9f",
+        "Flags": 0,
+        "Name": "Collider",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkInterpolation": true,
+        "Components": [
+          {
+            "__type": "Sandbox.BoxCollider",
+            "__guid": "2e16c151-6bec-4006-9fe3-be6307b80f7e",
+            "Center": "0,0,0",
+            "IsTrigger": true,
+            "Scale": "1500,1500,1500",
+            "Static": false
+          }
+        ]
+      }
+    ]
+  },
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "ResourceVersion": 1,
+  "__version": 1,
+  "__references": [
+    "ambi.myog"
+  ]
+}

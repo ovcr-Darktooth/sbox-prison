@@ -1,0 +1,36 @@
+{
+  "RootObject": {
+    "__guid": "7aa11b2d-55a2-412d-8310-7ef0c490a2d3",
+    "Name": "TriggerMine",
+    "Position": "-1062.787,-1419.68,411.498",
+    "Enabled": true,
+    "NetworkMode": 2,
+    "Components": [
+      {
+        "__type": "Sandbox.BoxCollider",
+        "__guid": "7fc9d386-7988-4efd-af91-92c28d977bf7",
+        "Center": "0,0,0",
+        "IsTrigger": true,
+        "Scale": "50,50,50",
+        "Static": false
+      },
+      {
+        "__type": "Sandbox.ModelRenderer",
+        "__guid": "628ecfc6-8129-4983-b08e-a817033b7e36",
+        "BodyGroups": 18446744073709551615,
+        "MaterialOverride": "materials/dev/debug_nav_wireframe.vmat",
+        "Model": "models/dev/box.vmdl",
+        "RenderType": "On",
+        "Tint": "0.80138,0.09995,0.97674,0.63"
+      }
+    ]
+  },
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "ResourceVersion": 1,
+  "__version": 1,
+  "__references": [
+    "ambi.myog"
+  ]
+}

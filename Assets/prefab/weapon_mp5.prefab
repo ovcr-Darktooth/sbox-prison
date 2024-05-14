@@ -1,0 +1,67 @@
+{
+  "RootObject": {
+    "__guid": "c5bb3f06-25e7-4334-bcc9-2aa97c7c31ac",
+    "Name": "weapon_mp5",
+    "Enabled": true,
+    "NetworkMode": 2,
+    "Components": [
+      {
+        "__type": "Facepunch.Arena.SMG",
+        "__guid": "d78d826b-fbe7-488d-9e13-df26fedf9630",
+        "AmmoType": "SMG",
+        "ClipSize": 24,
+        "Damage": 10,
+        "DamageForce": 5,
+        "DefaultAmmo": 60,
+        "DeploySound": "sounds/guns/switch/weapon_switch.sound",
+        "DeployTime": 0.5,
+        "DisplayName": "MP5",
+        "EmptyClipSound": "sounds/guns/gun.dryfire.sound",
+        "FireRate": 8,
+        "FireSound": "sounds/guns/mp5/smg1_shoot.sound",
+        "HoldType": "Rifle",
+        "ImpactEffect": "particles/impact.generic.vpcf",
+        "IsDeployed": false,
+        "MuzzleFlash": "particles/pistol_muzzleflash.vpcf",
+        "MuzzleSmoke": "particles/impact.generic.smokepuff.vpcf",
+        "Recoil": "-40,5,0",
+        "ReloadSoundSequence": "sounds/guns/mp5/reload/mp5.reload.sndseq",
+        "ReloadTime": 2,
+        "Spread": 0.01,
+        "ViewModelPrefab": {
+          "_type": "gameobject",
+          "prefab": "prefab/vm_mp5.prefab"
+        }
+      }
+    ],
+    "Children": [
+      {
+        "__guid": "901a2499-4edf-4384-bb55-aa5a636f1d81",
+        "Name": "Offset",
+        "Position": "1.646654,0,-4.321783",
+        "Scale": "1.5,1.5,1.5",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "Components": [
+          {
+            "__type": "Sandbox.SkinnedModelRenderer",
+            "__guid": "9a04df4c-1c3c-45a7-a067-82419e2a2dc5",
+            "BodyGroups": 3,
+            "CreateBoneObjects": false,
+            "Model": "models/weapons/sbox_smg_mp5/w_mp5.vmdl",
+            "RenderType": "On",
+            "Tint": "1,1,1,1"
+          }
+        ]
+      }
+    ]
+  },
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "ResourceVersion": 1,
+  "__version": 1,
+  "__references": [
+    "facepunch.w_mp5"
+  ]
+}

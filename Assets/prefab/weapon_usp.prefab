@@ -1,0 +1,57 @@
+{
+  "RootObject": {
+    "__guid": "843efdfe-ad59-4052-868b-cf938b0167b9",
+    "Name": "weapon_usp",
+    "Scale": "1.5,1.5,1.5",
+    "Enabled": true,
+    "NetworkMode": 2,
+    "Components": [
+      {
+        "__type": "Sandbox.SkinnedModelRenderer",
+        "__guid": "dacf0a53-edae-46dd-95f4-a3e0a6051b59",
+        "BodyGroups": 9493,
+        "CreateBoneObjects": false,
+        "Model": "models/weapons/sbox_pistol_usp/w_usp.vmdl",
+        "RenderType": "On",
+        "Tint": "1,1,1,1"
+      },
+      {
+        "__type": "Facepunch.Arena.Pistol",
+        "__guid": "a8ca3385-2c69-4bd6-9f10-d62977ee2d65",
+        "AmmoType": "Pistol",
+        "ClipSize": 15,
+        "Damage": 10,
+        "DamageForce": 5,
+        "DefaultAmmo": 60,
+        "DeploySound": "sounds/guns/switch/weapon_switch.sound",
+        "DeployTime": 0.5,
+        "DisplayName": "Pistol",
+        "EmptyClipSound": "sounds/guns/gun.dryfire.sound",
+        "FireRate": 3,
+        "FireSound": "sounds/guns/m1911/pistol_shoot.sound",
+        "HoldType": "Pistol",
+        "ImpactEffect": "particles/impact.generic.vpcf",
+        "IsDeployed": false,
+        "MuzzleFlash": "particles/pistol_muzzleflash.vpcf",
+        "MuzzleSmoke": "particles/impact.generic.smokepuff.vpcf",
+        "Recoil": "-30,0,0",
+        "ReloadSoundSequence": "sounds/guns/m1911/reload/m1911.reload.sndseq",
+        "ReloadTime": 1.5,
+        "Spread": 0.01,
+        "ViewModelPrefab": {
+          "_type": "gameobject",
+          "prefab": "prefab/vm_usp.prefab"
+        }
+      }
+    ],
+    "Children": []
+  },
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "ResourceVersion": 1,
+  "__version": 1,
+  "__references": [
+    "facepunch.w_usp"
+  ]
+}

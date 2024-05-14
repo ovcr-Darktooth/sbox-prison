@@ -1,0 +1,300 @@
+{
+  "__guid": "3f2bb307-bcda-44f3-8726-2e3c960f0923",
+  "GameObjects": [
+    {
+      "__guid": "6c836124-4fcb-4796-94c7-6464db54a696",
+      "Name": "Main Camera",
+      "Position": "-300,0,166.1354",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "Components": [
+        {
+          "__type": "Sandbox.CameraComponent",
+          "__guid": "36a1b04b-b1e2-4c31-a052-ca2c04d625b7",
+          "BackgroundColor": "0.33333,0.46275,0.52157,1",
+          "ClearFlags": "All",
+          "FieldOfView": 60,
+          "IsMainCamera": true,
+          "Orthographic": false,
+          "OrthographicHeight": 1204,
+          "Priority": 1,
+          "RenderExcludeTags": "",
+          "RenderTags": "",
+          "TargetEye": "None",
+          "Viewport": "0,0,1,1",
+          "ZFar": 10000,
+          "ZNear": 10
+        }
+      ]
+    },
+    {
+      "__guid": "b32558a8-7934-4e4b-b158-ac08209f58a1",
+      "Name": "Directional Light",
+      "Position": "0,0,200",
+      "Rotation": "-0.2459842,0.5938582,0.2931525,0.7077327",
+      "Tags": "light_directional,light",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "Components": [
+        {
+          "__type": "Sandbox.DirectionalLight",
+          "__guid": "45b08867-7b28-4c63-982b-020d082b26b0",
+          "FogMode": "Enabled",
+          "FogStrength": 1,
+          "LightColor": "0.91373,0.98039,1,1",
+          "Shadows": true,
+          "SkyColor": "0.05882,0.07451,0.08235,1"
+        }
+      ]
+    },
+    {
+      "__guid": "7ba11b75-3f5a-408e-b079-6070051394bd",
+      "Name": "Terrain",
+      "Position": "-109.7477,-31.45787,45.21332",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "Components": [
+        {
+          "__type": "Sandbox.Terrain",
+          "__guid": "4379ed43-117e-4636-ab60-d95396724ef7",
+          "ClipMapLodExtentTexels": 128,
+          "ClipMapLodLevels": 7,
+          "DebugView": "None",
+          "RenderType": "Off",
+          "TerrainDataFile": "new terrain.terrain",
+          "TerrainMaterial": "materials/core/terrain.vmat"
+        },
+        {
+          "__type": "Sandbox.TerrainCollider",
+          "__guid": "6b8a4c09-6b25-40f4-9d5e-89ba4a00b757",
+          "IsTrigger": false,
+          "Static": true
+        }
+      ]
+    },
+    {
+      "__guid": "cc3dc2ba-a1af-4b05-a700-76a6f1955bc3",
+      "Name": "Object",
+      "Position": "-88.43454,50.24492,88.42331",
+      "Enabled": true,
+      "NetworkMode": 2
+    },
+    {
+      "__guid": "6f234460-f0b9-4bd5-96fc-61caad66036c",
+      "Name": "Cube",
+      "Position": "72.02716,118.0977,88.42331",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "Components": [
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "ca98e34e-e43d-4013-ad22-cd16558592c0",
+          "BodyGroups": 18446744073709551615,
+          "Model": "models/dev/box.vmdl",
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.BoxCollider",
+          "__guid": "192ff391-32b6-46a7-b19b-fd9dc16fec92",
+          "Center": "0,0,0",
+          "IsTrigger": false,
+          "Scale": "50,50,50",
+          "Static": false
+        }
+      ]
+    },
+    {
+      "__guid": "43e67b07-ece4-4407-9714-af50ec5deb46",
+      "Name": "Player",
+      "Position": "-7.038636,215.9875,88.42331",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "Components": [
+        {
+          "__type": "Sandbox.SkinnedModelRenderer",
+          "__guid": "02e9211a-576c-464b-b5ad-d5352558ccfa",
+          "__enabled": false,
+          "BodyGroups": 341,
+          "CreateBoneObjects": false,
+          "Model": "models/citizen/citizen.vmdl",
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.CharacterController",
+          "__guid": "dccc9611-46bf-4a96-9a52-2675024ef884",
+          "Acceleration": 10,
+          "Bounciness": 0.3,
+          "GroundAngle": 45,
+          "Height": 64,
+          "IgnoreLayers": "",
+          "Radius": 16,
+          "StepHeight": 18
+        },
+        {
+          "__type": "Sandbox.Citizen.CitizenAnimationHelper",
+          "__guid": "c6aecc97-acd2-47fe-916e-94a16d55f7c0",
+          "__enabled": false,
+          "BodyWeight": 1,
+          "EyesWeight": 1,
+          "HeadWeight": 1,
+          "LookAtEnabled": false
+        },
+        {
+          "__type": "PlayerComponent",
+          "__guid": "503f1ea6-7837-48cf-b80a-fa0d08149c48",
+          "AirControl": 0.1,
+          "animationHelper": {
+            "_type": "component",
+            "component_id": "7bc8d0b9-beb8-4882-b36e-b3d0599c5af6",
+            "go": "5347a265-3c4d-449b-a5af-351ea9961345",
+            "component_type": "CitizenAnimationHelper"
+          },
+          "Body": {
+            "_type": "gameobject",
+            "go": "5347a265-3c4d-449b-a5af-351ea9961345"
+          },
+          "Camera": {
+            "_type": "gameobject",
+            "go": "f8e060f5-b563-4a5a-a178-a5c7e749369a"
+          },
+          "characterController": {
+            "_type": "component",
+            "component_id": "dccc9611-46bf-4a96-9a52-2675024ef884",
+            "go": "43e67b07-ece4-4407-9714-af50ec5deb46",
+            "component_type": "CharacterController"
+          },
+          "CrouchSpeed": 90,
+          "EyePosition": "0,0,0",
+          "GroundControl": 4,
+          "Head": {
+            "_type": "gameobject",
+            "go": "a5778c2c-1720-4a44-8c49-59348201383b"
+          },
+          "JumpStrength": 400,
+          "MaxForce": 50,
+          "RunSpeed": 250,
+          "WalkSpeed": 120
+        }
+      ],
+      "Children": [
+        {
+          "__guid": "f8e060f5-b563-4a5a-a178-a5c7e749369a",
+          "Name": "Camera",
+          "Position": "6.93623,0.1315002,64.28867",
+          "Tags": "maincamera",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "Components": [
+            {
+              "__type": "Sandbox.CameraComponent",
+              "__guid": "97e4b1bb-8c75-4b90-bc04-a6a0399d997e",
+              "BackgroundColor": "0.33333,0.46275,0.52157,1",
+              "ClearFlags": "All",
+              "FieldOfView": 60,
+              "IsMainCamera": true,
+              "Orthographic": false,
+              "OrthographicHeight": 1204,
+              "Priority": 1,
+              "RenderExcludeTags": "",
+              "RenderTags": "",
+              "TargetEye": "None",
+              "Viewport": "0,0,1,1",
+              "ZFar": 10000,
+              "ZNear": 10
+            },
+            {
+              "__type": "CameraMovement",
+              "__guid": "d6de43b4-b55c-4ae3-ab72-5b9b75b88165",
+              "Body": {
+                "_type": "gameobject",
+                "go": "5347a265-3c4d-449b-a5af-351ea9961345"
+              },
+              "Distance": 0,
+              "Head": {
+                "_type": "gameobject",
+                "go": "a5778c2c-1720-4a44-8c49-59348201383b"
+              },
+              "Player": {
+                "_type": "component",
+                "component_id": "503f1ea6-7837-48cf-b80a-fa0d08149c48",
+                "go": "43e67b07-ece4-4407-9714-af50ec5deb46",
+                "component_type": "PlayerComponent"
+              }
+            }
+          ]
+        },
+        {
+          "__guid": "a5778c2c-1720-4a44-8c49-59348201383b",
+          "Name": "Head",
+          "Position": "0,0,0",
+          "Enabled": true,
+          "NetworkMode": 2
+        },
+        {
+          "__guid": "5347a265-3c4d-449b-a5af-351ea9961345",
+          "Name": "Body",
+          "Position": "0,0,0",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "Components": [
+            {
+              "__type": "Sandbox.Citizen.CitizenAnimationHelper",
+              "__guid": "7bc8d0b9-beb8-4882-b36e-b3d0599c5af6",
+              "BodyWeight": 1,
+              "EyesWeight": 1,
+              "HeadWeight": 1,
+              "LookAtEnabled": false
+            },
+            {
+              "__type": "Sandbox.SkinnedModelRenderer",
+              "__guid": "7e3f441a-4a94-4b86-b033-23fdc0cd28e5",
+              "BodyGroups": 341,
+              "CreateBoneObjects": false,
+              "Model": "models/citizen/citizen.vmdl",
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "__guid": "af9d28c8-3aa9-4c98-ada6-df397a49617e",
+      "Name": "Object",
+      "Position": "86.61896,369.8727,125.1591",
+      "Enabled": true,
+      "NetworkMode": 2
+    }
+  ],
+  "SceneProperties": {
+    "FixedUpdateFrequency": 50,
+    "Lerping": true,
+    "MaxFixedUpdates": 5,
+    "NetworkFrequency": 30,
+    "ThreadedAnimation": true,
+    "TimeScale": 1,
+    "UseFixedUpdate": true,
+    "NavMesh": {
+      "Enabled": false,
+      "IncludeStaticBodies": true,
+      "IncludeKeyframedBodies": true,
+      "EditorAutoUpdate": true,
+      "AgentHeight": 64,
+      "AgentRadius": 16,
+      "AgentStepSize": 18,
+      "AgentMaxSlope": 40,
+      "ExcludedBodies": "",
+      "IncludedBodies": ""
+    }
+  },
+  "Title": "untitled3",
+  "Description": "",
+  "LastSaved": "2024-04-08T22:49:21.8224509\u002B02:00",
+  "ResourceVersion": 1,
+  "__version": 1,
+  "__references": [
+    "ambi.myog"
+  ]
+}
