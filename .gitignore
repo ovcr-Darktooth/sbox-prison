@@ -26,3 +26,4 @@ code/Editor/.vscode/*
 *.vpk
 sounds/*
 Assets/sounds/*
+Libraries/*
