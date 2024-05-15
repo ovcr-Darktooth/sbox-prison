@@ -220,20 +220,6 @@
       ]
     },
     {
-      "__guid": "4ed0fd47-ac98-4eab-9aff-735c7efae44c",
-      "Flags": 0,
-      "Name": "SdfWorld",
-      "Enabled": true,
-      "NetworkMode": 2,
-      "NetworkInterpolation": true,
-      "Components": [
-        {
-          "__type": "Sandbox.Sdf.Sdf3DWorld",
-          "__guid": "4c16f791-e420-4d21-a097-d8efeeefbe29"
-        }
-      ]
-    },
-    {
       "__guid": "39c0b608-c6c3-4c5d-9924-c212a958fcc0",
       "Flags": 0,
       "Name": "Spawns",
@@ -728,6 +714,7 @@
           "__guid": "9994b5a0-b0fd-42b1-a933-31cf3c80af31",
           "Collision": "Mesh",
           "Color": "1,1,1,1",
+          "HideInGame": false,
           "IsTrigger": false,
           "Mesh": {
             "Topology": "H4sIAAAAAAAACl2YB3iX1RXG8xHIIiGBbAhkEEhCQgYJZBAyREVcgKiIqAgORETEhbjQ2tbaZe22trV2221ta\u002B1y77a21dba1tVl996t2vPj\u002B/0fv8c8vo/6f9977j3n3O/ec8/WvLy8K5K8vMn4N39TAlMDBYGSQGlgRqAqUBOoC8wONARaAosC3YHewJLAQGAkcEDg4MAhgUMDhweOChwfOClwcmBr4NTAmYFzAxcGLgpcHLg08KrA6wNvDrwl8NbA2wPvCXww8NHAxwOfCHwq8PnAVwLfCNwZuDtwb\u002BDhwPcCPwj8MPCjwE8CPw38JvCHwJ8Cfwn8LfAf4hAxKQgUBUoCpYFZgdmBeYGmQEugNbAosCSwLDAUGAmMBg4IHBo4MrA2cFTg6MDxga2B0wNnBM4MnBU4N3BxIP7ZD3KR/WsKTPP3fPOUl9HO8vd8dQWvyGmRWv4KM3bz1ZZltMXmP2e76BW2p7s3EvVoqwMvxV\u002B\u002BtqbJT1NbkfGp3DVMcW722ALH8/8z/W2K4yucE55xle7JfOfA90b5qa6lWL5Qbac8v9e6l3NxYW8PZfyud5/nYoG2XVusY47fQM53tPNcK/bmanOqerSt\u002Bpq41lxsShy72PWhb3YO\u002BFzuy\u002BWxP985Cowt3\u002BKKTPyI5UL56c7dLI\u002B\u002BzTHwBWpnypO7Dr/tQv3H98FM/Illl3yZ2pXyJfpSL1\u002BotlIeP3o8M4rMM2fIWm2R6z7PE/hytRP6wjr7PWuK1KNd5lqxt1SbRerRjhrrYn2p9b8rHHuQ60M/7BzF2hgy5vDYX\u002B4cJe49zrxjMvElF2PyM517WB79uGNyZ\u002ByYOYEnTpOeodP1H9/XZPJDrA\u002BUr1S7Sb5CX/rky9R2yPNtrPJsLvXb4Kw\u002Bw7Wyb1d7bsNXqz3OtRC3wzzTS9WjPdK5sHeENkvVoz3a3JTrS4/6Gsee6PrQr3OOMsesNebw2F/vHDP8NrlbdmbiSy6Ola917nXy6Dc4Bn6W2nF59u1G76py/cf3bZn8EOsT5OvVnidfoy\u002Br5SvVTsrzXW/2Dqzw7OBOvMK5OCu2eD/Cz1F7jrb47k/x7qxQj/Z084e907RZoR7tWfparS\u002Br1Dc49gLXh367c8BXuTfWy2N/h3PM8uziDn9NJr7k4mz5uc69XR79LsfA16ndIM/ZuNuaoFL/8X1fJj/E\u002Bnz5RrVvkG/Qly3y9Wo3ynMO7rHWqPJspfZ4t1rOxb3WIfDNal/nXuIcuMQapUo92suNLfYu02aVerSvDtTozz73QLXjGfsm14f\u002BSueAn\u002B3e2CGP/auco8aznVrpfZn4kovXys937ivl0V/tGPh5anfJc3dcY\u002B1Vq//4/q5Mfoj1G\u002BUXqP2QfIu\u002B7JVvVLtbnnPuWmu6Ou8earzPuVe4a66z3oNvU/sBY8c59jZrwdy9jPad5g9779BmnXq07zWWzfqyR327Yz/i\u002BtBf7xzwTe6Nq\u002BSxf4NzzPbuoyb9Yia\u002B5OL98h3Ofb08\u002BhsdA9\u002Bq9mp57tabrHHn6D\u002B\u002BfzaTH2L9YflOtV\u002BVb9eX6\u002BQXqL1Gnrv5Y9bODd7N1NIPGhvuzZutq\u002BEXq/2yueTc/qQ1d4N6tJ8xf9j7tDYb1KP9gnutTV\u002BuVd/t2K\u002B7PvS3OAf8QvfGDfLYv9U55lkbUPt/KxNfcvEl\u002BR7nvkUe/W2OgV\u002Bk9kZ57s3bfUs06j\u002B\u002BP5DJD7H\u002Bmnyf2sfku/XlZvlOtTfJU1fc4RulydqFN8uz5opa5S7fL/D9ar/jt0zdcY9vmyb1aO83f9i7T5tN6tF\u002BM9CiPw\u002B4B5odz9jvuz70DzkHfJd741Z57D/iHC3WTryxfpGJL7n4tvxS535IHv2jjoHvVXubPLXZd32zzdd/fH8mkx9i/bj8oNrfyg/oy13yfWpvl6cOe8K3YKu1HW/Df/mtUpc96TsRfljtr9y71CE/9g3Zqh7t0\u002BYPe09ps1U92p\u002B7l/v15Q71I479vetD/5xzwC9xbzwij/2fOcdCa0vesi9k4ksufim/3Lmfk0f/vGPgl6l9VJ7a9de\u002Bjdv0H9//mckPsf6d/Aq1\u002BUnKj\u002BjLk/KDaskpPHXWH31zt1v78gavSNK9Sa37Z9/j8ONqeTB1Wkf91bd6u3q0/zB/2Pu7NtvVo/2f3/qwvjyhfsKx01w/\u002Bn87B/yQe4OYw2P/v86xyNqbnkF18nJ8ycWL8pPOjU149C85Bn5U7fPy1PZJkvYgOvUf38u1v8JYT5VHj3aO/IS\u002BEEN49GjJKTxvg0J7G12\u002BDeh1tCfpt0LdXmzfAx492rokPUupG6fbE\u002BlSj3aG\u002BcNemf2TLvVoqwLd\u002BoMv7IHFjmfsXNe/vy5N0jngx9wbxBwe\u002B5VJOke3bxN6M4uTl\u002BNLLmrkscfcM\u002BXR19rPgUePlpzAU7fX2\u002Bvp0X98b3M88SbWDfLo0fbL4w\u002B\u002BFMujR5vI865ptIfU69uJntJEkp6VvJWa7S/Bo9\u002BvZQ7fPfPtPfWqR7vQ/GFvgX2qXvVou\u002BhT6Q\u002B\u002BFKpnPGOXuj70HUk6BzzxZm9UymO/M0nnWOLbjR7YQZn4kotueewxd4c8\u002Bp5c38z8oa2V523YZ0\u002BtX//xfVyeeBPrAXn0aA\u002BTxx98aZZHj7ZennfgoL26Ad\u002BW9O6OS9KzgXfhsH08ePRoD0nSs4x30HJ7fAPq0Y6ZP\u002BytSFKbA\u002BrRHshv\u002BoMvjeoZz9gjXB/6ySSdA554szc65bG/MnEO37b0Gk/MxJdcHCyPPeaelEe/KknHwKNH2yPP23m1vctB/cf3DZn8EOvD5dGjPUUef/BlWB492j553nlr7IkO\u002BfamR3oOPvnWXme/FB492pOJie\u002B49fZSh9SjPdb8Ye\u002BYJLU5pB7tCeRUf/BlUD3jGXua60O/MUnngCfe7I2V8tjflKRzjPj2p6d7QSa\u002B5OIkeewx90Z59JuTdAw8erSr5OktbLFHvFz/8X1XJj/E\u002BlR59GgvkccffFknjx7tanl6E9vsPY/am6AXfV5gwr7BdvvS8OjRXsQ3yNoDO\u002BxZj6pHe7b5w97OJLU5qh7t\u002BXwj\u002BoMva9QznrGXuT70u5N0Dnjizd7YJI991rpTe/RG6J1f7vqJL7m4UB57zL3b8ej3JOmYMfVoN8vTN9hrL35c//F9m/aJN7G\u002BVB492n2Oxx982S6PHu2WjH20e7XHelj7HvlcT5feDf1H3lDU8dRq3KecKexr1s7ZzHnHHiVOxIZeD/0aeir0Peg90D/gjc87nLcw71nenLwLeZvxvuINxDuFtwL1PjU5dTO1K/UnNSJ1HLUU9RA1C3UFdzv3M3co9xx3DfcFZzrnLmcf5xdnDOcA3yLfE3uefcneIL/kgDiR2/8DTedVbZgaAAA=",
@@ -1812,6 +1799,7 @@
           "__guid": "2ebc4024-beab-4eb0-94ab-12e9a86062ed",
           "Collision": "Mesh",
           "Color": "1,1,1,1",
+          "HideInGame": false,
           "IsTrigger": false,
           "Mesh": {
             "Topology": "H4sIAAAAAAAACl2Qiw6CUAxDh1flgg/wAfr/X2pP0iWLJA25W9t16xHxFc4C30E4\u002Bt2FWbgKd2Ew4NTvIZxcb9ZH4b5db\u002Bb9z/oUzVh8m7lPc9FOzjRYQ8ZXyXxxXvrw4e72wvtWdoEPdzMXj8We9OHDXcvO7EqdN396eKaeLHjkLciePeYxi4z0mMFtMisablFvRXZ2Tj158KQOF78f9WSROMQBAAA=",
@@ -1938,6 +1926,7 @@
           "__guid": "0c84139c-6ec0-476c-ab2c-81c72a836d3a",
           "Collision": "Mesh",
           "Color": "1,1,1,1",
+          "HideInGame": false,
           "IsTrigger": false,
           "Mesh": {
             "Topology": "H4sIAAAAAAAACl2Qiw6CUAxDh1flgg/wAfr/X2pP0iWLJA25W9t16xHxFc4C30E4\u002Bt2FWbgKd2Ew4NTvIZxcb9ZH4b5db\u002Bb9z/oUzVh8m7lPc9FOzjRYQ8ZXyXxxXvrw4e72wvtWdoEPdzMXj8We9OHDXcvO7EqdN396eKaeLHjkLciePeYxi4z0mMFtMisablFvRXZ2Tj158KQOF78f9WSROMQBAAA=",
@@ -2064,6 +2053,7 @@
           "__guid": "5792bdcf-5825-4ab0-b2f8-9e33b09c0bef",
           "Collision": "Mesh",
           "Color": "1,1,1,1",
+          "HideInGame": false,
           "IsTrigger": false,
           "Mesh": {
             "Topology": "H4sIAAAAAAAACl2Qiw6CUAxDh1flgg/wAfr/X2pP0iWLJA25W9t16xHxFc4C30E4\u002Bt2FWbgKd2Ew4NTvIZxcb9ZH4b5db\u002Bb9z/oUzVh8m7lPc9FOzjRYQ8ZXyXxxXvrw4e72wvtWdoEPdzMXj8We9OHDXcvO7EqdN396eKaeLHjkLciePeYxi4z0mMFtMisablFvRXZ2Tj158KQOF78f9WSROMQBAAA=",
@@ -2226,6 +2216,20 @@
           "Size": 167
         }
       ]
+    },
+    {
+      "__guid": "fd190b45-3cc4-4077-b2b5-f95025409d49",
+      "Flags": 0,
+      "Name": "SdfWorld",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkInterpolation": true,
+      "Components": [
+        {
+          "__type": "Sandbox.Sdf.Sdf3DWorld",
+          "__guid": "42fe2210-2c2b-43e6-bfc8-828b26779906"
+        }
+      ]
     }
   ],
   "SceneProperties": {
@@ -2251,7 +2255,7 @@
   },
   "Title": "untitled8",
   "Description": "",
-  "LastSaved": "2024-05-10T16:19:53.71989\u002B02:00",
+  "LastSaved": "2024-05-15T21:56:38.5056753\u002B02:00",
   "ResourceVersion": 1,
   "__version": 1,
   "__references": []

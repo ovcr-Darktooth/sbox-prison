@@ -70,7 +70,7 @@
           "GroupName": "Movement"
         },
         {
-          "Name": "Crouch",
+          "Name": "Duck",
           "KeyboardCode": "ctrl",
           "GamepadCode": "B",
           "GroupName": "Movement"

@@ -34,7 +34,10 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 	[Property] public float DuckHeight { get; set; } = 28f;
 	[Property] public float HealthRegenPerSecond { get; set; } = 10f;
 	[Property] public Action OnJump { get; set; }
-	
+	[Property] public float WalkSpeed { get; set; } = 150f;
+	[Property] public float RunSpeed { get; set; } = 550f;
+	[Property] public float CrouchSpeed { get; set; } = 90f;
+	[Property] public float JumpForce { get; set; } = 600f;
 	[Sync, Property] public float MaxHealth { get; private set; } = 100f;
 	[Sync] public LifeState LifeState { get; private set; } = LifeState.Alive;
 	[Sync] public float Health { get; private set; } = 100f;
@@ -341,7 +344,7 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 
 	protected virtual void DoCrouchingInput()
 	{
-		WantsToCrouch = EnableCrouching && CharacterController.IsOnGround && Input.Down( "Duck" );
+		WantsToCrouch = CharacterController.IsOnGround && Input.Down( "Duck" );  //EnableCrouching &&
 
 		if ( WantsToCrouch == IsCrouching )
 			return;
@@ -367,7 +370,7 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 
 		if ( CharacterController.IsOnGround && Input.Down( "Jump" ) )
 		{
-			CharacterController.Punch( Vector3.Up * 300f );
+			CharacterController.Punch( Vector3.Up * JumpForce );
 			SendJumpMessage();
 		}
 
@@ -450,31 +453,6 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 		{
 			pickup.Pickup( GameObject );
 		}
-
-		var mine = other.Components.Get<TriggerDebug>();
-
-		if (mine.IsValid())
-		{
-			if (mine.iTouching == 1 && !IsProxy)
-				Log.Info("touching la mine ?");
-
-			if (mine.iTouching == 1)
-				Log.Info("iitouch");
-		}
-	}
-
-	void ITriggerListener.OnTriggerExit( Collider other )
-	{
-		var mine = other.Components.Get<TriggerDebug>();
-
-		if (mine.IsValid())
-		{
-			if (mine.iTouching == 1 && !IsProxy)
-				Log.Info("touching la mine ?");
-
-			if (mine.iTouching == 1)
-				Log.Info("iitouch");
-		}	
 	}
 	
 	private void MoveToSpawnPoint()
@@ -501,11 +479,11 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 			WishVelocity = WishVelocity.Normal;
 
 		if ( IsCrouching )
-			WishVelocity *= 64f;
+			WishVelocity *= CrouchSpeed;
 		else if ( IsRunning )
-			WishVelocity *= 260f;
+			WishVelocity *= RunSpeed;
 		else
-			WishVelocity *= 110f;
+			WishVelocity *= WalkSpeed;
 	}
 
 	[Broadcast]

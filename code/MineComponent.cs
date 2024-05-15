@@ -9,6 +9,7 @@ using Sandbox.Sdf;
 public sealed class MineComponent : Component, Component.ITriggerListener
 {
 
+	[Property] public GameObject WorldPrefab { get; set; }
 	[Property]
 	public GameObject entityStart {get; set;}
 	[Property]
@@ -64,29 +65,34 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 
 		if(entityStart.IsValid() && entityEnd.IsValid())
 		{
-			mineWorld = Scene.GetAllComponents<Sdf3DWorld>().FirstOrDefault();
+			//mineWorld = Scene.GetAllComponents<Sdf3DWorld>().FirstOrDefault(); //1 sdfworld
+			//mineWorld = Scene.CreateObject(true)
+			GameObject clone = WorldPrefab.Clone(new Transform(Vector3.Zero), name: "SdfWorld_" + idMine);
+			//mineWorld = clone.Components.Get<Sdf3DWorld>();
+			mineWorld = Scene.GetAllObjects(true).Where(go => go.Name.Equals("SdfWorld_"+idMine)).FirstOrDefault().Components.Get<Sdf3DWorld>();//.GetAllComponents<Sdf3DWorld>().FirstOrDefault();
 			mineWorld.GameObject.NetworkSpawn();
+			//clone.NetworkSpawn();
 			//mineWorld.GameObject.Network.DropOwnership();
 			Transform.Position = entityStart.Transform.Position 
-											+ (Vector3.Backward * 72) 
-											//+ (Vector3.Down * 16)
+											//+ (Vector3.Backward * 72) 
+											+ (Vector3.Down * 16)
 											//+ (Vector3.Left * 32)
-											- (Vector3.Backward * entityEnd.Transform.Position.x);										
+											+ (Vector3.Backward * (entityStart.Transform.Position.x - entityEnd.Transform.Position.x) );		
 			float differenceZ = entityEnd.Transform.Position.z - entityStart.Transform.Position.z;
 			float differenceX = entityStart.Transform.Position.x - entityEnd.Transform.Position.x;
 			float differenceY = entityEnd.Transform.Position.y - entityStart.Transform.Position.y;
-			Log.Info( $"Dif Z :{differenceZ}" );
+			/*Log.Info( $"Dif Z :{differenceZ}" );
 			Log.Info( $"Dif Z/32 (nb blocs technique) :{differenceZ / blockSize}" ); // compté 24
 			Log.Info( $"Dif X (rouge) :{differenceX}" );
 			Log.Info( $"Dif X/32 (nb blocs technique) :{differenceX / blockSize}" ); // compté 24
 			Log.Info( $"Dif Y (vert) :{differenceY}" );
-			Log.Info( $"Dif Y/32 (nb blocs technique) :{differenceY / blockSize}" ); // compté 24
+			Log.Info( $"Dif Y/32 (nb blocs technique) :{differenceY / blockSize}" ); // compté 24*/
 			Hauteur = (int)differenceZ / blockSize + 1;
 			Longueur = (int)differenceX / blockSize + 1; // on compte mal a cause de la position prise en compte
 			Largeur = (int)differenceY / blockSize + 1; // pareil donc + 1
-			Log.Info( $"Hauteur finale : {Hauteur}" );
+			/*Log.Info( $"Hauteur finale : {Hauteur}" );
 			Log.Info( $"Longueur finale : {Longueur}" );
-			Log.Info( $"Largeur finale : {Largeur}" );
+			Log.Info( $"Largeur finale : {Largeur}" );*/
 
 			if (idMine != 0)
 			{
@@ -125,7 +131,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 
 	public async Task AddCube(Vector3 pos)
 	{
-		var cube = new BoxSdf3D(Vector3.Zero, blockSizeF).Transform(pos);
+		var cube = new BoxSdf3D(Vector3.Zero, blockSizeF, 0f).Transform(pos);
 		await mineWorld.AddAsync(cube, mineVolume);
 	}
 
@@ -135,7 +141,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 		if (!IsProxy)
 		{
 			//mineWorld.Network.TakeOwnership();
-			var cube = new BoxSdf3D(Vector3.Zero, 33f).Transform(pos);
+			var cube = new BoxSdf3D(Vector3.Zero, 32f, 0f).Transform(pos);
 			mineWorld.SubtractAsync(cube, mineVolume);
 		}
 	}
@@ -183,8 +189,8 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	{
 		if (!playersInside.ContainsKey(collider.GameObject.Name) && collider.GameObject.Tags.Has("player"))
 		{
-			Log.Info("Enter");
-			Log.Info(collider.GameObject.Name);
+			/*Log.Info("Enter");
+			Log.Info(collider.GameObject.Name);*/
 			playersInside.Add(collider.GameObject.Name,collider.GameObject);
 		}
 	}
@@ -193,8 +199,8 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	{
 		if (playersInside.ContainsKey(collider.GameObject.Name))
 		{
-			Log.Info("Exit");
-			Log.Info(collider.GameObject.Name);
+			/*Log.Info("Exit");
+			Log.Info(collider.GameObject.Name);*/
 			playersInside.Remove(collider.GameObject.Name);
 		}
 	}

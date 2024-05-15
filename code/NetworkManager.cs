@@ -64,7 +64,7 @@ public class NetworkManager : Component, Component.INetworkListener
 		Log.Info("count ainit:"+ lesMinesAInit.Count());
 		foreach (int initMine in lesMinesAInit)
 		{
-			if (initMine == 1)
+			if (initMine != 0)
 			{
 				Log.Info(lesMinesPhysics.Where(go => go.Name.Equals("mine_physics_debut_" + initMine)).SingleOrDefault());
 				var entityStart = lesMinesPhysics.Where(go => go.Name.Equals("mine_physics_debut_" + initMine)).SingleOrDefault();

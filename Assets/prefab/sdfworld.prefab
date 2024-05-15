@@ -1,0 +1,22 @@
+{
+  "RootObject": {
+    "__guid": "4ed0fd47-ac98-4eab-9aff-735c7efae44c",
+    "Flags": 0,
+    "Name": "SdfWorld",
+    "Enabled": true,
+    "NetworkMode": 2,
+    "NetworkInterpolation": true,
+    "Components": [
+      {
+        "__type": "Sandbox.Sdf.Sdf3DWorld",
+        "__guid": "4c16f791-e420-4d21-a097-d8efeeefbe29"
+      }
+    ]
+  },
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "ResourceVersion": 1,
+  "__version": 1,
+  "__references": []
+}
