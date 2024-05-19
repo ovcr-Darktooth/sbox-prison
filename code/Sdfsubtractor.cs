@@ -36,7 +36,7 @@ public sealed class SDFGun : Component
 			Gizmo.Draw.LineBBox(BBox.FromHeightAndRadius(32f,16f));
 		}
 
-		if (Input.Pressed("attack1") && !IsProxy && tr.Hit)
+		if (Input.Down("attack1") && !IsProxy && tr.Hit)
 		{
 			/*if (buildMode)
 				_ = Add();
