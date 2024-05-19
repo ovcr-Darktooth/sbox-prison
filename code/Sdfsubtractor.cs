@@ -8,6 +8,8 @@ public sealed class SDFGun : Component
 	public MineComponent Mine { get; set; }
 	[Property] public float SphereSize { get; set; } = 50;
 	[Property] public Sdf3DVolume sdf3DVolume { get; set; }
+
+	private TimeUntil nextDestroy = 0.1f;
 	
 
 	public bool buildMode = false;
@@ -42,7 +44,11 @@ public sealed class SDFGun : Component
 				_ = Add();
 			else*/
 				//_ = Subtract()
+			if (nextDestroy <= 0f)
+			{
 				SubtractCube();
+				nextDestroy = 0.1f;
+			}
 		}
 
 		/*if (Input.Pressed("attack2"))
