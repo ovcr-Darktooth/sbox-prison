@@ -410,7 +410,6 @@
       "__guid": "9c2a9e83-732d-4bfa-b45d-1a7865f528cf",
       "Flags": 0,
       "Name": "Pickups",
-      "Enabled": true,
       "NetworkMode": 2,
       "NetworkInterpolation": true,
       "Children": [
@@ -2255,8 +2254,10 @@
   },
   "Title": "untitled8",
   "Description": "",
-  "LastSaved": "2024-05-15T21:56:38.5056753\u002B02:00",
+  "LastSaved": "2024-05-16T22:11:39.757645\u002B02:00",
   "ResourceVersion": 1,
   "__version": 1,
-  "__references": []
+  "__references": [
+    "ambi.myog"
+  ]
 }

@@ -74,10 +74,11 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 			//clone.NetworkSpawn();
 			//mineWorld.GameObject.Network.DropOwnership();
 			Transform.Position = entityStart.Transform.Position 
-											//+ (Vector3.Backward * 72) 
+											+ (Vector3.Backward * 16) 
 											+ (Vector3.Down * 16)
-											//+ (Vector3.Left * 32)
-											+ (Vector3.Backward * (entityStart.Transform.Position.x - entityEnd.Transform.Position.x) );		
+											- (Vector3.Left * 16)
+											+ (Vector3.Backward * (entityStart.Transform.Position.x - entityEnd.Transform.Position.x) );
+		
 			float differenceZ = entityEnd.Transform.Position.z - entityStart.Transform.Position.z;
 			float differenceX = entityStart.Transform.Position.x - entityEnd.Transform.Position.x;
 			float differenceY = entityEnd.Transform.Position.y - entityStart.Transform.Position.y;

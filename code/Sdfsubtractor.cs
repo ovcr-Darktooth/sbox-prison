@@ -16,12 +16,27 @@ public sealed class SDFGun : Component
 		var tr = Scene.Trace.Ray(Scene.Camera.ScreenNormalToRay(0.5f), 200).WithoutTags("player").Run();
 		if (tr.Hit)
 		{
-			Gizmo.Transform = new Transform(tr.HitPosition.SnapToGrid(32) + Vector3.Down * 32f, Rotation.Identity);
+			/*Vector3 hitPosition = tr.HitPosition;
+			Vector3 normal = tr.HitPosition.Normal;
+			Vector3 adjustPosition = hitPosition - normal * 16f; // Ajuste la position dans la direction du normal (demi-taille du cube)
+
+		// Arrondir la position ajustée à la grille
+			Vector3 snappedPosition = Vector3.Down * 32f + adjustPosition.SnapToGrid(32f);*/
+
+			Vector3 hitPosition = tr.HitPosition;
+			Vector3 normal = tr.Normal; // Utiliser la normale fournie par le tracé
+			Vector3 adjustPosition = hitPosition - normal * (32f/2) + Vector3.Down * 16f; // Ajuster la position dans la direction de la normale (demi-taille du cube)
+			
+			// Arrondir la position ajustée à la grille
+			Vector3 snappedPosition = adjustPosition.SnapToGrid(32f);
+			//Gizmo.Transform = new Transform(tr.HitPosition.SnapToGrid(32) + Vector3.Down * 32f, Rotation.Identity);
+			Gizmo.Transform = new Transform(snappedPosition, Rotation.Identity);
 			Gizmo.Draw.Color = buildMode ? Color.Green : Color.Red;
-			Gizmo.Draw.LineSphere(Vector3.Zero, 50f);
+			//Gizmo.Draw.LineSphere(Vector3.Zero, 50f);
+			Gizmo.Draw.LineBBox(BBox.FromHeightAndRadius(32f,16f));
 		}
 
-		if (Input.Down("attack1") && !IsProxy && tr.Hit)
+		if (Input.Pressed("attack1") && !IsProxy && tr.Hit)
 		{
 			/*if (buildMode)
 				_ = Add();
@@ -68,8 +83,15 @@ public sealed class SDFGun : Component
 		Mine = Scene.GetAllObjects(true).Where(go => go.Name == "Mine_"+result).FirstOrDefault().Components.Get<MineComponent>();
 		if (Mine is null)
 			return;
-		var position = (tr.HitPosition  + Vector3.Down * 32f).SnapToGrid(32f);
-		Mine.RemoveCube(position);
+		//var position = (tr.HitPosition + Vector3.Down * 32f).SnapToGrid(32f);
+
+		Vector3 hitPosition = tr.HitPosition;
+		Vector3 normal = tr.Normal; // Utiliser la normale fournie par le tracé
+		Vector3 adjustPosition = hitPosition - normal * (32f/2) + Vector3.Down * 16f;  // Ajuster la position dans la direction de la normale (demi-taille du cube)
+		
+		// Arrondir la position ajustée à la grille
+		Vector3 snappedPosition = adjustPosition.SnapToGrid(32f);
+		Mine.RemoveCube(snappedPosition);
 		//World.SubtractAsync(cube);
 			//Scene.GetAllComponents<MineComponent>().Where()
 		//Scene.GetAllComponents<MineComponent>().FirstOrDefault().RemoveCube(position);
