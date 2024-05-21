@@ -85,19 +85,20 @@ public sealed class SDFGun : Component
 		//var cube = new BoxSdf3D(Vector3.Zero, 33f).Transform((tr.HitPosition  + Vector3.Down * 32f).SnapToGrid(32f));
 		int lastUnderscoreIndex = tr.GameObject.Name.LastIndexOf('_');
 		ReadOnlySpan<char> span = tr.GameObject.Name.AsSpan(lastUnderscoreIndex + 1);
-    	string result = span.ToString();
-		Mine = Scene.GetAllObjects(true).Where(go => go.Name == "Mine_"+result).FirstOrDefault().Components.Get<MineComponent>();
-		if (Mine is null)
-			return;
-		//var position = (tr.HitPosition + Vector3.Down * 32f).SnapToGrid(32f);
+		string result = span.ToString();
+		if (tr.Hit && Scene.GetAllObjects(true).Where(go => go.Name == "Mine_"+result).FirstOrDefault().IsValid())
+		{			
+			Mine = Scene.GetAllObjects(true).Where(go => go.Name == "Mine_"+result).FirstOrDefault().Components.Get<MineComponent>();
+			//var position = (tr.HitPosition + Vector3.Down * 32f).SnapToGrid(32f);
 
-		Vector3 hitPosition = tr.HitPosition;
-		Vector3 normal = tr.Normal; // Utiliser la normale fournie par le tracé
-		Vector3 adjustPosition = hitPosition - normal * (32f/2) + Vector3.Down * 16f;  // Ajuster la position dans la direction de la normale (demi-taille du cube)
-		
-		// Arrondir la position ajustée à la grille
-		Vector3 snappedPosition = adjustPosition.SnapToGrid(32f);
-		Mine.RemoveCube(snappedPosition);
+			Vector3 hitPosition = tr.HitPosition;
+			Vector3 normal = tr.Normal; // Utiliser la normale fournie par le tracé
+			Vector3 adjustPosition = hitPosition - normal * (32f/2) + Vector3.Down * 16f;  // Ajuster la position dans la direction de la normale (demi-taille du cube)
+			
+			// Arrondir la position ajustée à la grille
+			Vector3 snappedPosition = adjustPosition.SnapToGrid(32f);
+			Mine.RemoveCube(snappedPosition);
+		}
 		//World.SubtractAsync(cube);
 			//Scene.GetAllComponents<MineComponent>().Where()
 		//Scene.GetAllComponents<MineComponent>().FirstOrDefault().RemoveCube(position);

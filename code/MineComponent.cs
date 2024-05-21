@@ -23,7 +23,9 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 
 	public int LevelMine { get; set; }
 	public float ActualPercent {get;set;}
-	public float PercentReset { get; set; }
+	public float ResetPercent { get; } = 40f;
+
+	private int LastModificationCount = 0;
 	//public List<MineBlockLines> MineBlockLines { get; set; }
 	public string BlockMaterial { get; set; }
 	//AxeX(Rouge)
@@ -37,6 +39,8 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 
 	private TimeSince timeSinceReset = 0;
 	private TimeSince timeSincePercentage = 0;
+
+	private TimeUntil timeUntilResetAvailable = 10f;
 
 	// Matrice de données représentant la forme
     private int[,] shapeMatrix = new int[,]
@@ -91,9 +95,10 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 			Hauteur = (int)differenceZ / blockSize + 1;
 			Longueur = (int)differenceX / blockSize + 1; // on compte mal a cause de la position prise en compte
 			Largeur = (int)differenceY / blockSize + 1; // pareil donc + 1
-			/*Log.Info( $"Hauteur finale : {Hauteur}" );
+			Log.Info( $"Hauteur finale : {Hauteur}" );
 			Log.Info( $"Longueur finale : {Longueur}" );
-			Log.Info( $"Largeur finale : {Largeur}" );*/
+			Log.Info( $"Largeur finale : {Largeur}" );
+			Log.Info( $"NbBlocs:  {Hauteur * Longueur * Largeur}");
 
 			if (idMine != 0)
 			{
@@ -120,13 +125,13 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 
 			Components.GetInChildren<BoxCollider>().Transform.Position = (entityStart.Transform.Position + entityEnd.Transform.Position) / 2;
 			Components.GetInChildren<BoxCollider>().Scale = (Hauteur + Longueur + Largeur) * 26.5f;
-			Components.GetInChildren<BoxCollider>().OnTriggerEnter = this.OnTriggerEnter;
-			Components.GetInChildren<BoxCollider>().OnTriggerExit = this.OnTriggerExit;
+
+			Components.GetInChildren<BoxCollider>().OnTriggerEnter = this.OnInsideMineTriggerEnter;
+			Components.GetInChildren<BoxCollider>().OnTriggerExit = this.OnInsideMineTriggerExit;
 
 			timeSinceReset = 0;
 			timeSincePercentage = 0;
-
-			//mineWorld.
+			timeUntilResetAvailable = 10f;
 		}
 	}
 
@@ -158,9 +163,9 @@ public sealed class MineComponent : Component, Component.ITriggerListener
   			Gizmo.Draw.LineThickness = 3;
 			Gizmo.Draw.Line(posTrace.StartPosition, posTrace.EndPosition);
 			
-			if (timeSinceReset > 40f)
+			if (timeSinceReset > 300f)
 			{
-				//resetMine();
+				resetMine();
 				timeSinceReset = 0;
 			}
 
@@ -170,6 +175,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 				timeSincePercentage = 0;
 			}
 			//mineWorld.GameObject.Network.DropOwnership();
+			Log.Info(timeUntilResetAvailable);
 		}
 		/*else 
 		{
@@ -186,7 +192,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 
 	}
 
-	void OnTriggerEnter(Collider collider)
+	void OnInsideMineTriggerEnter(Collider collider)
 	{
 		if (!playersInside.ContainsKey(collider.GameObject.Name) && collider.GameObject.Tags.Has("player"))
 		{
@@ -196,7 +202,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 		}
 	}
 
-	void OnTriggerExit(Collider collider)
+	void OnInsideMineTriggerExit(Collider collider)
 	{
 		if (playersInside.ContainsKey(collider.GameObject.Name))
 		{
@@ -220,32 +226,38 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 
 	public void resetMine()
 	{
-		Log.Info("ResetMine !");
-		//TP players
-		teleportPlayers();
 
-		//Regen mine
-		for ( int i = 0; i < Hauteur; i++ )
+		if (timeUntilResetAvailable <= 0)
 		{
-			for ( int j = 0; j < Longueur ; j++ )
+			Log.Info("ResetMine !");
+			//TP players
+			teleportPlayers();
+
+			//Regen mine
+			for ( int i = 0; i < Hauteur; i++ )
 			{
-				for ( int k = 0; k < Largeur; k++ )
+				for ( int j = 0; j < Longueur ; j++ )
 				{
-					if (mineWorld.IsValid())
-						_ = AddCube(Transform.Position
-											+ (Vector3.Up * blockSize * i) 
-											+ (Vector3.Forward * blockSize * j) 
-											+ (Vector3.Left * blockSize * k));
-					/*if (j == 1 || i == 1 || k == 1)
-						_ = RemoveCube(Vector3.Zero
-											+ (Vector3.Up * blockSize * i) 
-											+ (Vector3.Backward * blockSize * j) 
-											+ (Vector3.Right * blockSize * k));*/
+					for ( int k = 0; k < Largeur; k++ )
+					{
+						if (mineWorld.IsValid())
+							_ = AddCube(Transform.Position
+												+ (Vector3.Up * blockSize * i) 
+												+ (Vector3.Forward * blockSize * j) 
+												+ (Vector3.Left * blockSize * k));
+						/*if (j == 1 || i == 1 || k == 1)
+							_ = RemoveCube(Vector3.Zero
+												+ (Vector3.Up * blockSize * i) 
+												+ (Vector3.Backward * blockSize * j) 
+												+ (Vector3.Right * blockSize * k));*/
+					}
 				}
 			}
+
+			LastModificationCount = mineWorld.ModificationCount;
+			ActualPercent = 100f;
+			timeUntilResetAvailable = 10f;
 		}
-
-
 	}
 
 	//[Broadcast]
@@ -255,9 +267,9 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 		{
 			if (!IsProxy && !entry.Value.Network.IsProxy)
 			{
-				Log.Info(entry.Value.Transform.Position);
+				//Log.Info(entry.Value.Transform.Position);
 				entry.Value.Transform.Position = new Vector3(entry.Value.Transform.Position.x,entry.Value.Transform.Position.y, entityEnd.Transform.Position.z + 450);
-				Log.Info(entry.Value.Transform.Position);
+				//Log.Info(entry.Value.Transform.Position);
 			}				
 		}		
 	}
@@ -266,26 +278,12 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	{
 		if (mineWorld.IsValid())
 		{
-			Log.Info("updateminepercentage");
-			for ( int i = 0; i < Hauteur; i++ )
-			{
-				for ( int j = 0; j < Longueur ; j++ )
-				{
-					for ( int k = 0; k < Largeur; k++ )
-					{
-						var pos1 = Transform.Position + (Vector3.Up * blockSize * i - 5) 
-												+ (Vector3.Forward * blockSize * j - 5 ) 
-												+ (Vector3.Left * blockSize * k - 5);
-						var pos2 = Transform.Position + (Vector3.Up * 5) 
-												+ (Vector3.Forward *  5 ) 
-												+ (Vector3.Left * 5);												
-						var trace = Scene.Trace.Ray( pos1, pos2 ).Run();
+			ActualPercent = mineWorld.ModificationCount - LastModificationCount;
+			ActualPercent = 100f - (ActualPercent / (Hauteur * Longueur * Largeur) * 100f);
+			Log.Info($"[Mine:{idMine}] % of blocks remaining: {ActualPercent}");
 
-						//if (trace.GameObject.IsValid())
-							//Log.Info(trace.GameObject.Name);
-					}
-				}
-			}
+			if (ActualPercent < ResetPercent)	
+				resetMine();
 		}
 	}
 
