@@ -1,6 +1,6 @@
 {
   "RootObject": {
-    "__guid": "7cb8d21f-95e3-4684-b3d9-c79568fc5aef",
+    "__guid": "9f5860f1-9974-4f52-a722-903f2a0c4b76",
     "Flags": 0,
     "Name": "mine",
     "Enabled": true,
@@ -9,7 +9,7 @@
     "Components": [
       {
         "__type": "MineComponent",
-        "__guid": "1ea360c8-037a-466a-975d-87eed2e28d93",
+        "__guid": "ac02977e-2363-4778-bec1-21b976e884cb",
         "idMine": 0,
         "mineVolume": "sdfvol/box.sdfvol",
         "WorldPrefab": {
@@ -19,7 +19,7 @@
       },
       {
         "__type": "Sandbox.ModelRenderer",
-        "__guid": "a6d7c706-9b46-49e9-9928-05cf66d7b9ad",
+        "__guid": "4c33bff0-c23c-4a1f-bfb6-86084a713845",
         "__enabled": false,
         "BodyGroups": 18446744073709551615,
         "MaterialOverride": "materials/dev/debug_nav_wireframe.vmat",
@@ -30,19 +30,37 @@
     ],
     "Children": [
       {
-        "__guid": "ac6de847-dd9c-4c01-b952-4bf366192b68",
+        "__guid": "be71e27a-4c98-47ff-a57d-845f3af04a13",
         "Flags": 0,
-        "Name": "Collider",
+        "Name": "Around",
         "Enabled": true,
         "NetworkMode": 2,
         "NetworkInterpolation": true,
         "Components": [
           {
             "__type": "Sandbox.BoxCollider",
-            "__guid": "526e069f-7087-499f-97c4-9344fc3c5613",
+            "__guid": "3d8e29b3-b727-4d06-8776-e9b8f8725d6b",
             "Center": "0,0,0",
             "IsTrigger": true,
             "Scale": "1500,1500,1500",
+            "Static": false
+          }
+        ]
+      },
+      {
+        "__guid": "b08e62f7-71ab-4893-86d5-726e2acb6b42",
+        "Flags": 0,
+        "Name": "Inside",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkInterpolation": true,
+        "Components": [
+          {
+            "__type": "Sandbox.BoxCollider",
+            "__guid": "cdf9fb36-48e2-4db5-ad85-ccd170105bf3",
+            "Center": "0,0,0",
+            "IsTrigger": true,
+            "Scale": "50,50,50",
             "Static": false
           }
         ]
@@ -53,6 +71,8 @@
   "MenuPath": null,
   "MenuIcon": null,
   "ResourceVersion": 1,
-  "__version": 1,
-  "__references": []
+  "__references": [
+    "ambi.myog"
+  ],
+  "__version": 1
 }

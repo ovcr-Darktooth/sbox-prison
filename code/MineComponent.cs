@@ -4,6 +4,7 @@ using Sandbox;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Sandbox.Sdf;
+using System.Numerics;
 
 
 public sealed class MineComponent : Component, Component.ITriggerListener
@@ -36,11 +37,10 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	public int Hauteur { get; set; }
 
 	private Dictionary<string, GameObject> playersInside = new Dictionary<string, GameObject>();
+	private Dictionary<string, GameObject> playersAround = new Dictionary<string, GameObject>();
 
 	private TimeSince timeSinceReset = 0;
 	private TimeSince timeSincePercentage = 0;
-
-	private TimeUntil timeUntilResetAvailable = 10f;
 
 	// Matrice de données représentant la forme
     private int[,] shapeMatrix = new int[,]
@@ -102,36 +102,23 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 
 			if (idMine != 0)
 			{
-				for ( int i = 0; i < Hauteur; i++ )
-				{
-					for ( int j = 0; j < Longueur ; j++ )
-					{
-						for ( int k = 0; k < Largeur; k++ )
-						{
-							if (mineWorld.IsValid())
-								_ = AddCube(Transform.Position
-													+ (Vector3.Up * blockSize * i) 
-													+ (Vector3.Forward * blockSize * j) 
-													+ (Vector3.Left * blockSize * k));
-							/*if (j == 1 || i == 1 || k == 1)
-								_ = RemoveCube(Vector3.Zero
-													+ (Vector3.Up * blockSize * i) 
-													+ (Vector3.Backward * blockSize * j) 
-													+ (Vector3.Right * blockSize * k));*/
-						}
-					}
-				}
+				_ = regenMine();
+
 			}
 
 			Components.GetInChildren<BoxCollider>().Transform.Position = (entityStart.Transform.Position + entityEnd.Transform.Position) / 2;
 			Components.GetInChildren<BoxCollider>().Scale = (Hauteur + Longueur + Largeur) * 26.5f;
+			//TODO: refaire un autre colliderbox trigger pour vraiment les tp, et utiliser celui la pour donner le status du world a ceux qui sont a cotés
+			Components.GetInChildren<BoxCollider>().OnTriggerEnter = this.OnAroundMineTriggerEnter;
+			Components.GetInChildren<BoxCollider>().OnTriggerExit = this.OnAroundMineTriggerExit;
 
-			Components.GetInChildren<BoxCollider>().OnTriggerEnter = this.OnInsideMineTriggerEnter;
-			Components.GetInChildren<BoxCollider>().OnTriggerExit = this.OnInsideMineTriggerExit;
+			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().Transform.Position = (entityStart.Transform.Position + entityEnd.Transform.Position) / 2;
+			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().Scale = new Vector3(Longueur*32f,Largeur*32f,Hauteur*32f);
+			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().OnTriggerEnter = this.OnInsideMineTriggerEnter;
+			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().OnTriggerExit = this.OnInsideMineTriggerExit;
 
 			timeSinceReset = 0;
 			timeSincePercentage = 0;
-			timeUntilResetAvailable = 10f;
 		}
 	}
 
@@ -163,7 +150,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
   			Gizmo.Draw.LineThickness = 3;
 			Gizmo.Draw.Line(posTrace.StartPosition, posTrace.EndPosition);
 			
-			if (timeSinceReset > 300f)
+			if (timeSinceReset > 300f) // 60* 5 = 300
 			{
 				resetMine();
 				timeSinceReset = 0;
@@ -175,7 +162,6 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 				timeSincePercentage = 0;
 			}
 			//mineWorld.GameObject.Network.DropOwnership();
-			Log.Info(timeUntilResetAvailable);
 		}
 		/*else 
 		{
@@ -190,6 +176,26 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 		}
 
 
+	}
+
+	void OnAroundMineTriggerEnter(Collider collider)
+	{
+		if (!playersAround.ContainsKey(collider.GameObject.Name) && collider.GameObject.Tags.Has("player"))
+		{
+			/*Log.Info("Enter");
+			Log.Info(collider.GameObject.Name);*/
+			playersAround.Add(collider.GameObject.Name,collider.GameObject);
+		}
+	}
+
+	void OnAroundMineTriggerExit(Collider collider)
+	{
+		if (playersAround.ContainsKey(collider.GameObject.Name))
+		{
+			/*Log.Info("Exit");
+			Log.Info(collider.GameObject.Name);*/
+			playersAround.Remove(collider.GameObject.Name);
+		}
 	}
 
 	void OnInsideMineTriggerEnter(Collider collider)
@@ -224,40 +230,26 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 
 	}
 
+	public async Task regenMine()
+	{
+		if (idMine != 0)
+		{
+			var cube = new BoxSdf3D(Vector3.Zero, new Vector3(Longueur*blockSizeF,Largeur*blockSizeF,Hauteur*blockSizeF), 0f).Transform(Transform.Position);
+			await mineWorld.AddAsync(cube, mineVolume);
+		}
+	}
+
 	public void resetMine()
 	{
+		Log.Info("ResetMine !");
+		//TP players
+		teleportPlayers();
 
-		if (timeUntilResetAvailable <= 0)
-		{
-			Log.Info("ResetMine !");
-			//TP players
-			teleportPlayers();
+		//Regen mine
+		_ = regenMine();			
 
-			//Regen mine
-			for ( int i = 0; i < Hauteur; i++ )
-			{
-				for ( int j = 0; j < Longueur ; j++ )
-				{
-					for ( int k = 0; k < Largeur; k++ )
-					{
-						if (mineWorld.IsValid())
-							_ = AddCube(Transform.Position
-												+ (Vector3.Up * blockSize * i) 
-												+ (Vector3.Forward * blockSize * j) 
-												+ (Vector3.Left * blockSize * k));
-						/*if (j == 1 || i == 1 || k == 1)
-							_ = RemoveCube(Vector3.Zero
-												+ (Vector3.Up * blockSize * i) 
-												+ (Vector3.Backward * blockSize * j) 
-												+ (Vector3.Right * blockSize * k));*/
-					}
-				}
-			}
-
-			LastModificationCount = mineWorld.ModificationCount;
-			ActualPercent = 100f;
-			timeUntilResetAvailable = 10f;
-		}
+		LastModificationCount = mineWorld.ModificationCount;
+		ActualPercent = 100f;
 	}
 
 	//[Broadcast]
@@ -288,3 +280,26 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	}
 
 }
+
+
+/*
+	/*for ( int i = 0; i < Hauteur; i++ )
+			{
+				for ( int j = 0; j < Longueur ; j++ )
+				{
+					for ( int k = 0; k < Largeur; k++ )
+					{
+						if (mineWorld.IsValid())
+							_ = AddCube(Transform.Position
+												+ (Vector3.Up * blockSize * i) 
+												+ (Vector3.Forward * blockSize * j) 
+												+ (Vector3.Left * blockSize * k));
+						/*if (j == 1 || i == 1 || k == 1)
+							_ = RemoveCube(Vector3.Zero
+												+ (Vector3.Up * blockSize * i) 
+												+ (Vector3.Backward * blockSize * j) 
+												+ (Vector3.Right * blockSize * k));* /
+					}
+				}
+			}* /
+*/

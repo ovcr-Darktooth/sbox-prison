@@ -47,7 +47,7 @@ public sealed class SDFGun : Component
 			if (nextDestroy <= 0f)
 			{
 				SubtractCube();
-				nextDestroy = 0.1f;
+				nextDestroy = 0.075f;
 			}
 		}
 
