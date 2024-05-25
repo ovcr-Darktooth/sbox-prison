@@ -29,6 +29,7 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 	[Property] public CitizenAnimationHelper AnimationHelper { get; set; }
 	[Property] public SoundEvent HurtSound { get; set; }
 	[Property] public bool SicknessMode { get; set; }
+	[Property] public bool SeeOwnModel { get; set; } = true;
 	[Property] public bool EnableCrouching { get; set; }
 	[Property] public float StandHeight { get; set; } = 64f;
 	[Property] public float DuckHeight { get; set; } = 28f;
@@ -211,25 +212,38 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 		var deployedWeapon = Weapons.Deployed;
 		var shadowRenderer = ShadowAnimator.Components.Get<SkinnedModelRenderer>( true );
 		var hasViewModel = deployedWeapon.IsValid() && deployedWeapon.HasViewModel;
-		var clothing = ModelRenderer.Components.GetAll<ClothingComponent>( FindMode.EverythingInSelfAndDescendants );
+		//var clothing = ModelRenderer.Components.GetAll<ClothingComponent>( FindMode.EverythingInSelfAndDescendants );
+		var clothing = ModelRenderer.GameObject.GetAllObjects(true);
+		var clothingShadow = shadowRenderer.GameObject.GetAllObjects(true);
 		
 		if ( hasViewModel )
 		{
-			shadowRenderer.Enabled = false;
+			shadowRenderer.Enabled = true;
+			shadowRenderer.RenderType = Sandbox.ModelRenderer.ShadowRenderType.ShadowsOnly;
+			//Log.Info(shadowRenderer.GameObject.Name);
+
+			foreach ( var c in clothingShadow )
+			{
+				c.Components.Get<SkinnedModelRenderer>(true).RenderType = Sandbox.ModelRenderer.ShadowRenderType.ShadowsOnly;
+			}
 			
 			ModelRenderer.Enabled = Ragdoll.IsRagdolled;
 			ModelRenderer.RenderType = Sandbox.ModelRenderer.ShadowRenderType.On;
 			
 			foreach ( var c in clothing )
 			{
-				c.ModelRenderer.Enabled = Ragdoll.IsRagdolled;
-				c.ModelRenderer.RenderType = Sandbox.ModelRenderer.ShadowRenderType.On;
+				if(c.Name.StartsWith("Clothing"))
+				{
+					c.Enabled = Ragdoll.IsRagdolled;
+					c.Components.Get<SkinnedModelRenderer>(true).RenderType = Sandbox.ModelRenderer.ShadowRenderType.On;
+				}				
 			}
 
 			return;
 		}
 			
 		ModelRenderer.SetBodyGroup( "head", IsProxy ? 0 : 1 );
+		ModelRenderer.Enabled = SeeOwnModel;
 		ModelRenderer.Enabled = true;
 
 		if ( Ragdoll.IsRagdolled )
@@ -248,12 +262,17 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 
 		foreach ( var c in clothing )
 		{
-			c.ModelRenderer.Enabled = true;
+			c.Enabled = true;
 
-			if ( c.Category is Clothing.ClothingCategory.Hair or Clothing.ClothingCategory.Facial or Clothing.ClothingCategory.Hat )
-			{
-				c.ModelRenderer.RenderType = IsProxy ? Sandbox.ModelRenderer.ShadowRenderType.On : Sandbox.ModelRenderer.ShadowRenderType.ShadowsOnly;
-			}
+
+			//ClothingComponent
+			//Log.Info("cat" + c.Components.Get<ClothingComponent>(true).Category);
+
+			//if ( c.Category is Clothing.ClothingCategory.Hair or Clothing.ClothingCategory.Facial or Clothing.ClothingCategory.Hat )
+			//{
+				//TODO: juste cette ligne fait enlever la caméra, le if du dessus y est pour quelque chose, mais impossible d'accéder a un clothingcomponent (composant créé manuellement)
+				//c.Components.Get<SkinnedModelRenderer>(true).RenderType = IsProxy ? Sandbox.ModelRenderer.ShadowRenderType.On : Sandbox.ModelRenderer.ShadowRenderType.ShadowsOnly;
+			//}
 		}
 	}
 
@@ -320,7 +339,10 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 			var angles = EyeAngles.Normal;
 			angles += Input.AnalogLook * 0.5f;
 			angles += Recoil * Time.Delta;
-			angles.pitch = angles.pitch.Clamp( -60f, 80f );
+			//angles.pitch = angles.pitch.Clamp( -89f, 89f );
+			// Normalisation de l'angle de pitch
+			if (angles.pitch > 89.9f) angles.pitch = 89.9f;
+			if (angles.pitch < -89.9f) angles.pitch = -89.9f;
 			
 			EyeAngles = angles.WithRoll( 0f );
 			IsRunning = Input.Down( "Run" );

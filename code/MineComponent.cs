@@ -272,7 +272,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 		{
 			ActualPercent = mineWorld.ModificationCount - LastModificationCount;
 			ActualPercent = 100f - (ActualPercent / (Hauteur * Longueur * Largeur) * 100f);
-			Log.Info($"[Mine:{idMine}] % of blocks remaining: {ActualPercent}");
+			//Log.Info($"[Mine:{idMine}] % of blocks remaining: {ActualPercent}");
 
 			if (ActualPercent < ResetPercent)	
 				resetMine();
