@@ -92,23 +92,9 @@ public abstract class WeaponComponent : Component
 		SendAttackMessage( origin, trace.EndPosition, trace.Distance );
 
 		IHealthComponent damageable = null;
-		MineComponent mine = null;
 		if ( trace.Component.IsValid() )
 		{
 			damageable = trace.Component.Components.GetInAncestorsOrSelf<IHealthComponent>();
-			mine = trace.Component.Components.GetInAncestorsOrSelf<MineComponent>();
-			/*Log.Info("mine:");
-			Log.Info(mine);
-			Log.Info(trace.HitPosition);*/
-		}
-
-		if (mine != null)
-		{
-			/*Vector3 sizeOfCube = Vector3.One * 32f;
-			Vector3 traceOffset = trace.Normal;
-			Vector3 positionOffset = new Vector3(sizeOfCube.x * traceOffset.x, sizeOfCube.y * traceOffset.y, sizeOfCube.z * traceOffset.z);
-			_ = mine.RemoveCube(trace.HitPosition + positionOffset);*/
-			//var task = mine.RemoveCube(trace.HitPosition);
 		}
 
 		if ( damageable is not null )
