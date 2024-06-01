@@ -182,9 +182,10 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	{
 		if (!playersAround.ContainsKey(collider.GameObject.Name) && collider.GameObject.Tags.Has("player"))
 		{
-			/*Log.Info("Enter");
-			Log.Info(collider.GameObject.Name);*/
+			Log.Info("Enter");
+			Log.Info(collider.GameObject.Name);
 			playersAround.Add(collider.GameObject.Name,collider.GameObject);
+			mineWorld.Enabled = true;
 		}
 	}
 
@@ -192,9 +193,10 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	{
 		if (playersAround.ContainsKey(collider.GameObject.Name))
 		{
-			/*Log.Info("Exit");
-			Log.Info(collider.GameObject.Name);*/
+			Log.Info("Exit");
+			Log.Info(collider.GameObject.Name);
 			playersAround.Remove(collider.GameObject.Name);
+			mineWorld.Enabled = false;
 		}
 	}
 

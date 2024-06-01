@@ -97,8 +97,6 @@ public abstract class WeaponComponent : Component
 			damageable = trace.Component.Components.GetInAncestorsOrSelf<IHealthComponent>();
 		}
 
-
-
 		if ( damageable is not null )
 		{
 			if ( trace.Hitbox is not null && trace.Hitbox.Tags.Has( "head" ) )
