@@ -1,0 +1,24 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@inherits PanelComponent
+
+<root>
+
+    <div class="card">
+        <div class="name">Mine</div>
+        <div class="name">Level: @Level</div>
+        <div class="name">Percentage: @Percentage%</div>
+    </div>
+
+</root>
+
+@code{
+
+    [Property] public string Level { get; set; } = "Undefined rank";
+    [Property] public float Percentage { get; set; } = -1;
+
+    /// <summary>
+    /// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+    /// </summary>
+    protected override int BuildHash() => System.HashCode.Combine(Percentage);
+}

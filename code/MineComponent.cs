@@ -15,14 +15,21 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	public GameObject entityStart {get; set;}
 	[Property]
 	public GameObject entityEnd {get; set;}
+	[Property] 
+	public NameTagPanel Panel_Left { get; set; }
+	[Property] 
+	public NameTagPanel Panel_Right { get; set; }
+	[Property] 
+	public NameTagPanel Panel_Front { get; set; }
+	[Property] 
+	public NameTagPanel Panel_Back { get; set; }
 	[Property]
 	public int idMine;
 	[Property]
 	public Sdf3DVolume mineVolume { get; set; }
-	//[Property]
 	public Sdf3DWorld mineWorld { get; set; }
-
-	public int LevelMine { get; set; }
+	[Property]
+	public int LevelMine { get; set; } = 1;
 	public float ActualPercent {get;set;}
 	public float ResetPercent { get; } = 40f;
 
@@ -101,10 +108,8 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 			Log.Info( $"NbBlocs:  {Hauteur * Longueur * Largeur}");
 
 			if (idMine != 0)
-			{
 				_ = regenMine();
 
-			}
 
 			Components.GetInChildren<BoxCollider>().Transform.Position = (entityStart.Transform.Position + entityEnd.Transform.Position) / 2;
 			Components.GetInChildren<BoxCollider>().Scale = (Hauteur + Longueur + Largeur) * 26.5f;
@@ -116,6 +121,23 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().Scale = new Vector3(Longueur*32f,Largeur*32f,Hauteur*32f);
 			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().OnTriggerEnter = this.OnInsideMineTriggerEnter;
 			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().OnTriggerExit = this.OnInsideMineTriggerExit;
+
+			int hauteurPanel = 150;
+			Panel_Left.Transform.Position =  new Vector3(Transform.Position.x + Longueur*blockSize/2, Transform.Position.y, entityEnd.Transform.Position.z + hauteurPanel);
+			Panel_Right.Transform.Position = new Vector3(Transform.Position.x + Longueur*blockSize/2, Transform.Position.y + Largeur*blockSize, entityEnd.Transform.Position.z + hauteurPanel);
+			Panel_Front.Transform.Position = new Vector3(Transform.Position.x, Transform.Position.y + Largeur*blockSize/ 2, entityEnd.Transform.Position.z + hauteurPanel);
+			Panel_Back.Transform.Position =  new Vector3(Transform.Position.x + Longueur*blockSize, Transform.Position.y + Largeur*blockSize/ 2, entityEnd.Transform.Position.z + hauteurPanel);
+
+
+			Panel_Left.Level = LevelMine.ToString();
+			Panel_Right.Level = LevelMine.ToString();
+			Panel_Front.Level = LevelMine.ToString();
+			Panel_Back.Level = LevelMine.ToString();
+
+			/*Panel_Left.Percentage = ActualPercent;
+			Panel_Right.Percentage = ActualPercent;
+			Panel_Front.Percentage = ActualPercent;
+			Panel_Back.Percentage = ActualPercent;*/
 
 			timeSinceReset = 0;
 			timeSincePercentage = 0;
@@ -278,9 +300,13 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 
 			if (ActualPercent < ResetPercent)	
 				resetMine();
+
+			Panel_Left.Percentage = ActualPercent;
+			Panel_Right.Percentage = ActualPercent;
+			Panel_Front.Percentage = ActualPercent;
+			Panel_Back.Percentage = ActualPercent;
 		}
 	}
-
 }
 
 

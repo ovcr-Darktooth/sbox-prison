@@ -1,6 +1,6 @@
 {
   "RootObject": {
-    "__guid": "9f5860f1-9974-4f52-a722-903f2a0c4b76",
+    "__guid": "71205dc2-b61a-4052-beeb-9f49dd556b22",
     "Flags": 0,
     "Name": "mine",
     "Enabled": true,
@@ -9,9 +9,33 @@
     "Components": [
       {
         "__type": "MineComponent",
-        "__guid": "ac02977e-2363-4778-bec1-21b976e884cb",
+        "__guid": "899fde26-6cc2-4c10-8441-23350a207c79",
         "idMine": 0,
         "mineVolume": "sdfvol/box.sdfvol",
+        "Panel_Back": {
+          "_type": "component",
+          "component_id": "af4dc297-16fa-4b7f-ad8b-e773464b1c16",
+          "go": "28acd500-2fdf-4dba-9487-4528a3000c06",
+          "component_type": "NameTagPanel"
+        },
+        "Panel_Front": {
+          "_type": "component",
+          "component_id": "4fc9fade-188d-46e6-8110-2e51ae5e8656",
+          "go": "b5dd7c30-a463-40f8-b0a9-fb5ebecdd121",
+          "component_type": "NameTagPanel"
+        },
+        "Panel_Left": {
+          "_type": "component",
+          "component_id": "a484818c-1d67-40c8-aa4a-9f6299ef96d9",
+          "go": "fba80d74-3078-4ec0-9d50-76345e1ff72f",
+          "component_type": "NameTagPanel"
+        },
+        "Panel_Right": {
+          "_type": "component",
+          "component_id": "e1354efe-d295-4160-b7e2-524ce5b71357",
+          "go": "741f3028-c6de-4edd-b1c9-64698184dc8c",
+          "component_type": "NameTagPanel"
+        },
         "WorldPrefab": {
           "_type": "gameobject",
           "prefab": "prefab/sdfworld.prefab"
@@ -19,7 +43,7 @@
       },
       {
         "__type": "Sandbox.ModelRenderer",
-        "__guid": "4c33bff0-c23c-4a1f-bfb6-86084a713845",
+        "__guid": "b3534337-c534-4da5-8adb-1dc504086cff",
         "__enabled": false,
         "BodyGroups": 18446744073709551615,
         "MaterialOverride": "materials/dev/debug_nav_wireframe.vmat",
@@ -30,7 +54,7 @@
     ],
     "Children": [
       {
-        "__guid": "be71e27a-4c98-47ff-a57d-845f3af04a13",
+        "__guid": "c87651ff-d2dd-40d0-8041-4fed4279d9a0",
         "Flags": 0,
         "Name": "Around",
         "Enabled": true,
@@ -39,7 +63,7 @@
         "Components": [
           {
             "__type": "Sandbox.BoxCollider",
-            "__guid": "3d8e29b3-b727-4d06-8776-e9b8f8725d6b",
+            "__guid": "690bf2f2-b5ce-4eb7-9d9b-b7ee76e42ba7",
             "Center": "0,0,0",
             "IsTrigger": true,
             "Scale": "1500,1500,1500",
@@ -48,7 +72,7 @@
         ]
       },
       {
-        "__guid": "b08e62f7-71ab-4893-86d5-726e2acb6b42",
+        "__guid": "978493d7-cacf-4661-abcb-479ede0ce792",
         "Flags": 0,
         "Name": "Inside",
         "Enabled": true,
@@ -57,11 +81,119 @@
         "Components": [
           {
             "__type": "Sandbox.BoxCollider",
-            "__guid": "cdf9fb36-48e2-4db5-ad85-ccd170105bf3",
+            "__guid": "333d4a4d-09e8-4fde-b209-9345de693d35",
             "Center": "0,0,0",
             "IsTrigger": true,
             "Scale": "50,50,50",
             "Static": false
+          }
+        ]
+      },
+      {
+        "__guid": "fba80d74-3078-4ec0-9d50-76345e1ff72f",
+        "Flags": 0,
+        "Name": "Panel_Left",
+        "Position": "-16.01869,106.6034,-50.88832",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkInterpolation": true,
+        "Components": [
+          {
+            "__type": "NameTagPanel",
+            "__guid": "a484818c-1d67-40c8-aa4a-9f6299ef96d9",
+            "Name": "Undefined text",
+            "Percentage": -1
+          },
+          {
+            "__type": "Sandbox.WorldPanel",
+            "__guid": "8f8173a9-0fda-4243-b38a-66557aa54797",
+            "HorizontalAlign": "Center",
+            "InteractionRange": 1000,
+            "LookAtCamera": true,
+            "PanelSize": "1024,512",
+            "RenderScale": 3,
+            "VerticalAlign": "Center"
+          }
+        ]
+      },
+      {
+        "__guid": "741f3028-c6de-4edd-b1c9-64698184dc8c",
+        "Flags": 0,
+        "Name": "Panel_Right",
+        "Position": "-16.01869,106.6034,-50.88832",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkInterpolation": true,
+        "Components": [
+          {
+            "__type": "NameTagPanel",
+            "__guid": "e1354efe-d295-4160-b7e2-524ce5b71357",
+            "Name": "Undefined text",
+            "Percentage": -1
+          },
+          {
+            "__type": "Sandbox.WorldPanel",
+            "__guid": "d0e25c4c-e1db-4e5a-a028-70482c01dedf",
+            "HorizontalAlign": "Center",
+            "InteractionRange": 1000,
+            "LookAtCamera": true,
+            "PanelSize": "1024,512",
+            "RenderScale": 3,
+            "VerticalAlign": "Center"
+          }
+        ]
+      },
+      {
+        "__guid": "b5dd7c30-a463-40f8-b0a9-fb5ebecdd121",
+        "Flags": 0,
+        "Name": "Panel_Front",
+        "Position": "-16.01869,106.6034,-50.88832",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkInterpolation": true,
+        "Components": [
+          {
+            "__type": "NameTagPanel",
+            "__guid": "4fc9fade-188d-46e6-8110-2e51ae5e8656",
+            "Name": "Undefined text",
+            "Percentage": -1
+          },
+          {
+            "__type": "Sandbox.WorldPanel",
+            "__guid": "ea7a2c5b-1838-44f5-8683-586d74b57e0f",
+            "HorizontalAlign": "Center",
+            "InteractionRange": 1000,
+            "LookAtCamera": true,
+            "PanelSize": "1024,512",
+            "RenderScale": 3,
+            "VerticalAlign": "Center"
+          }
+        ]
+      },
+      {
+        "__guid": "28acd500-2fdf-4dba-9487-4528a3000c06",
+        "Flags": 0,
+        "Name": "Panel_Back",
+        "Position": "-91.09657,314.0035,-182.3756",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkInterpolation": true,
+        "Components": [
+          {
+            "__type": "NameTagPanel",
+            "__guid": "af4dc297-16fa-4b7f-ad8b-e773464b1c16",
+            "Name": "Undefined text",
+            "Percentage": -1
+          },
+          {
+            "__type": "Sandbox.WorldPanel",
+            "__guid": "b09f8d5a-ffed-48dc-966a-acbe910bb8d2",
+            "HorizontalAlign": "Center",
+            "InteractionRange": 1000,
+            "LookAtCamera": true,
+            "PanelSize": "1024,512",
+            "RenderScale": 3,
+            "VerticalAlign": "Center"
           }
         ]
       }
@@ -71,8 +203,6 @@
   "MenuPath": null,
   "MenuIcon": null,
   "ResourceVersion": 1,
-  "__references": [
-    "ambi.myog"
-  ],
+  "__references": [],
   "__version": 1
 }

@@ -212,6 +212,12 @@
           "KeyboardCode": "enter",
           "GamepadCode": "None",
           "GroupName": "Other"
+        },
+        {
+          "Name": "See_own_model",
+          "KeyboardCode": "F4",
+          "GamepadCode": "None",
+          "GroupName": "Other"
         }
       ],
       "__guid": "d8660094-bad3-46c5-b5b0-cef69421ba5c"

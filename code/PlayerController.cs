@@ -234,7 +234,7 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
             {
 				if(c.Name.StartsWith("Clothing"))
                 {
-                    c.Enabled = true;//Ragdoll.IsRagdolled;
+                    c.Enabled = false;//Ragdoll.IsRagdolled;
                     c.Components.Get<SkinnedModelRenderer>(true).RenderType = Sandbox.ModelRenderer.ShadowRenderType.ShadowsOnly;
                 }                
             }
@@ -242,7 +242,13 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 		}
 			
 		ModelRenderer.SetBodyGroup( "head", IsProxy ? 0 : 1 );
-		ModelRenderer.Enabled = SeeOwnModel;
+		ModelRenderer.SetBodyGroup( "chest", IsProxy ? 0 : 1 );
+		ModelRenderer.SetBodyGroup( "legs", IsProxy ? 0 : 1 );
+		ModelRenderer.SetBodyGroup( "hands", IsProxy ? 0 : 1 );
+		ModelRenderer.SetBodyGroup( "feet", IsProxy ? 0 : 1 );
+		ModelRenderer.Enabled = !IsProxy ? true : SeeOwnModel;
+
+
 
 		if ( Ragdoll.IsRagdolled )
 		{
@@ -258,10 +264,18 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 			shadowRenderer.Enabled = true;
 		}
 
-		foreach ( var c in clothingComponents )
+		foreach ( var c in clothing )
 		{
 			//c.ModelRenderer.Enabled = true;
-			//c.Enabled = true;
+			//c.Enabled = !IsProxy ? true : SeeOwnModel;
+			//TODO: c'est presque sa
+			if(c.Name.StartsWith("Clothing"))
+			{
+				c.Enabled = !SeeOwnModel;
+				c.Components.Get<SkinnedModelRenderer>(true).RenderType = IsProxy
+					? Sandbox.ModelRenderer.ShadowRenderType.On
+					: Sandbox.ModelRenderer.ShadowRenderType.ShadowsOnly;
+			}
             //ClothingComponent
             //Log.Info("cat" + c.Components.Get<ClothingComponent>(true).Category);
 
@@ -271,6 +285,11 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
                 //c.Components.Get<SkinnedModelRenderer>(true).RenderType = IsProxy ? Sandbox.ModelRenderer.ShadowRenderType.On : Sandbox.ModelRenderer.ShadowRenderType.ShadowsOnly;
 				//c.ModelRenderer.RenderType = IsProxy ? Sandbox.ModelRenderer.ShadowRenderType.On : Sandbox.ModelRenderer.ShadowRenderType.ShadowsOnly;
             //}
+		}
+
+		foreach ( var c in clothingShadow )
+		{
+			c.Components.Get<SkinnedModelRenderer>(true).RenderType = Sandbox.ModelRenderer.ShadowRenderType.ShadowsOnly;
 		}
 	}
 
@@ -438,6 +457,13 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 
 		DoCrouchingInput();
 		DoMovementInput();
+		
+		if (Input.Pressed("See_own_model"))
+		{
+			Log.Info("see own");
+			SeeOwnModel = !SeeOwnModel;
+		} 
+
 
 		if ( Input.MouseWheel.y > 0 )
 			Weapons.Next();
