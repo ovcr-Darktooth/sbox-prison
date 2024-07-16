@@ -46,6 +46,7 @@ public sealed class SDFGun : Component
 				//_ = Subtract()
 			if (nextDestroy <= 0f)
 			{
+				enchantsCalc();
 				SubtractCube();
 				nextDestroy = 0.075f;
 			}
@@ -78,6 +79,36 @@ public sealed class SDFGun : Component
 		await World.SubtractAsync(cube);
 	}*/
 
+	public void enchantsCalc()
+	{
+		Random random = new Random();
+
+        // Générer un nombre aléatoire entre 0 et 1
+        double randomValue = random.NextDouble() * 100;
+
+        // Formater le nombre avec 6 chiffres après la virgule
+        string formattedValue = randomValue.ToString("F6");
+
+        // Convertir le format string en double pour obtenir la précision requise
+        double preciseValue = double.Parse(formattedValue);
+
+		Log.Info(preciseValue);
+		
+
+		double jackHammerChance = GameObject.Components.Get<Enchantments>().getChanceOfEnchant(Enchants.Jackhammer);
+		Log.Info(jackHammerChance);
+
+		if (preciseValue < jackHammerChance)
+		{
+			SubtractLayer();
+			Log.Info("Jackhammer proc !");
+		}
+		else
+			Log.Info("Pas de chance");
+		
+		//GameObject.Components.Get<Enchantments>().getChanceOfEnum(Enchants.Jackhammer);
+	}
+
 	//[Broadcast]
 	public void SubtractCube()
 	{	
@@ -102,5 +133,25 @@ public sealed class SDFGun : Component
 		//World.SubtractAsync(cube);
 			//Scene.GetAllComponents<MineComponent>().Where()
 		//Scene.GetAllComponents<MineComponent>().FirstOrDefault().RemoveCube(position);
+	}
+
+	public void SubtractLayer()
+	{
+		var tr = Scene.Trace.Ray(Scene.Camera.ScreenNormalToRay(0.5f), 200).WithoutTags("player").Run();
+		int lastUnderscoreIndex = tr.GameObject.Name.LastIndexOf('_');
+		ReadOnlySpan<char> span = tr.GameObject.Name.AsSpan(lastUnderscoreIndex + 1);
+		string result = span.ToString();
+		if (tr.Hit && Scene.GetAllObjects(true).Where(go => go.Name == "Mine_"+result).FirstOrDefault().IsValid())
+		{			
+			Mine = Scene.GetAllObjects(true).Where(go => go.Name == "Mine_"+result).FirstOrDefault().Components.Get<MineComponent>();
+
+			Vector3 hitPosition = tr.HitPosition;
+			Vector3 normal = tr.Normal; // Utiliser la normale fournie par le tracé
+			Vector3 adjustPosition = hitPosition - normal * (32f/2) + Vector3.Down * 16f;  // Ajuster la position dans la direction de la normale (demi-taille du cube)
+			
+			// Arrondir la position ajustée à la grille
+			Vector3 snappedPosition = adjustPosition.SnapToGrid(32f);
+			Mine.RemoveLayer(snappedPosition);
+		}
 	}
 }

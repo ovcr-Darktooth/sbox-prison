@@ -122,7 +122,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().OnTriggerEnter = this.OnInsideMineTriggerEnter;
 			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().OnTriggerExit = this.OnInsideMineTriggerExit;
 
-			int hauteurPanel = 150;
+			int hauteurPanel = 125;
 			Panel_Left.Transform.Position =  new Vector3(Transform.Position.x + Longueur*blockSize/2, Transform.Position.y, entityEnd.Transform.Position.z + hauteurPanel);
 			Panel_Right.Transform.Position = new Vector3(Transform.Position.x + Longueur*blockSize/2, Transform.Position.y + Largeur*blockSize, entityEnd.Transform.Position.z + hauteurPanel);
 			Panel_Front.Transform.Position = new Vector3(Transform.Position.x, Transform.Position.y + Largeur*blockSize/ 2, entityEnd.Transform.Position.z + hauteurPanel);
@@ -161,6 +161,20 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 		}
 	}
 
+	[Broadcast]
+	public void RemoveLayer(Vector3 pos)
+	{
+		if (!IsProxy)
+		{
+			//var cube = new BoxSdf3D(Vector3.Zero, 32f, 0f).Transform(pos);
+			Vector3 layerPos = new Vector3(entityEnd.Transform.Position.x, entityStart.Transform.Position.y, pos.z);
+			var cube = new BoxSdf3D(Vector3.Zero, 32f*Longueur*Largeur, 0f).Transform(layerPos);
+			mineWorld.SubtractAsync(cube, mineVolume);
+		}
+	}
+
+
+
 	protected override void OnUpdate()
 	{
 		base.OnUpdate();
@@ -172,7 +186,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
   			Gizmo.Draw.LineThickness = 3;
 			Gizmo.Draw.Line(posTrace.StartPosition, posTrace.EndPosition);
 			
-			if (timeSinceReset > 300f) // 60* 5 = 300
+			if (timeSinceReset > 300f) // 60 * 5 = 300
 			{
 				resetMine();
 				timeSinceReset = 0;
@@ -208,6 +222,11 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 			Log.Info(collider.GameObject.Name);
 			playersAround.Add(collider.GameObject.Name,collider.GameObject);
 			mineWorld.Enabled = true;
+			
+			Panel_Left.nbPlayers = playersAround.Count;
+			Panel_Right.nbPlayers = playersAround.Count;
+			Panel_Front.nbPlayers = playersAround.Count;
+			Panel_Back.nbPlayers = playersAround.Count;
 		}
 	}
 
@@ -219,6 +238,11 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 			Log.Info(collider.GameObject.Name);
 			playersAround.Remove(collider.GameObject.Name);
 			mineWorld.Enabled = false;
+
+			Panel_Left.nbPlayers = playersAround.Count;
+			Panel_Right.nbPlayers = playersAround.Count;
+			Panel_Front.nbPlayers = playersAround.Count;
+			Panel_Back.nbPlayers = playersAround.Count;
 		}
 	}
 

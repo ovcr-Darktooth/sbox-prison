@@ -11,6 +11,7 @@
         "__type": "MineComponent",
         "__guid": "899fde26-6cc2-4c10-8441-23350a207c79",
         "idMine": 0,
+        "LevelMine": 1,
         "mineVolume": "sdfvol/box.sdfvol",
         "Panel_Back": {
           "_type": "component",
@@ -101,7 +102,8 @@
           {
             "__type": "NameTagPanel",
             "__guid": "a484818c-1d67-40c8-aa4a-9f6299ef96d9",
-            "Name": "Undefined text",
+            "Level": "Undefined rank",
+            "nbPlayers": -1,
             "Percentage": -1
           },
           {
@@ -110,7 +112,7 @@
             "HorizontalAlign": "Center",
             "InteractionRange": 1000,
             "LookAtCamera": true,
-            "PanelSize": "1024,512",
+            "PanelSize": "2500,1500",
             "RenderScale": 3,
             "VerticalAlign": "Center"
           }
@@ -128,7 +130,8 @@
           {
             "__type": "NameTagPanel",
             "__guid": "e1354efe-d295-4160-b7e2-524ce5b71357",
-            "Name": "Undefined text",
+            "Level": "Undefined rank",
+            "nbPlayers": -1,
             "Percentage": -1
           },
           {
@@ -137,7 +140,7 @@
             "HorizontalAlign": "Center",
             "InteractionRange": 1000,
             "LookAtCamera": true,
-            "PanelSize": "1024,512",
+            "PanelSize": "2500,1500",
             "RenderScale": 3,
             "VerticalAlign": "Center"
           }
@@ -155,7 +158,8 @@
           {
             "__type": "NameTagPanel",
             "__guid": "4fc9fade-188d-46e6-8110-2e51ae5e8656",
-            "Name": "Undefined text",
+            "Level": "Undefined rank",
+            "nbPlayers": -1,
             "Percentage": -1
           },
           {
@@ -164,7 +168,7 @@
             "HorizontalAlign": "Center",
             "InteractionRange": 1000,
             "LookAtCamera": true,
-            "PanelSize": "1024,512",
+            "PanelSize": "2500,1500",
             "RenderScale": 3,
             "VerticalAlign": "Center"
           }
@@ -182,7 +186,8 @@
           {
             "__type": "NameTagPanel",
             "__guid": "af4dc297-16fa-4b7f-ad8b-e773464b1c16",
-            "Name": "Undefined text",
+            "Level": "Undefined rank",
+            "nbPlayers": -1,
             "Percentage": -1
           },
           {
@@ -191,13 +196,14 @@
             "HorizontalAlign": "Center",
             "InteractionRange": 1000,
             "LookAtCamera": true,
-            "PanelSize": "1024,512",
+            "PanelSize": "2500,1500",
             "RenderScale": 3,
             "VerticalAlign": "Center"
           }
         ]
       }
-    ]
+    ],
+    "__variables": []
   },
   "ShowInMenu": false,
   "MenuPath": null,
