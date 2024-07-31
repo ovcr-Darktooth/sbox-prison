@@ -4,8 +4,6 @@
     "Flags": 0,
     "Name": "mine",
     "Enabled": true,
-    "NetworkMode": 2,
-    "NetworkInterpolation": true,
     "Components": [
       {
         "__type": "MineComponent",
@@ -59,8 +57,6 @@
         "Flags": 0,
         "Name": "Around",
         "Enabled": true,
-        "NetworkMode": 2,
-        "NetworkInterpolation": true,
         "Components": [
           {
             "__type": "Sandbox.BoxCollider",
@@ -77,15 +73,13 @@
         "Flags": 0,
         "Name": "Inside",
         "Enabled": true,
-        "NetworkMode": 2,
-        "NetworkInterpolation": true,
         "Components": [
           {
             "__type": "Sandbox.BoxCollider",
             "__guid": "333d4a4d-09e8-4fde-b209-9345de693d35",
             "Center": "0,0,0",
             "IsTrigger": true,
-            "Scale": "50,50,50",
+            "Scale": "1,1,1",
             "Static": false
           }
         ]
@@ -96,8 +90,6 @@
         "Name": "Panel_Left",
         "Position": "-16.01869,106.6034,-50.88832",
         "Enabled": true,
-        "NetworkMode": 2,
-        "NetworkInterpolation": true,
         "Components": [
           {
             "__type": "NameTagPanel",
@@ -124,8 +116,6 @@
         "Name": "Panel_Right",
         "Position": "-16.01869,106.6034,-50.88832",
         "Enabled": true,
-        "NetworkMode": 2,
-        "NetworkInterpolation": true,
         "Components": [
           {
             "__type": "NameTagPanel",
@@ -152,8 +142,6 @@
         "Name": "Panel_Front",
         "Position": "-16.01869,106.6034,-50.88832",
         "Enabled": true,
-        "NetworkMode": 2,
-        "NetworkInterpolation": true,
         "Components": [
           {
             "__type": "NameTagPanel",
@@ -180,8 +168,6 @@
         "Name": "Panel_Back",
         "Position": "-91.09657,314.0035,-182.3756",
         "Enabled": true,
-        "NetworkMode": 2,
-        "NetworkInterpolation": true,
         "Components": [
           {
             "__type": "NameTagPanel",
@@ -209,6 +195,8 @@
   "MenuPath": null,
   "MenuIcon": null,
   "ResourceVersion": 1,
-  "__references": [],
+  "__references": [
+    "ambi.myog"
+  ],
   "__version": 1
 }

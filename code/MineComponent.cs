@@ -32,6 +32,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	public int LevelMine { get; set; } = 1;
 	public float ActualPercent {get;set;}
 	public float ResetPercent { get; } = 40f;
+	public float blocsRestants {get;set;}
 
 	private int LastModificationCount = 0;
 	//public List<MineBlockLines> MineBlockLines { get; set; }
@@ -60,6 +61,8 @@ public sealed class MineComponent : Component, Component.ITriggerListener
     // Taille d'un bloc
     private float blockSizeF = 32f;
 	private int blockSize = 32;
+
+	private float blockSizeV = 50f;
 
 	private Vector3 gizmoTest = Vector3.Zero;
 
@@ -107,6 +110,8 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 			Log.Info( $"Largeur finale : {Largeur}" );
 			Log.Info( $"NbBlocs:  {Hauteur * Longueur * Largeur}");
 
+			blocsRestants = Hauteur * Longueur * Largeur;
+
 			if (idMine != 0)
 				_ = regenMine();
 
@@ -117,8 +122,8 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 			Components.GetInChildren<BoxCollider>().OnTriggerEnter = this.OnAroundMineTriggerEnter;
 			Components.GetInChildren<BoxCollider>().OnTriggerExit = this.OnAroundMineTriggerExit;
 
-			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().Transform.Position = (entityStart.Transform.Position + entityEnd.Transform.Position) / 2;
-			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().Scale = new Vector3(Longueur*32f,Largeur*32f,Hauteur*32f);
+			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().Transform.Position = (entityStart.Transform.Position + entityEnd.Transform.Position) / 2 ;//- (Vector3.Up * 32f);
+			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().Scale = new Vector3(Longueur*blockSizeV, Largeur*blockSizeV, Hauteur*blockSizeV);
 			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().OnTriggerEnter = this.OnInsideMineTriggerEnter;
 			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().OnTriggerExit = this.OnInsideMineTriggerExit;
 
@@ -158,6 +163,8 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 			//mineWorld.Network.TakeOwnership();
 			var cube = new BoxSdf3D(Vector3.Zero, 32f, 0f).Transform(pos);
 			mineWorld.SubtractAsync(cube, mineVolume);
+
+			blocsRestants = blocsRestants - 1;
 		}
 	}
 
@@ -168,8 +175,10 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 		{
 			//var cube = new BoxSdf3D(Vector3.Zero, 32f, 0f).Transform(pos);
 			Vector3 layerPos = new Vector3(entityEnd.Transform.Position.x, entityStart.Transform.Position.y, pos.z);
-			var cube = new BoxSdf3D(Vector3.Zero, 32f*Longueur*Largeur, 0f).Transform(layerPos);
+			var cube = new BoxSdf3D(Vector3.Zero, new Vector3(Largeur*32f,Longueur*32f,32f), 0f).Transform(layerPos);
 			mineWorld.SubtractAsync(cube, mineVolume);
+
+			blocsRestants = blocsRestants - (Largeur * Longueur);
 		}
 	}
 
@@ -218,8 +227,8 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	{
 		if (!playersAround.ContainsKey(collider.GameObject.Name) && collider.GameObject.Tags.Has("player"))
 		{
-			Log.Info("Enter");
-			Log.Info(collider.GameObject.Name);
+			/*Log.Info("Enter");
+			Log.Info(collider.GameObject.Name);*/
 			playersAround.Add(collider.GameObject.Name,collider.GameObject);
 			mineWorld.Enabled = true;
 			
@@ -234,8 +243,8 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	{
 		if (playersAround.ContainsKey(collider.GameObject.Name))
 		{
-			Log.Info("Exit");
-			Log.Info(collider.GameObject.Name);
+			/*Log.Info("Exit");
+			Log.Info(collider.GameObject.Name);*/
 			playersAround.Remove(collider.GameObject.Name);
 			mineWorld.Enabled = false;
 
@@ -282,8 +291,10 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	{
 		if (idMine != 0)
 		{
-			var cube = new BoxSdf3D(Vector3.Zero, new Vector3(Longueur*blockSizeF,Largeur*blockSizeF,Hauteur*blockSizeF), 0f).Transform(Transform.Position);
+			var cube = new BoxSdf3D(Vector3.Zero, new Vector3(Longueur*blockSizeF, Largeur*blockSizeF, Hauteur*blockSizeF), 0f).Transform(Transform.Position);
 			await mineWorld.AddAsync(cube, mineVolume);
+
+			
 		}
 	}
 
@@ -294,9 +305,9 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 		teleportPlayers();
 
 		//Regen mine
-		_ = regenMine();			
+		_ = regenMine();
 
-		LastModificationCount = mineWorld.ModificationCount;
+		blocsRestants = Hauteur * Longueur * Largeur;
 		ActualPercent = 100f;
 	}
 
@@ -318,9 +329,8 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	{
 		if (mineWorld.IsValid())
 		{
-			ActualPercent = mineWorld.ModificationCount - LastModificationCount;
-			ActualPercent = 100f - (ActualPercent / (Hauteur * Longueur * Largeur) * 100f);
-			//Log.Info($"[Mine:{idMine}] % of blocks remaining: {ActualPercent}");
+			ActualPercent = (blocsRestants / (Hauteur * Longueur * Largeur) * 100f);
+			Log.Info($"[Mine:{idMine}] % of blocks remaining: {ActualPercent}");
 
 			if (ActualPercent < ResetPercent)	
 				resetMine();

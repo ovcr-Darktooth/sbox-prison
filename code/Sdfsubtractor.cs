@@ -2,6 +2,7 @@ using Sandbox;
 using Sandbox.Sdf;
 using System;
 using System.Linq;
+using System.Numerics;
 using System.Threading.Tasks;
 public sealed class SDFGun : Component
 {
@@ -32,10 +33,29 @@ public sealed class SDFGun : Component
 			// Arrondir la position ajustée à la grille
 			Vector3 snappedPosition = adjustPosition.SnapToGrid(32f);
 			//Gizmo.Transform = new Transform(tr.HitPosition.SnapToGrid(32) + Vector3.Down * 32f, Rotation.Identity);
+
 			Gizmo.Transform = new Transform(snappedPosition, Rotation.Identity);
 			Gizmo.Draw.Color = buildMode ? Color.Green : Color.Red;
-			//Gizmo.Draw.LineSphere(Vector3.Zero, 50f);
+				//Gizmo.Draw.LineSphere(Vector3.Zero, 50f);
 			Gizmo.Draw.LineBBox(BBox.FromHeightAndRadius(32f,16f));
+
+			var trace = Scene.Trace.Ray(Scene.Camera.ScreenNormalToRay(0.5f), 200).WithoutTags("player").Run();
+			int lastUnderscoreIndex = trace.GameObject.Name.LastIndexOf('_');
+			ReadOnlySpan<char> span = trace.GameObject.Name.AsSpan(lastUnderscoreIndex + 1);
+			string result = span.ToString();
+			if (trace.Hit && Scene.GetAllObjects(true).Where(go => go.Name == "Mine_"+result).FirstOrDefault().IsValid())
+			{			
+				Mine = Scene.GetAllObjects(true).Where(go => go.Name == "Mine_"+result).FirstOrDefault().Components.Get<MineComponent>();
+
+				Vector3 layerPos = new Vector3(Mine.entityEnd.Transform.Position.x, Mine.entityStart.Transform.Position.y, snappedPosition.z);
+				//var cube = new BoxSdf3D(Vector3.Zero, new Vector3(Mine.Largeur,Mine.Longueur,32f), 0f).Transform(layerPos);
+
+				var bboxtest = new BBox(Vector3.Zero, new Vector3(Mine.Largeur*32f,Mine.Longueur*32f,32f));
+
+				Gizmo.Transform = new Transform(layerPos, Rotation.Identity);
+				Gizmo.Draw.Color =  Color.Blue;
+				Gizmo.Draw.LineBBox(bboxtest);
+			}
 		}
 
 		if (Input.Down("attack1") && !IsProxy && tr.Hit)
@@ -92,19 +112,17 @@ public sealed class SDFGun : Component
         // Convertir le format string en double pour obtenir la précision requise
         double preciseValue = double.Parse(formattedValue);
 
-		Log.Info(preciseValue);
+		//Log.Info(preciseValue);
 		
 
 		double jackHammerChance = GameObject.Components.Get<Enchantments>().getChanceOfEnchant(Enchants.Jackhammer);
-		Log.Info(jackHammerChance);
+		//Log.Info(jackHammerChance);
 
 		if (preciseValue < jackHammerChance)
 		{
 			SubtractLayer();
 			Log.Info("Jackhammer proc !");
 		}
-		else
-			Log.Info("Pas de chance");
 		
 		//GameObject.Components.Get<Enchantments>().getChanceOfEnum(Enchants.Jackhammer);
 	}
@@ -152,6 +170,9 @@ public sealed class SDFGun : Component
 			// Arrondir la position ajustée à la grille
 			Vector3 snappedPosition = adjustPosition.SnapToGrid(32f);
 			Mine.RemoveLayer(snappedPosition);
+
+
+			
 		}
 	}
 }
