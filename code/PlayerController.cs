@@ -21,7 +21,7 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 	
 	[Property] private CitizenAnimationHelper ShadowAnimator { get; set; }
 	[Property] public WeaponContainer Weapons { get; set; }
-	[Property] public CameraComponent ViewModelCamera { get; set; }
+	[Property] public CameraComponent ViewModelCamera { get; set; } 
 	[Property] public GameObject ViewModelRoot { get; set; }
 	[Property] public AmmoContainer Ammo { get; set; }
 	[Property] public GameObject Head { get; set; }
@@ -297,7 +297,8 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 	{
 		base.OnPreRender();
 
-		if ( !Scene.IsValid() || !Scene.Camera.IsValid() )
+		//if ( !Scene.IsValid() || !Scene.Camera.IsValid() )
+		if ( !Scene.IsValid() || !ViewModelCamera.IsValid() )
 			return;
 
 		UpdateModelVisibility();
@@ -310,8 +311,10 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 
 		if ( Ragdoll.IsRagdolled )
 		{
-			Scene.Camera.Transform.Position = Scene.Camera.Transform.Position.LerpTo( Eye.Transform.Position, Time.Delta * 32f );
-			Scene.Camera.Transform.Rotation = Rotation.Lerp( Scene.Camera.Transform.Rotation, Eye.Transform.Rotation, Time.Delta * 16f );
+			ViewModelCamera.Transform.Position = ViewModelCamera.Transform.Position.LerpTo( Eye.Transform.Position, Time.Delta * 32f );
+			ViewModelCamera.Transform.Rotation  = Rotation.Lerp( ViewModelCamera.Transform.Rotation, Eye.Transform.Rotation, Time.Delta * 16f );
+			//Scene.Camera.Transform.Position = Scene.Camera.Transform.Position.LerpTo( Eye.Transform.Position, Time.Delta * 32f );
+			//Scene.Camera.Transform.Rotation = Rotation.Lerp( Scene.Camera.Transform.Rotation, Eye.Transform.Rotation, Time.Delta * 16f );
 			return;
 		}
 
@@ -335,7 +338,7 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 		var deployedWeapon = Weapons.Deployed;
 		var hasViewModel = deployedWeapon.IsValid() && deployedWeapon.HasViewModel;
 
-		if ( hasViewModel )
+		/*if ( hasViewModel )
 			Scene.Camera.Transform.Position = Head.Transform.Position;
 		else
 			Scene.Camera.Transform.Position = trace.Hit ? trace.EndPosition : idealEyePos;
@@ -343,7 +346,17 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 		if ( SicknessMode )
 			Scene.Camera.Transform.Rotation = Rotation.LookAt( Eye.Transform.Rotation.Left ) * Rotation.FromPitch( -10f );
 		else
-			Scene.Camera.Transform.Rotation = EyeAngles.ToRotation() * Rotation.FromPitch( -10f );
+			Scene.Camera.Transform.Rotation = EyeAngles.ToRotation() * Rotation.FromPitch( -10f );*/
+
+		if ( hasViewModel )
+			ViewModelCamera.Transform.Position = Head.Transform.Position;
+		else
+			ViewModelCamera.Transform.Position = trace.Hit ? trace.EndPosition : idealEyePos;
+		
+		if ( SicknessMode )
+			ViewModelCamera.Transform.Rotation = Rotation.LookAt( Eye.Transform.Rotation.Left ) * Rotation.FromPitch( -10f );
+		else
+			ViewModelCamera.Transform.Rotation = EyeAngles.ToRotation() * Rotation.FromPitch( -10f );
 	}
 
 	protected override void OnUpdate()
@@ -511,6 +524,13 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 		Transform.Position = randomSpawnpoint.Transform.Position;
 		Transform.Rotation = Rotation.FromYaw( randomSpawnpoint.Transform.Rotation.Yaw() );
 		EyeAngles = Transform.Rotation;
+	}
+
+	[Authority]
+	public void tpAbove(int positionAbove) 
+	{
+		if (!IsProxy)
+			Transform.Position = new Vector3(Transform.Position.x, Transform.Position.y, Transform.Position.z + positionAbove);
 	}
 
 	private void BuildWishVelocity()

@@ -21,7 +21,7 @@
     "PerMapRanking": false,
     "LeaderboardType": "None",
     "CsProjName": "",
-    "StartupScene": "scenes/untitled9.scene",
+    "StartupScene": "scenes/dev.scene",
     "ControlModes": {
       "Keyboard": true
     },

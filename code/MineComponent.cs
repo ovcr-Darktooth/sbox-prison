@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Sandbox.Sdf;
 using System.Numerics;
+using Facepunch.Arena;
 
 
 public sealed class MineComponent : Component, Component.ITriggerListener
@@ -34,7 +35,6 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	public float ResetPercent { get; } = 40f;
 	public float blocsRestants {get;set;}
 
-	private int LastModificationCount = 0;
 	//public List<MineBlockLines> MineBlockLines { get; set; }
 	public string BlockMaterial { get; set; }
 	//AxeX(Rouge)
@@ -195,7 +195,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
   			Gizmo.Draw.LineThickness = 3;
 			Gizmo.Draw.Line(posTrace.StartPosition, posTrace.EndPosition);
 			
-			if (timeSinceReset > 300f) // 60 * 5 = 300
+			if (timeSinceReset > 20f) // 60 * 5 = 300
 			{
 				resetMine();
 				timeSinceReset = 0;
@@ -259,8 +259,8 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	{
 		if (!playersInside.ContainsKey(collider.GameObject.Name) && collider.GameObject.Tags.Has("player"))
 		{
-			/*Log.Info("Enter");
-			Log.Info(collider.GameObject.Name);*/
+			Log.Info("Enter");
+			Log.Info(collider.GameObject.Name);
 			playersInside.Add(collider.GameObject.Name,collider.GameObject);
 		}
 	}
@@ -292,9 +292,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 		if (idMine != 0)
 		{
 			var cube = new BoxSdf3D(Vector3.Zero, new Vector3(Longueur*blockSizeF, Largeur*blockSizeF, Hauteur*blockSizeF), 0f).Transform(Transform.Position);
-			await mineWorld.AddAsync(cube, mineVolume);
-
-			
+			await mineWorld.AddAsync(cube, mineVolume);	
 		}
 	}
 
@@ -311,18 +309,11 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 		ActualPercent = 100f;
 	}
 
-	//[Broadcast]
+	[Broadcast]
 	public void teleportPlayers()
 	{		
 		foreach (KeyValuePair<string, GameObject> entry in playersInside)
-		{
-			if (!IsProxy && !entry.Value.Network.IsProxy)
-			{
-				//Log.Info(entry.Value.Transform.Position);
-				entry.Value.Transform.Position = new Vector3(entry.Value.Transform.Position.x,entry.Value.Transform.Position.y, entityEnd.Transform.Position.z + 450);
-				//Log.Info(entry.Value.Transform.Position);
-			}				
-		}		
+			entry.Value.Components.Get<PlayerController>().tpAbove(350);
 	}
 
 	public void updateMinePercentage() 

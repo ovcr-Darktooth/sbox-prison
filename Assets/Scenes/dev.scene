@@ -1,5 +1,5 @@
 {
-  "__guid": "5d91d9be-19df-44e7-8631-a3308d6951a9",
+  "__guid": "05f51141-1fe9-45a8-a5a3-eab3343371c3",
   "GameObjects": [
     {
       "__guid": "af4a1561-96b5-43ce-b42e-c73182de216b",
@@ -2209,160 +2209,6 @@
           "__guid": "42fe2210-2c2b-43e6-bfc8-828b26779906"
         }
       ]
-    },
-    {
-      "__guid": "fdfe6abb-99e2-4220-a9a4-40f21362de20",
-      "Flags": 0,
-      "Name": "Camera",
-      "Position": "-20.34279,807.7991,-5.339451",
-      "Rotation": "0.02498195,0.003467371,-0.9901899,0.1374334",
-      "Enabled": true,
-      "Components": [
-        {
-          "__type": "Sandbox.CameraComponent",
-          "__guid": "afbbfcbc-3683-4882-aba7-ea535dbdfff6",
-          "BackgroundColor": "0.33333,0.46275,0.52157,1",
-          "ClearFlags": "All",
-          "FieldOfView": 120,
-          "IsMainCamera": true,
-          "Orthographic": false,
-          "OrthographicHeight": 1204,
-          "Priority": 1,
-          "RenderExcludeTags": "viewmodel",
-          "RenderTags": "",
-          "TargetEye": "None",
-          "Viewport": "0,0,1,1",
-          "ZFar": 10000,
-          "ZNear": 0.5
-        },
-        {
-          "__type": "Sandbox.Highlight",
-          "__guid": "881d261f-27a6-4017-b87b-98ce4b2c6f53"
-        },
-        {
-          "__type": "Sandbox.ScreenPanel",
-          "__guid": "6f6110dc-d560-473c-a9be-2dc3c77dea2c",
-          "AutoScreenScale": true,
-          "Opacity": 1,
-          "Scale": 1,
-          "ZIndex": 100
-        },
-        {
-          "__type": "Facepunch.Arena.Scoreboard",
-          "__guid": "b22defcb-fefe-438a-9900-4b3ead017677"
-        },
-        {
-          "__type": "Facepunch.Arena.Chat",
-          "__guid": "c974a936-2e80-48a8-aab7-4caa7ae64bde"
-        },
-        {
-          "__type": "Facepunch.Arena.Hud",
-          "__guid": "476901b1-ad5b-4211-ba03-6e1e9c45fce3"
-        },
-        {
-          "__type": "Sandbox.ChromaticAberration",
-          "__guid": "5e4297ad-28d6-4cf1-8d93-dffc21470d1b",
-          "Offset": "2,4,0",
-          "Scale": 0.2
-        },
-        {
-          "__type": "Sandbox.Bloom",
-          "__guid": "ec4e4fa8-619f-498e-9acf-e4927a22940f",
-          "BloomColor": {
-            "color": [
-              {
-                "c": "1,1,1,1"
-              },
-              {
-                "t": 1,
-                "c": "1,1,1,1"
-              }
-            ],
-            "alpha": []
-          },
-          "BloomCurve": [
-            {
-              "y": 0.5
-            },
-            {
-              "x": 1,
-              "y": 1
-            }
-          ],
-          "Mode": "Additive",
-          "Strength": 0.3,
-          "Threshold": 0.5,
-          "ThresholdWidth": 0
-        },
-        {
-          "__type": "Sandbox.Sharpen",
-          "__guid": "d69cd5a7-e530-4c4f-877c-d54e149136c3",
-          "Scale": 0.2
-        },
-        {
-          "__type": "Sandbox.CubemapFog",
-          "__guid": "f37e6753-c517-4128-b812-7fd53e21008c",
-          "Blur": 0.5,
-          "EndDistance": 4096,
-          "FalloffExponent": 2,
-          "HeightExponent": 2,
-          "HeightStart": 2000,
-          "HeightWidth": 0,
-          "Sky": "materials/error.vmat",
-          "StartDistance": 10,
-          "Tint": "1,1,1,1"
-        },
-        {
-          "__type": "Sandbox.ColorAdjustments",
-          "__guid": "99dc2083-3465-4b66-bc62-668519c1ec6f",
-          "Brightness": 1,
-          "Contrast": 1,
-          "HueRotate": 0,
-          "Saturation": 1
-        },
-        {
-          "__type": "Sandbox.Vignette",
-          "__guid": "6de35305-2389-4082-a2d6-6bcf63648c41",
-          "Center": "0.5,0.5",
-          "Color": "0,0,0,1",
-          "Intensity": 0.47,
-          "Roundness": 0.9,
-          "Smoothness": 0.9
-        },
-        {
-          "__type": "Sandbox.Vignette",
-          "__guid": "82d561a0-9cb0-4331-81a8-c3a302ef4f63",
-          "Center": "0.5,0.5",
-          "Color": "0.64186,0.08956,0.08956,1",
-          "Intensity": 0,
-          "Roundness": 0.75,
-          "Smoothness": 0.95
-        },
-        {
-          "__type": "Facepunch.Arena.HealthEffects",
-          "__guid": "bc6c1380-24e2-4c48-a22f-7763568882b6",
-          "Adjustments": {
-            "_type": "component",
-            "component_id": "99dc2083-3465-4b66-bc62-668519c1ec6f",
-            "go": "fdfe6abb-99e2-4220-a9a4-40f21362de20",
-            "component_type": "ColorAdjustments"
-          }
-        }
-      ]
-    },
-    {
-      "__guid": "bfe06f02-a078-4275-956d-98a7a8b17485",
-      "Flags": 0,
-      "Name": "Object",
-      "Position": "278.3861,0,68.74593",
-      "Enabled": true,
-      "Components": [
-        {
-          "__type": "SDFGun",
-          "__guid": "6accc75e-361d-42f8-9946-557ec9467ed2",
-          "SphereSize": 50
-        }
-      ]
     }
   ],
   "SceneProperties": {
@@ -2386,11 +2232,9 @@
       "IncludedBodies": ""
     }
   },
-  "Title": "untitled8",
+  "Title": "dev",
   "Description": "",
   "ResourceVersion": 1,
-  "__references": [
-    "ambi.myog"
-  ],
+  "__references": [],
   "__version": 1
 }
