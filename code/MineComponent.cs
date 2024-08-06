@@ -311,9 +311,9 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 
 	[Broadcast]
 	public void teleportPlayers()
-	{		
+	{
 		foreach (KeyValuePair<string, GameObject> entry in playersInside)
-			entry.Value.Components.Get<PlayerController>().tpAbove(350);
+			entry.Value.Components.Get<PlayerController>().tpAbove((int)(entityEnd.Transform.Position.z + 350));
 	}
 
 	public void updateMinePercentage() 
