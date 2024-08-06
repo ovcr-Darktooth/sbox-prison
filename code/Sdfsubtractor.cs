@@ -68,11 +68,6 @@ public sealed class SDFGun : Component
 
 			if (Input.Down("attack1") && !IsProxy && tr.Hit)
 			{
-				/*if (buildMode)
-					_ = Add();
-				else*/
-					//_ = Subtract()
-				Log.Info(nextDestroy);
 				if (nextDestroy <= 0f)
 				{
 					enchantsCalc();

@@ -51,12 +51,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	private TimeSince timeSincePercentage = 0;
 
 	// Matrice de données représentant la forme
-    private int[,] shapeMatrix = new int[,]
-    {
-        { 0, 1, 1, 1, 0 },
-        { 0, 0, 0, 0, 0 },
-        { 1, 1, 1, 1, 1 }
-    };
+    private int[,,] shapeMatrix {get; set;}
 
     // Taille d'un bloc
     private float blockSizeF = 32f;
@@ -116,6 +111,20 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 				_ = regenMine();
 
 
+			shapeMatrix = new int[Longueur,Largeur,Hauteur];
+
+			for (int x = 0; x < Longueur; x++)
+			{
+				for (int y = 0; y < Largeur; y++)
+				{
+					for (int z = 0; z < Hauteur; z++)
+					{
+						shapeMatrix[x, y, z] = 1; // Bloc présent
+					}
+				}
+			}
+
+
 			Components.GetInChildren<BoxCollider>().Transform.Position = (entityStart.Transform.Position + entityEnd.Transform.Position) / 2;
 			Components.GetInChildren<BoxCollider>().Scale = (Hauteur + Longueur + Largeur) * 26.5f;
 			//TODO: refaire un autre colliderbox trigger pour vraiment les tp, et utiliser celui la pour donner le status du world a ceux qui sont a cotés
@@ -160,16 +169,91 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	{
 		if (!IsProxy)
 		{
+			// Conversion de la position réelle à l'index de la matrice
+			//int x = (int)(pos.x / blockSize);
+			//int y = (int)(pos.y / blockSize);
+			//int z = (int)(pos.z / blockSize);
+
+			int x = (int)((entityStart.Transform.Position.x - pos.x ) / blockSize);
+			int y = (int)((pos.y - entityStart.Transform.Position.y) / blockSize);
+			int z = (int)((pos.z - entityStart.Transform.Position.z) / blockSize);
+
+			//Log.Info($"Suppresion bloc xyz {x}/{y}/{z}");
+
+			// Vérifier les limites de la matrice pour éviter les erreurs d'index
+			if (x >= 0 && x < Longueur && y >= 0 && y < Largeur && z >= 0 && z < Hauteur && x < shapeMatrix.GetLength(0) && y < shapeMatrix.GetLength(1) && z < shapeMatrix.GetLength(2))
+			{
+				// Vérifier s'il y a encore un bloc à cet endroit
+				if (shapeMatrix[x, y, z] == 1)
+				{
+					// Mise à jour de la matrice et décrémentation du compteur de blocs
+					shapeMatrix[x, y, z] = 0;
+					blocsRestants--;
+
+					// Logique pour la suppression visuelle du bloc
+					var cube = new BoxSdf3D(Vector3.Zero, 32f, 0f).Transform(pos);
+					mineWorld.SubtractAsync(cube, mineVolume);
+				}
+			}
+		}
+	}
+	/*public void RemoveCube(Vector3 pos)
+	{
+		if (!IsProxy)
+		{
 			//mineWorld.Network.TakeOwnership();
 			var cube = new BoxSdf3D(Vector3.Zero, 32f, 0f).Transform(pos);
 			mineWorld.SubtractAsync(cube, mineVolume);
 
 			blocsRestants = blocsRestants - 1;
 		}
-	}
+	}*/
 
 	[Broadcast]
 	public void RemoveLayer(Vector3 pos)
+{
+    if (!IsProxy)
+    {
+        // Position de départ de la mine
+        Vector3 start = entityStart.Transform.Position;
+
+        // Conversion de la position réelle à l'index de la matrice pour la coordonnée z
+        int z = (int)((pos.z - start.z) / blockSize);
+
+        //Log.Info($"Suppression de la couche z {z}");
+
+		int compteBlocsSupp = 0;
+
+        // Vérifier les limites de la matrice pour éviter les erreurs d'index
+        if (z >= 0 && z < shapeMatrix.GetLength(2))
+        {
+            // Parcourir tous les blocs dans la couche z et les supprimer
+            for (int x = 0; x < shapeMatrix.GetLength(0); x++)
+            {
+                for (int y = 0; y < shapeMatrix.GetLength(1); y++)
+                {
+                    // Vérifier s'il y a encore un bloc à cet endroit
+                    if (shapeMatrix[x, y, z] == 1)
+                    {
+                        // Mise à jour de la matrice et décrémentation du compteur de blocs
+                        shapeMatrix[x, y, z] = 0;
+                        blocsRestants--;
+						compteBlocsSupp++;
+                    }
+                }
+            }
+
+			//Log.Info($"nb blocs supp:{compteBlocsSupp}");
+
+            // Logique pour la suppression visuelle de la couche
+			Vector3 layerPos = new Vector3(entityEnd.Transform.Position.x, entityStart.Transform.Position.y, pos.z);
+            //var cube = new BoxSdf3D(Vector3.Zero, new Vector3(shapeMatrix.GetLength(0) * blockSize, shapeMatrix.GetLength(1) * blockSize, blockSize), 0f).Transform(layerPos);
+			var cube = new BoxSdf3D(Vector3.Zero, new Vector3(Largeur*32f,Longueur*32f,32f), 0f).Transform(layerPos);
+            mineWorld.SubtractAsync(cube, mineVolume);
+        }
+    }
+}
+	/*public void RemoveLayer(Vector3 pos)
 	{
 		if (!IsProxy)
 		{
@@ -180,7 +264,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 
 			blocsRestants = blocsRestants - (Largeur * Longueur);
 		}
-	}
+	}*/
 
 
 
@@ -305,6 +389,17 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 		//Regen mine
 		_ = regenMine();
 
+		for (int x = 0; x < Longueur; x++)
+		{
+			for (int y = 0; y < Largeur; y++)
+			{
+				for (int z = 0; z < Hauteur; z++)
+				{
+					shapeMatrix[x, y, z] = 1; // Bloc présent
+				}
+			}
+		}
+
 		blocsRestants = Hauteur * Longueur * Largeur;
 		ActualPercent = 100f;
 	}
@@ -320,6 +415,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	{
 		if (mineWorld.IsValid())
 		{
+			//Log.Info(blocsRestants);
 			ActualPercent = (blocsRestants / (Hauteur * Longueur * Largeur) * 100f);
 			Log.Info($"[Mine:{idMine}] % of blocks remaining: {ActualPercent}");
 
