@@ -311,7 +311,8 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 
 	[Broadcast]
 	public void teleportPlayers()
-	{
+	{ 
+		Log.Info(entityEnd.Transform.Position.z);
 		foreach (KeyValuePair<string, GameObject> entry in playersInside)
 			entry.Value.Components.Get<PlayerController>().tpAbove((int)(entityEnd.Transform.Position.z + 350));
 	}
