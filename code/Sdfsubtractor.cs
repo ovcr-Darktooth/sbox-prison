@@ -11,10 +11,14 @@ public sealed class SDFGun : Component
 	[Property] public Sdf3DVolume sdf3DVolume { get; set; }
 	[Property] public CameraComponent ViewModelCamera { get; set; } 
 
-	private TimeUntil nextDestroy = 0.1f;
-	
+	private TimeUntil nextDestroy = 0.1f;	
+	public bool buildMode = false; 
 
-	public bool buildMode = false;
+	protected override void OnStart()
+	{
+		base.OnStart();
+		nextDestroy = 0.1f;
+	}
 	protected override void OnUpdate()
 	{
 		if (ViewModelCamera.IsValid())
@@ -68,6 +72,7 @@ public sealed class SDFGun : Component
 					_ = Add();
 				else*/
 					//_ = Subtract()
+				Log.Info(nextDestroy);
 				if (nextDestroy <= 0f)
 				{
 					enchantsCalc();

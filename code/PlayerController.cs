@@ -529,7 +529,6 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 	[Authority]
 	public void tpAbove(int positionAbove) 
 	{
-		Log.Info(positionAbove);
 		if (!IsProxy)
 			Transform.Position = new Vector3(Transform.Position.x, Transform.Position.y, positionAbove);
 	}
