@@ -194,7 +194,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 					var cube = new BoxSdf3D(Vector3.Zero, 32f, 0f).Transform(pos);
 					mineWorld.SubtractAsync(cube, mineVolume);
 				}
-			}
+			} 
 		}
 	}
 	/*public void RemoveCube(Vector3 pos)

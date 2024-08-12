@@ -11,6 +11,8 @@ public sealed class SDFGun : Component
 	[Property] public Sdf3DVolume sdf3DVolume { get; set; }
 	[Property] public CameraComponent ViewModelCamera { get; set; } 
 
+	[Property] public Currencies Currencies { get; set; } 
+
 	private TimeUntil nextDestroy = 0.1f;	
 	public bool buildMode = false; 
 
@@ -72,6 +74,8 @@ public sealed class SDFGun : Component
 				{
 					enchantsCalc();
 					SubtractCube();
+					if (Currencies.IsValid())
+						Currencies.AddCurrency(CurrenciesEnum.Dollars, 3);
 					nextDestroy = 0.075f;
 				}
 			}
@@ -174,9 +178,6 @@ public sealed class SDFGun : Component
 			// Arrondir la position ajustée à la grille
 			Vector3 snappedPosition = adjustPosition.SnapToGrid(32f);
 			Mine.RemoveLayer(snappedPosition);
-
-
-			
 		}
 	}
 }
