@@ -73,9 +73,6 @@ public sealed class SDFGun : Component
 				if (nextDestroy <= 0f)
 				{
 					enchantsCalc();
-					SubtractCube();
-					if (Currencies.IsValid())
-						Currencies.AddCurrency(CurrenciesEnum.Dollars, 3);
 					nextDestroy = 0.075f;
 				}
 			}
@@ -131,6 +128,10 @@ public sealed class SDFGun : Component
 			SubtractLayer();
 			Log.Info("Jackhammer proc !");
 		}
+		else
+		{
+			SubtractCube();
+		}
 		
 		//GameObject.Components.Get<Enchantments>().getChanceOfEnum(Enchants.Jackhammer);
 	}
@@ -143,7 +144,7 @@ public sealed class SDFGun : Component
 		int lastUnderscoreIndex = tr.GameObject.Name.LastIndexOf('_');
 		ReadOnlySpan<char> span = tr.GameObject.Name.AsSpan(lastUnderscoreIndex + 1);
 		string result = span.ToString();
-		if (tr.Hit && Scene.GetAllObjects(true).Where(go => go.Name == "Mine_"+result).FirstOrDefault().IsValid())
+		if (!IsProxy && tr.Hit && Scene.GetAllObjects(true).Where(go => go.Name == "Mine_"+result).FirstOrDefault().IsValid())
 		{			
 			Mine = Scene.GetAllObjects(true).Where(go => go.Name == "Mine_"+result).FirstOrDefault().Components.Get<MineComponent>();
 			//var position = (tr.HitPosition + Vector3.Down * 32f).SnapToGrid(32f);
@@ -154,7 +155,15 @@ public sealed class SDFGun : Component
 			
 			// Arrondir la position ajustée à la grille
 			Vector3 snappedPosition = adjustPosition.SnapToGrid(32f);
+			int nbBlocsSupp = Mine.PreRemoveCube(snappedPosition);
 			Mine.RemoveCube(snappedPosition);
+
+
+			if (Currencies.IsValid() && nbBlocsSupp > 0)
+			{
+				Currencies.AddCurrency(CurrenciesEnum.Dollars, 3 * nbBlocsSupp);
+				Currencies.AddCurrency(CurrenciesEnum.EToken, nbBlocsSupp);
+			}
 		}
 		//World.SubtractAsync(cube);
 			//Scene.GetAllComponents<MineComponent>().Where()
@@ -167,7 +176,7 @@ public sealed class SDFGun : Component
 		int lastUnderscoreIndex = tr.GameObject.Name.LastIndexOf('_');
 		ReadOnlySpan<char> span = tr.GameObject.Name.AsSpan(lastUnderscoreIndex + 1);
 		string result = span.ToString();
-		if (tr.Hit && Scene.GetAllObjects(true).Where(go => go.Name == "Mine_"+result).FirstOrDefault().IsValid())
+		if (!IsProxy && tr.Hit && Scene.GetAllObjects(true).Where(go => go.Name == "Mine_"+result).FirstOrDefault().IsValid())
 		{			
 			Mine = Scene.GetAllObjects(true).Where(go => go.Name == "Mine_"+result).FirstOrDefault().Components.Get<MineComponent>();
 
@@ -177,7 +186,15 @@ public sealed class SDFGun : Component
 			
 			// Arrondir la position ajustée à la grille
 			Vector3 snappedPosition = adjustPosition.SnapToGrid(32f);
+
+			int nbBlocsSupp = Mine.PreRemoveLayer(snappedPosition);
 			Mine.RemoveLayer(snappedPosition);
+
+			if (Currencies.IsValid() && nbBlocsSupp > 0)
+			{
+				Currencies.AddCurrency(CurrenciesEnum.Dollars, 3 * nbBlocsSupp);
+				Currencies.AddCurrency(CurrenciesEnum.EToken, nbBlocsSupp);
+			}
 		}
 	}
 }

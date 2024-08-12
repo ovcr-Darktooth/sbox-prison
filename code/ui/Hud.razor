@@ -8,17 +8,23 @@
 
 <root>
 	@{
-		var weapon = LocalPlayer.Weapons.Deployed;
+		//var weapon = LocalPlayer.Weapons.Deployed;
 	}
 	
-	@if ( weapon.IsValid() && LocalPlayer.LifeState == LifeState.Alive  )
+	@if (LocalPlayer.Currencies.IsValid())
 	{
 		<div class="ammo">
 			@{
-				var totalAmmo = LocalPlayer.Ammo.Get( weapon.AmmoType );
+				var totalDollars = LocalPlayer.Currencies.GetBalance(CurrenciesEnum.Dollars) + LocalPlayer.Currencies.GetCurrencyTextSymbol(CurrenciesEnum.Dollars);
+				var totalEtokens = LocalPlayer.Currencies.GetBalance(CurrenciesEnum.EToken) + LocalPlayer.Currencies.GetCurrencyTextSymbol(CurrenciesEnum.EToken);
 			}
 			
-			<label class="clip">@weapon.AmmoInClip</label>/<label class="total">@totalAmmo</label>
+			<div class="currency dollar">
+                <label>@totalDollars</label>
+            </div>
+            <div class="currency etoken">
+                <label>@totalEtokens</label>
+            </div>
 		</div>
 	}
 	

@@ -164,6 +164,33 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 		await mineWorld.AddAsync(cube, mineVolume);
 	}
 
+	public int PreRemoveCube(Vector3 pos)
+	{
+		int compteBlocsSupp = 0;
+		if (!IsProxy)
+		{
+			// Conversion de la position réelle à l'index de la matrice
+			//int x = (int)(pos.x / blockSize);
+			//int y = (int)(pos.y / blockSize);
+			//int z = (int)(pos.z / blockSize);
+
+			int x = (int)((entityStart.Transform.Position.x - pos.x ) / blockSize);
+			int y = (int)((pos.y - entityStart.Transform.Position.y) / blockSize);
+			int z = (int)((pos.z - entityStart.Transform.Position.z) / blockSize);
+
+			//Log.Info($"Suppresion bloc xyz {x}/{y}/{z}");
+
+			// Vérifier les limites de la matrice pour éviter les erreurs d'index
+			if (x >= 0 && x < Longueur && y >= 0 && y < Largeur && z >= 0 && z < Hauteur && x < shapeMatrix.GetLength(0) && y < shapeMatrix.GetLength(1) && z < shapeMatrix.GetLength(2))
+			{
+				// Vérifier s'il y a encore un bloc à cet endroit
+				if (shapeMatrix[x, y, z] == 1)
+					compteBlocsSupp++;
+			} 
+		}
+		return compteBlocsSupp;
+	}
+
 	[Broadcast]
 	public void RemoveCube(Vector3 pos)
 	{
@@ -209,50 +236,86 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 		}
 	}*/
 
+	public int PreRemoveLayer(Vector3 pos)
+	{
+		int compteBlocsSupp = 0;
+		if (!IsProxy)
+		{
+			// Position de départ de la mine
+			Vector3 start = entityStart.Transform.Position;
+
+			// Conversion de la position réelle à l'index de la matrice pour la coordonnée z
+			int z = (int)((pos.z - start.z) / blockSize);
+
+			//Log.Info($"Suppression de la couche z {z}");
+
+			
+
+			// Vérifier les limites de la matrice pour éviter les erreurs d'index
+			if (z >= 0 && z < shapeMatrix.GetLength(2))
+			{
+				// Parcourir tous les blocs dans la couche z et les supprimer
+				for (int x = 0; x < shapeMatrix.GetLength(0); x++)
+				{
+					for (int y = 0; y < shapeMatrix.GetLength(1); y++)
+					{
+						// Vérifier s'il y a encore un bloc à cet endroit
+						if (shapeMatrix[x, y, z] == 1)
+							compteBlocsSupp++;
+					}
+				}
+
+				//Log.Info($"nb blocs supp:{compteBlocsSupp}");
+			}
+		}
+		return compteBlocsSupp;
+	}
+
 	[Broadcast]
 	public void RemoveLayer(Vector3 pos)
-{
-    if (!IsProxy)
-    {
-        // Position de départ de la mine
-        Vector3 start = entityStart.Transform.Position;
+	{
+		if (!IsProxy)
+		{
+			// Position de départ de la mine
+			Vector3 start = entityStart.Transform.Position;
 
-        // Conversion de la position réelle à l'index de la matrice pour la coordonnée z
-        int z = (int)((pos.z - start.z) / blockSize);
+			// Conversion de la position réelle à l'index de la matrice pour la coordonnée z
+			int z = (int)((pos.z - start.z) / blockSize);
 
-        //Log.Info($"Suppression de la couche z {z}");
+			//Log.Info($"Suppression de la couche z {z}");
 
-		int compteBlocsSupp = 0;
+			int compteBlocsSupp = 0;
 
-        // Vérifier les limites de la matrice pour éviter les erreurs d'index
-        if (z >= 0 && z < shapeMatrix.GetLength(2))
-        {
-            // Parcourir tous les blocs dans la couche z et les supprimer
-            for (int x = 0; x < shapeMatrix.GetLength(0); x++)
-            {
-                for (int y = 0; y < shapeMatrix.GetLength(1); y++)
-                {
-                    // Vérifier s'il y a encore un bloc à cet endroit
-                    if (shapeMatrix[x, y, z] == 1)
-                    {
-                        // Mise à jour de la matrice et décrémentation du compteur de blocs
-                        shapeMatrix[x, y, z] = 0;
-                        blocsRestants--;
-						compteBlocsSupp++;
-                    }
-                }
-            }
+			// Vérifier les limites de la matrice pour éviter les erreurs d'index
+			if (z >= 0 && z < shapeMatrix.GetLength(2))
+			{
+				// Parcourir tous les blocs dans la couche z et les supprimer
+				for (int x = 0; x < shapeMatrix.GetLength(0); x++)
+				{
+					for (int y = 0; y < shapeMatrix.GetLength(1); y++)
+					{
+						// Vérifier s'il y a encore un bloc à cet endroit
+						if (shapeMatrix[x, y, z] == 1)
+						{
+							// Mise à jour de la matrice et décrémentation du compteur de blocs
+							shapeMatrix[x, y, z] = 0;
+							blocsRestants--;
+							compteBlocsSupp++;
+						}
+					}
+				}
 
-			//Log.Info($"nb blocs supp:{compteBlocsSupp}");
+				//Log.Info($"nb blocs supp:{compteBlocsSupp}");
 
-            // Logique pour la suppression visuelle de la couche
-			Vector3 layerPos = new Vector3(entityEnd.Transform.Position.x, entityStart.Transform.Position.y, pos.z);
-            //var cube = new BoxSdf3D(Vector3.Zero, new Vector3(shapeMatrix.GetLength(0) * blockSize, shapeMatrix.GetLength(1) * blockSize, blockSize), 0f).Transform(layerPos);
-			var cube = new BoxSdf3D(Vector3.Zero, new Vector3(Largeur*32f,Longueur*32f,32f), 0f).Transform(layerPos);
-            mineWorld.SubtractAsync(cube, mineVolume);
-        }
-    }
-}
+				// Logique pour la suppression visuelle de la couche
+				Vector3 layerPos = new Vector3(entityEnd.Transform.Position.x, entityStart.Transform.Position.y, pos.z);
+				//var cube = new BoxSdf3D(Vector3.Zero, new Vector3(shapeMatrix.GetLength(0) * blockSize, shapeMatrix.GetLength(1) * blockSize, blockSize), 0f).Transform(layerPos);
+				var cube = new BoxSdf3D(Vector3.Zero, new Vector3(Largeur*32f,Longueur*32f,32f), 0f).Transform(layerPos);
+				mineWorld.SubtractAsync(cube, mineVolume);
+			}
+		}
+	}
+
 	/*public void RemoveLayer(Vector3 pos)
 	{
 		if (!IsProxy)

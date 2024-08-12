@@ -1,16 +1,17 @@
 using System.Collections.Generic;
 using Sandbox;
+using System.Numerics;
 
 public enum CurrenciesEnum
 {
-    Dollars,
+	Dollars,
     EToken
 }
 
 public sealed class Currencies : Component
 {
 
-	public Dictionary<string, decimal> _balances;
+	public Dictionary<string, double> _balances;
 	protected override void OnUpdate()
 	{
 		//DisplayBalances();
@@ -21,14 +22,14 @@ public sealed class Currencies : Component
 		base.OnStart();
 		if (!IsProxy)
 		{
-			_balances = new Dictionary<string, decimal>();
+			_balances = new Dictionary<string, double>();
 
-			AddCurrency(CurrenciesEnum.Dollars, 123);
-			AddCurrency(CurrenciesEnum.EToken, 456);
+			AddCurrency(CurrenciesEnum.Dollars, 0);
+			AddCurrency(CurrenciesEnum.EToken, 0);
 		}
 	}
 
-	public void AddCurrency(CurrenciesEnum currencyEnum, decimal amount)
+	public void AddCurrency(CurrenciesEnum currencyEnum, double amount)
     {
 		if (!IsProxy)
 		{
@@ -40,7 +41,7 @@ public sealed class Currencies : Component
 		}
     }
 
-    public bool WithdrawCurrency(CurrenciesEnum currencyEnum, decimal amount)
+    public bool WithdrawCurrency(CurrenciesEnum currencyEnum, double amount)
     {
 		if (!IsProxy)
 		{
@@ -55,7 +56,7 @@ public sealed class Currencies : Component
 		return false;
     }
 
-    public decimal GetBalance(CurrenciesEnum currencyEnum)
+    public double GetBalance(CurrenciesEnum currencyEnum)
     {
 		string saveDbName = GetCurrencyTextSaveDB(currencyEnum);
         return _balances.ContainsKey(saveDbName) ? _balances[saveDbName] : 0;
@@ -69,7 +70,7 @@ public sealed class Currencies : Component
     }
 
 
-	public static string GetCurrencyTextSymbol(CurrenciesEnum currencyValue)
+	public string GetCurrencyTextSymbol(CurrenciesEnum currencyValue)
 	{
 		switch (currencyValue)
 		{
@@ -82,7 +83,7 @@ public sealed class Currencies : Component
 		}
 	}
 
-	public static string GetCurrencyTextBig(CurrenciesEnum currencyValue)
+	public string GetCurrencyTextBig(CurrenciesEnum currencyValue)
 	{
 		switch (currencyValue)
 		{
@@ -95,7 +96,7 @@ public sealed class Currencies : Component
 		}
 	}
 
-	public static string GetCurrencyTextSaveDB(CurrenciesEnum currencyValue)
+	public string GetCurrencyTextSaveDB(CurrenciesEnum currencyValue)
 	{
 		switch (currencyValue)
 		{

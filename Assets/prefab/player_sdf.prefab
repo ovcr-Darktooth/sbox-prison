@@ -22,6 +22,12 @@
           "component_type": "CitizenAnimationHelper"
         },
         "CrouchSpeed": 90,
+        "Currencies": {
+          "_type": "component",
+          "component_id": "63ac087d-5529-46ef-9bf9-fb83b222f201",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Currencies"
+        },
         "DuckHeight": 28,
         "EnableCrouching": false,
         "Eye": {
@@ -1146,32 +1152,6 @@
         "Enabled": true,
         "Children": [
           {
-            "__guid": "0618b389-d390-4150-9954-7df0065ab393",
-            "Flags": 0,
-            "Name": "ViewModelCamera",
-            "Position": "-21.61395,0,7.888905",
-            "Components": [
-              {
-                "__type": "Sandbox.CameraComponent",
-                "__guid": "8b303a74-b30a-477f-88c0-206ca01dc819",
-                "__enabled": false,
-                "BackgroundColor": "1,1,1,0",
-                "ClearFlags": "Depth, Stencil",
-                "FieldOfView": 90,
-                "IsMainCamera": true,
-                "Orthographic": false,
-                "OrthographicHeight": 1024,
-                "Priority": 2,
-                "RenderExcludeTags": "",
-                "RenderTags": "viewmodel,light",
-                "TargetEye": "None",
-                "Viewport": "0,0,1,1",
-                "ZFar": 10000,
-                "ZNear": 0.1
-              }
-            ]
-          },
-          {
             "__guid": "eac9f9ba-8fe7-42b3-a268-dd9ae033a9a9",
             "Flags": 0,
             "Name": "Camera",
@@ -1343,8 +1323,6 @@
   "MenuPath": null,
   "MenuIcon": null,
   "ResourceVersion": 1,
-  "__references": [
-    "ambi.myog"
-  ],
+  "__references": [],
   "__version": 1
 }

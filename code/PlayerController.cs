@@ -28,6 +28,7 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 	[Property] public GameObject Eye { get; set; }
 	[Property] public CitizenAnimationHelper AnimationHelper { get; set; }
 	[Property] public SoundEvent HurtSound { get; set; }
+	[Property] public Currencies Currencies { get; set; }
 	[Property] public bool SicknessMode { get; set; }
 	[Property] public bool SeeOwnModel { get; set; } = true;
 	[Property] public bool EnableCrouching { get; set; }
