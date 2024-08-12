@@ -3,6 +3,7 @@ using System.Linq;
 using Sandbox;
 using System.Collections.Generic;
 using Sandbox.Network;
+using Facepunch.Arena;
 
 namespace Sandbox;
 

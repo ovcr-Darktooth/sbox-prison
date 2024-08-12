@@ -10,6 +10,7 @@ namespace Facepunch.Arena;
 [Title( "Player Controller" )]
 public class PlayerController : Component, Component.ITriggerListener, IHealthComponent
 {
+	public UInt64 SteamId { get; private set; } = 0;
 	[Property] public Vector3 Gravity { get; set; } = new ( 0f, 0f, 800f );
 	
 	public CharacterController CharacterController { get; private set; }
@@ -55,6 +56,17 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 	private RealTimeSince TimeSinceDamaged { get; set; }
 	private bool WantsToCrouch { get; set; }
 	private Angles Recoil { get; set; }
+
+
+	public void SetSteamId(ulong steamId)
+    {
+        // Assure-toi que le Steam ID n'est défini qu'une seule fois
+        if (SteamId == 0)
+        {
+            SteamId = steamId;
+			Log.Info($"Steamid {GameObject.Name} : {SteamId}");
+        }
+    }
 
 	public void ApplyRecoil( Angles recoil )
 	{
@@ -176,9 +188,7 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 		Ragdoll = Components.GetInDescendantsOrSelf<RagdollController>( true );
 
 		if ( CharacterController.IsValid() )
-		{
 			CharacterController.Height = StandHeight;
-		}
 		
 		if ( IsProxy )
 			return;
@@ -195,12 +205,13 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 		{
 			//Respawn();
 			RespawnAsync(0.5f);
+			SetSteamId(GameObject.Network.OwnerConnection.SteamId);
 		}
 
 		if ( IsProxy && ViewModelCamera.IsValid() )
-		{
 			ViewModelCamera.Enabled = false;
-		}
+
+		
 			
 		base.OnStart();
 	}

@@ -12,9 +12,26 @@ public sealed class Currencies : Component
 {
 
 	public Dictionary<string, double> _balances;
+	private TimeUntil nextSaveDB = 10f;	
+	private WebSocket ws;
+
 	protected override void OnUpdate()
 	{
-		//DisplayBalances();
+		if (nextSaveDB <= 0f)
+		{
+			DisplayBalances();
+			saveDB();
+			nextSaveDB = 10f;
+			//Log.Info();
+		}
+	}
+
+	private void saveDB()
+	{
+		if (!IsProxy)
+		{
+			//Log.Info("Saving to database");
+		}
 	}
 
 	protected override void OnStart()
@@ -26,7 +43,22 @@ public sealed class Currencies : Component
 
 			AddCurrency(CurrenciesEnum.Dollars, 0);
 			AddCurrency(CurrenciesEnum.EToken, 0);
+
+			/*ws = new WebSocket("ws://localhost:8080");
+			ws.OnMessage += (sender, e) => {
+				Log.Info($"Message from server: {e.Data}");
+			};
+			ws.Connect();
+
+			// Example to send a message
+			ws.Send(JsonSerializer.Serialize(new { action = "getUser", username = "player1" }));*/
 		}
+	}
+
+	protected override void OnDestroy()
+	{
+		base.OnDestroy();
+		//ws?.Close();
 	}
 
 	public void AddCurrency(CurrenciesEnum currencyEnum, double amount)
