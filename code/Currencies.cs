@@ -10,19 +10,19 @@ public enum CurrenciesEnum
 
 public sealed class Currencies : Component
 {
-
 	public Dictionary<string, double> _balances;
 	private TimeUntil nextSaveDB = 10f;	
 	private WebSocket ws;
 
 	protected override void OnUpdate()
 	{
-		if (nextSaveDB <= 0f)
+		if (!IsProxy && nextSaveDB <= 0f)
 		{
 			DisplayBalances();
 			saveDB();
 			nextSaveDB = 10f;
-			//Log.Info();
+			//Log.Info(GameObject.Network.OwnerConnection.SteamId);
+			//Log.Info(GameObject.Name);
 		}
 	}
 
@@ -90,15 +90,22 @@ public sealed class Currencies : Component
 
     public double GetBalance(CurrenciesEnum currencyEnum)
     {
-		string saveDbName = GetCurrencyTextSaveDB(currencyEnum);
-        return _balances.ContainsKey(saveDbName) ? _balances[saveDbName] : 0;
+		if(!IsProxy)
+		{
+			string saveDbName = GetCurrencyTextSaveDB(currencyEnum);
+			return _balances.ContainsKey(saveDbName) ? _balances[saveDbName] : 0;
+		}
+		return -1;
     }
 
     public void DisplayBalances()
     {
-        Log.Info("Wallet Balances:");
-        foreach (var entry in _balances)
-            Log.Info($"{entry.Key}: {entry.Value}");
+		if (!IsProxy)
+		{
+			Log.Info("Wallet Balances:");
+			foreach (var entry in _balances)
+				Log.Info($"{entry.Key}: {entry.Value}");
+		}
     }
 
 

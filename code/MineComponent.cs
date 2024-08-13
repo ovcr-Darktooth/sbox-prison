@@ -12,10 +12,14 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 {
 
 	[Property] public GameObject WorldPrefab { get; set; }
-	[Property]
+	[HostSync]
 	public GameObject entityStart {get; set;}
-	[Property]
+	[HostSync]
 	public GameObject entityEnd {get; set;}
+	[HostSync]
+	public Vector3 entityStartPosition {get; set;}
+	[HostSync]
+	public Vector3 entityEndPosition {get; set;}
 	[Property] 
 	public NameTagPanel Panel_Left { get; set; }
 	[Property] 
@@ -38,10 +42,13 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	//public List<MineBlockLines> MineBlockLines { get; set; }
 	public string BlockMaterial { get; set; }
 	//AxeX(Rouge)
+	[HostSync]
 	public int Longueur { get; set; }
 	//AxeY(Vert)
+	[HostSync]
 	public int Largeur { get; set; }
 	//AxeZ(Bleu)
+	[HostSync]
 	public int Hauteur { get; set; }
 
 	private Dictionary<string, GameObject> playersInside = new Dictionary<string, GameObject>();
@@ -51,7 +58,51 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	private TimeSince timeSincePercentage = 0;
 
 	// Matrice de données représentant la forme
-    private int[,,] shapeMatrix {get; set;}
+	
+    /*int[,,] _shapeMatrix;
+	//[Sync( Query = true )]
+	[HostSync( Query = true )]
+	public int[,,] shapeMatrix 
+	{
+		get => _shapeMatrix;
+		set => _shapeMatrix = value;
+	}
+
+	void SetShapeMatrix(int[,,] val)
+	{
+		_shapeMatrix = val;
+	}*/
+
+	private int[] _flattenedShapeMatrix;
+
+	[HostSync(Query = true)]
+	public int[] FlattenedShapeMatrix
+	{
+		get => _flattenedShapeMatrix;
+		set 
+		{
+			_flattenedShapeMatrix = value;
+			_shapeMatrix = UnflattenMatrix(_flattenedShapeMatrix, Longueur, Largeur, Hauteur);
+		}
+	}
+
+	private int[,,] _shapeMatrix;
+
+	public int[,,] ShapeMatrix
+	{
+		get => _shapeMatrix;
+		set
+		{
+			_shapeMatrix = value;
+			FlattenedShapeMatrix = FlattenMatrix(_shapeMatrix);
+		}
+	}
+
+	void SetShapeMatrix(int[,,] val)
+	{
+		_shapeMatrix = val;
+		FlattenedShapeMatrix = FlattenMatrix(_shapeMatrix);
+	}
 
     // Taille d'un bloc
     private float blockSizeF = 32f;
@@ -64,7 +115,48 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	protected override void OnAwake()
 	{
 		base.OnAwake();
+	}
 
+
+	// Transforme ton tableau en un tableau unidimensionnel
+	int[] FlattenMatrix(int[,,] matrix)
+	{
+		int length = matrix.GetLength(0) * matrix.GetLength(1) * matrix.GetLength(2);
+		int[] flattened = new int[length];
+
+		int index = 0;
+		for (int x = 0; x < matrix.GetLength(0); x++)
+		{
+			for (int y = 0; y < matrix.GetLength(1); y++)
+			{
+				for (int z = 0; z < matrix.GetLength(2); z++)
+				{
+					flattened[index++] = matrix[x, y, z];
+				}
+			}
+		}
+
+		return flattened;
+	}
+
+	// Transforme un tableau unidimensionnel en un tableau multidimensionnel
+	int[,,] UnflattenMatrix(int[] flattened, int longueur, int largeur, int hauteur)
+	{
+		int[,,] matrix = new int[longueur, largeur, hauteur];
+
+		int index = 0;
+		for (int x = 0; x < longueur; x++)
+		{
+			for (int y = 0; y < largeur; y++)
+			{
+				for (int z = 0; z < hauteur; z++)
+				{
+					matrix[x, y, z] = flattened[index++];
+				}
+			}
+		}
+
+		return matrix;
 	}
 
 	protected override void OnStart()
@@ -74,6 +166,8 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 
 		if(entityStart.IsValid() && entityEnd.IsValid())
 		{
+			entityStartPosition = entityStart.Transform.Position;
+			entityEndPosition = entityEnd.Transform.Position;
 			//mineWorld = Scene.GetAllComponents<Sdf3DWorld>().FirstOrDefault(); //1 sdfworld
 			//mineWorld = Scene.CreateObject(true)
 			GameObject clone = WorldPrefab.Clone(new Transform(Vector3.Zero), name: "SdfWorld_" + idMine);
@@ -81,7 +175,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 			mineWorld = Scene.GetAllObjects(true).Where(go => go.Name.Equals("SdfWorld_"+idMine)).FirstOrDefault().Components.Get<Sdf3DWorld>();//.GetAllComponents<Sdf3DWorld>().FirstOrDefault();
 			mineWorld.GameObject.NetworkSpawn();
 			//clone.NetworkSpawn();
-			//mineWorld.GameObject.Network.DropOwnership();
+			mineWorld.GameObject.Network.DropOwnership();
 			Transform.Position = entityStart.Transform.Position 
 											+ (Vector3.Backward * 16) 
 											+ (Vector3.Down * 16)
@@ -111,7 +205,8 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 				_ = regenMine();
 
 
-			shapeMatrix = new int[Longueur,Largeur,Hauteur];
+			//shapeMatrix = new int[Longueur,Largeur,Hauteur];
+			/*SetShapeMatrix(new int[Longueur,Largeur,Hauteur]);
 
 			for (int x = 0; x < Longueur; x++)
 			{
@@ -123,6 +218,24 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 					}
 				}
 			}
+
+			FlattenedShapeMatrix = FlattenMatrix(ShapeMatrix);*/
+
+			SetShapeMatrix(new int[Longueur, Largeur, Hauteur]);
+
+			for (int x = 0; x < Longueur; x++)
+			{
+				for (int y = 0; y < Largeur; y++)
+				{
+					for (int z = 0; z < Hauteur; z++)
+					{
+						ShapeMatrix[x, y, z] = 1; // Bloc présent
+					}
+				}
+			}
+
+			// Synchronise la version aplatie
+			FlattenedShapeMatrix = FlattenMatrix(ShapeMatrix);
 
 
 			Components.GetInChildren<BoxCollider>().Transform.Position = (entityStart.Transform.Position + entityEnd.Transform.Position) / 2;
@@ -167,26 +280,22 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	public int PreRemoveCube(Vector3 pos)
 	{
 		int compteBlocsSupp = 0;
-		if (!IsProxy)
+		// Conversion de la position réelle à l'index de la matrice
+		//int x = (int)(pos.x / blockSize);
+		//int y = (int)(pos.y / blockSize);
+		//int z = (int)(pos.z / blockSize);
+
+		int x = (int)((entityStartPosition.x - pos.x ) / blockSize);
+		int y = (int)((pos.y - entityStartPosition.y) / blockSize);
+		int z = (int)((pos.z - entityStartPosition.z) / blockSize);
+
+		// Vérifier les limites de la matrice pour éviter les erreurs d'index
+		if (x >= 0 && x < Longueur && y >= 0 && y < Largeur && z >= 0 && z < Hauteur)
 		{
-			// Conversion de la position réelle à l'index de la matrice
-			//int x = (int)(pos.x / blockSize);
-			//int y = (int)(pos.y / blockSize);
-			//int z = (int)(pos.z / blockSize);
-
-			int x = (int)((entityStart.Transform.Position.x - pos.x ) / blockSize);
-			int y = (int)((pos.y - entityStart.Transform.Position.y) / blockSize);
-			int z = (int)((pos.z - entityStart.Transform.Position.z) / blockSize);
-
-			//Log.Info($"Suppresion bloc xyz {x}/{y}/{z}");
-
-			// Vérifier les limites de la matrice pour éviter les erreurs d'index
-			if (x >= 0 && x < Longueur && y >= 0 && y < Largeur && z >= 0 && z < Hauteur && x < shapeMatrix.GetLength(0) && y < shapeMatrix.GetLength(1) && z < shapeMatrix.GetLength(2))
-			{
-				// Vérifier s'il y a encore un bloc à cet endroit
-				if (shapeMatrix[x, y, z] == 1)
-					compteBlocsSupp++;
-			} 
+			// Vérifier s'il y a encore un bloc à cet endroit
+			int index = x * (Largeur * Hauteur) + y * Hauteur + z;
+			if (FlattenedShapeMatrix[index] == 1)
+				compteBlocsSupp++;
 		}
 		return compteBlocsSupp;
 	}
@@ -208,13 +317,15 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 			//Log.Info($"Suppresion bloc xyz {x}/{y}/{z}");
 
 			// Vérifier les limites de la matrice pour éviter les erreurs d'index
-			if (x >= 0 && x < Longueur && y >= 0 && y < Largeur && z >= 0 && z < Hauteur && x < shapeMatrix.GetLength(0) && y < shapeMatrix.GetLength(1) && z < shapeMatrix.GetLength(2))
+			if (x >= 0 && x < Longueur && y >= 0 && y < Largeur && z >= 0 && z < Hauteur)
 			{
 				// Vérifier s'il y a encore un bloc à cet endroit
-				if (shapeMatrix[x, y, z] == 1)
+				int index = x * (Largeur * Hauteur) + y * Hauteur + z;
+
+				if (FlattenedShapeMatrix[index] == 1)
 				{
 					// Mise à jour de la matrice et décrémentation du compteur de blocs
-					shapeMatrix[x, y, z] = 0;
+					FlattenedShapeMatrix[index] = 0;
 					blocsRestants--;
 
 					// Logique pour la suppression visuelle du bloc
@@ -239,34 +350,29 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	public int PreRemoveLayer(Vector3 pos)
 	{
 		int compteBlocsSupp = 0;
-		if (!IsProxy)
+		// Position de départ de la mine
+		Vector3 start = entityStartPosition;
+
+		// Conversion de la position réelle à l'index de la matrice pour la coordonnée z
+		int z = (int)((pos.z - start.z) / blockSize);
+
+		if (z >= 0 && z < Hauteur)
 		{
-			// Position de départ de la mine
-			Vector3 start = entityStart.Transform.Position;
-
-			// Conversion de la position réelle à l'index de la matrice pour la coordonnée z
-			int z = (int)((pos.z - start.z) / blockSize);
-
-			//Log.Info($"Suppression de la couche z {z}");
-
-			
-
-			// Vérifier les limites de la matrice pour éviter les erreurs d'index
-			if (z >= 0 && z < shapeMatrix.GetLength(2))
+			for (int x = 0; x < Longueur; x++)
 			{
-				// Parcourir tous les blocs dans la couche z et les supprimer
-				for (int x = 0; x < shapeMatrix.GetLength(0); x++)
+				for (int y = 0; y < Largeur; y++)
 				{
-					for (int y = 0; y < shapeMatrix.GetLength(1); y++)
+					int index = x * (Largeur * Hauteur) + y * Hauteur + z;
+
+					if (index >= 0 && index < FlattenedShapeMatrix.Length)
 					{
-						// Vérifier s'il y a encore un bloc à cet endroit
-						if (shapeMatrix[x, y, z] == 1)
+						if (FlattenedShapeMatrix[index] == 1)
 							compteBlocsSupp++;
 					}
 				}
-
-				//Log.Info($"nb blocs supp:{compteBlocsSupp}");
 			}
+
+			//Log.Info($"nb blocs avant supp:{compteBlocsSupp}");
 		}
 		return compteBlocsSupp;
 	}
@@ -287,18 +393,20 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 			int compteBlocsSupp = 0;
 
 			// Vérifier les limites de la matrice pour éviter les erreurs d'index
-			if (z >= 0 && z < shapeMatrix.GetLength(2))
+			if (z >= 0)
 			{
 				// Parcourir tous les blocs dans la couche z et les supprimer
-				for (int x = 0; x < shapeMatrix.GetLength(0); x++)
+				for (int x = 0; x < Longueur; x++)
 				{
-					for (int y = 0; y < shapeMatrix.GetLength(1); y++)
+					for (int y = 0; y < Largeur; y++)
 					{
+						int index = x * (Largeur * Hauteur) + y * Hauteur + z;
+
 						// Vérifier s'il y a encore un bloc à cet endroit
-						if (shapeMatrix[x, y, z] == 1)
+						if (FlattenedShapeMatrix[index] == 1)
 						{
 							// Mise à jour de la matrice et décrémentation du compteur de blocs
-							shapeMatrix[x, y, z] = 0;
+							FlattenedShapeMatrix[index] = 0;
 							blocsRestants--;
 							compteBlocsSupp++;
 						}
@@ -452,13 +560,20 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 		//Regen mine
 		_ = regenMine();
 
+		int[,,] shapeMatrix = new int[Longueur, Largeur, Hauteur]; // Initialiser shapeMatrix
+
+		// Nouvelle méthode pour remplir FlattenedShapeMatrix
 		for (int x = 0; x < Longueur; x++)
 		{
 			for (int y = 0; y < Largeur; y++)
 			{
 				for (int z = 0; z < Hauteur; z++)
 				{
-					shapeMatrix[x, y, z] = 1; // Bloc présent
+					// Calcul de l'index dans le tableau aplati
+					int index = x * (Largeur * Hauteur) + y * Hauteur + z;
+
+					// Remplir la valeur dans le tableau aplati
+					FlattenedShapeMatrix[index] = 1; // Bloc présent
 				}
 			}
 		}

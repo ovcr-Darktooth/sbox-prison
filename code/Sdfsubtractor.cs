@@ -144,6 +144,7 @@ public sealed class SDFGun : Component
 		int lastUnderscoreIndex = tr.GameObject.Name.LastIndexOf('_');
 		ReadOnlySpan<char> span = tr.GameObject.Name.AsSpan(lastUnderscoreIndex + 1);
 		string result = span.ToString();
+		
 		if (!IsProxy && tr.Hit && Scene.GetAllObjects(true).Where(go => go.Name == "Mine_"+result).FirstOrDefault().IsValid())
 		{			
 			Mine = Scene.GetAllObjects(true).Where(go => go.Name == "Mine_"+result).FirstOrDefault().Components.Get<MineComponent>();
@@ -157,7 +158,6 @@ public sealed class SDFGun : Component
 			Vector3 snappedPosition = adjustPosition.SnapToGrid(32f);
 			int nbBlocsSupp = Mine.PreRemoveCube(snappedPosition);
 			Mine.RemoveCube(snappedPosition);
-
 
 			if (Currencies.IsValid() && nbBlocsSupp > 0)
 			{
