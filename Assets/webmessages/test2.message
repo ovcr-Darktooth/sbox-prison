@@ -1,5 +1,5 @@
 {
-  "UseJsonTags": false,
+  "UseJsonTags": true,
   "message": "{\n  \u0022action\u0022: \u0022updateBalance\u0022,\n  \u0022playerId\u0022: \u002276561198087405083\u0022,\n  \u0022currency\u0022: \u0022dollar\u0022,\n  \u0022amount\u0022: 100\n}",
   "jsonTags": [
     {

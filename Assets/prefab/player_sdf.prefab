@@ -189,18 +189,8 @@
       },
       {
         "__type": "Currencies",
-        "__guid": "63ac087d-5529-46ef-9bf9-fb83b222f201"
-      },
-      {
-        "__type": "WebSocketUtility",
-        "__guid": "dae684be-1be2-4d17-9cc1-e3cc7598080b",
-        "__enabled": false,
-        "websocketToolsList": [
-          {
-            "url": "ws://localhost:8080",
-            "message": "webmessages/test.message"
-          }
-        ]
+        "__guid": "63ac087d-5529-46ef-9bf9-fb83b222f201",
+        "Message": "webmessages/test2.message"
       }
     ],
     "Children": [
