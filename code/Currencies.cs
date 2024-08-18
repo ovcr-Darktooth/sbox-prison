@@ -3,75 +3,59 @@ using System.Net;
 using System.Collections.Generic;
 using Sandbox;
 using System.Numerics;
-//using System.Web.;
-//using nolankicks.websocket_tools;
-//using WebSocket;
-//using WebSocketTools;
-//using Sandbox.WebSocketTools;
 using static WebSocketUtility;
 using System;
 using System.Linq;
+using System.Text.Json;
 
 public enum CurrenciesEnum
 {
-	Dollars,
+	Invalid = -1,
+	Dollars = 0,
     EToken
 }
 
 public sealed class Currencies : Component
 {
 	public Dictionary<string, double> _balances;
-	private TimeUntil nextSaveDB = 5f;	
+	private TimeUntil nextSaveDB = 5f;
+	private TimeUntil nextLoadCurrencies = 0f;
 	private WebsocketTools Websocket;
-	//[Property]
-	//public WebsocketMessage Message;
-	//public WebsocketMessage InternalMessage {get;set;} = new();
+	private bool hasLoaded = false;
+
+	private WebsocketMessage saveCurrenciesMessage {get;set;} = new();
+	private WebsocketMessage getCurrenciesMessage {get;set;} = new();
 
 	protected override void OnUpdate()
 	{
-		if (!IsProxy && nextSaveDB <= 0f)
+		if (!IsProxy && hasLoaded && nextSaveDB <= 0f)
 		{
 			//DisplayBalances();
 			saveDB();
 			nextSaveDB = 5f;
-			//Log.Info(GameObject.Network.OwnerConnection.SteamId);
-			//Log.Info(GameObject.Name); 
+		}
+
+		if (!IsProxy && !hasLoaded && nextLoadCurrencies <= 0f)
+		{
+			Log.Info("Trying to load player currencies");
+			Websocket.message = getCurrenciesMessage;
+
+			_ = WebSocketUtility.SendAsync(Websocket);
+			nextLoadCurrencies = 5f;
 		}
 	}
 
 	private async void saveDB()
 	{
-		if (!IsProxy)
+		if (!IsProxy && hasLoaded)
 		{
 			Log.Info("Saving to database");
-			/*if (Message.message == "{\"action\": \"updateBalance\",\"playerId\": \"76561198087405083\",\"currency\": \"dollar\",\"amount\": 150}")
-				Message.message = "{\"action\": \"updateBalance\",\"playerId\": \""+ GameObject.Network.OwnerConnection.SteamId +"\",\"currency\": \"dollar\",\"amount\": 100}";
-			else
-				Message.message = "{\"action\": \"updateBalance\",\"playerId\": \""+ GameObject.Network.OwnerConnection.SteamId +"\",\"currency\": \"dollar\",\"amount\": 150}";*/
-				//Log.Info(Message.jsonTags);
 
-				/*Message.jsonTags.ForEach(jTag => Log.Info($"test {jTag.tag == "amount"}"));
-				Message.jsonTags.ForEach(jTag => Log.Info($"test {jTag.amount}"));
-				JsonTags test = Message.jsonTags.Find(jTag => jTag.tag == "amount");
-				JsonTags firstTag = Message.jsonTags.First();*/
-				//Log.Info(Websocket.message.jsonTags.Find(tag => tag.tag == "amount").value);
-				//Log.Info(Message.jsonTags.Find(tag => tag.tag == "amount").value);
-			/*if (Message.jsonTags.Find(tag => tag.tag == "amount").value == "100")
-				Message.jsonTags.Find(tag => tag.tag == "amount").value = "150";
-			else
-				Message.jsonTags.Find(tag => tag.tag == "amount").value = "100";*/ 
-			
-			if (Websocket.message.jsonTags.Find(jTag => jTag.tag == "amount").value == "100")
-				WebSocketUtility.ChangeJsonTagValue(Websocket.message,"amount","150");
-				//Websocket.message.jsonTags.Find(tag => tag.tag == "amount").value = "150";
-			else
-				WebSocketUtility.ChangeJsonTagValue(Websocket.message,"amount","100");
-				//Websocket.message.jsonTags.Find(tag => tag.tag == "amount").value = "100";
+			string jsonCurrencies = JsonSerializer.Serialize(_balances);
 
-				Log.Info(Websocket.message.jsonTags.Find(jTag => jTag.tag == "amount").value);
+			Websocket.message = saveCurrenciesMessage;
 
-			Log.Info("message usejsontags" + Websocket.message.UseJsonTags);
-			Log.Info(Websocket.message is null); 
+			WebSocketUtility.ChangeJsonTagValue(Websocket.message, "currencies", jsonCurrencies);
 
 			await WebSocketUtility.SendAsync(Websocket);
 		}
@@ -80,6 +64,72 @@ public sealed class Currencies : Component
 	private void OnWSMessageReceived(string message)
     {
         Log.Info("Server responded: " + message);
+
+		try
+        {
+            // Désérialiser le message en un JsonDocument
+            using (JsonDocument doc = JsonDocument.Parse(message))
+            {
+                JsonElement root = doc.RootElement;
+
+                // Vérifier le type d'action
+                if (root.TryGetProperty("action", out JsonElement actionElement))
+                {
+                    string action = actionElement.GetString();
+
+                    switch (action)
+                    {
+                        case "balanceUpdated":
+                            // Ne rien faire ou ajouter votre logique si nécessaire
+                            break;
+
+                        case "getBalances":
+                            // Charger les monnaies depuis la réponse
+                            if (root.TryGetProperty("balances", out JsonElement balancesElement))
+                            {
+                                LoadBalances(balancesElement);
+								hasLoaded = true;
+                            }
+                            else
+                                Log.Info("Balances property is missing");
+                            break;
+
+                        default:
+                            Log.Info("Unknown action: " + action);
+                            break;
+                    }
+                }
+                else
+                    Log.Info("Action property is missing");
+            }
+        }
+        catch (JsonException ex)
+        {
+            Log.Info("Error parsing server response: " + ex.Message);
+        }
+    }
+
+	private void LoadBalances(JsonElement balances)
+    {
+        if (balances.ValueKind == JsonValueKind.Object)
+        {
+            foreach (JsonProperty currencyProperty in balances.EnumerateObject())
+            {
+				CurrenciesEnum currencyEnum = GetCurrencyEnumFromString(currencyProperty.Name);
+                if (currencyEnum != CurrenciesEnum.Invalid)
+                {
+                    // Convertir la valeur en double, ou utiliser une valeur par défaut en cas d'erreur
+                    if (double.TryParse(currencyProperty.Value.GetString(), out var amount))
+                        AddCurrency(currencyEnum, amount);
+                    else
+                        Log.Info($"Invalid amount for currency '{currencyProperty.Name}': {currencyProperty.Value}");
+                }
+                else
+                    Log.Info($"Unknown currency type received: {currencyProperty.Name}");
+            }
+        }
+        else
+            Log.Info("Invalid balances format received");
     }
 
 
@@ -89,32 +139,18 @@ public sealed class Currencies : Component
 		if (!IsProxy)
 		{
 			Websocket = new WebsocketTools();
-			Websocket.url = "ws://localhost:8080";
+			Websocket.url = "wss://overcreep.loca.lt";
+			//Websocket.url = "ws://136.243.63.156:10706";
+			//Websocket.url = "ws://localhost:8080";
 
-			/*WebSocketUtility.AddJsonTag(InternalMessage,"action","updateBalance");
-			WebSocketUtility.AddJsonTag(InternalMessage,"playerId","76561198087405083");
-			WebSocketUtility.AddJsonTag(InternalMessage,"currency","dollar");
-			WebSocketUtility.AddJsonTag(InternalMessage,"amount","100");*/
+			saveCurrenciesMessage.UseJsonTags = true;
+			WebSocketUtility.AddJsonTag(saveCurrenciesMessage, "action", "updateBalance");
+			WebSocketUtility.AddJsonTag(saveCurrenciesMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
+			WebSocketUtility.AddJsonTag(saveCurrenciesMessage, "currencies", "{}");
 
-			/*Websocket.message.jsonTags.Add(new JsonTags{tag = "action", value = "updateBalance"});
-			Websocket.message.jsonTags.Add(new JsonTags{tag = "playerId", value = "76561198087405083"});
-			Websocket.message.jsonTags.Add(new JsonTags{tag = "currency", value = "dollar"});
-			Websocket.message.jsonTags.Add(new JsonTags{tag = "amount", value = "100"});*/
-
-			//Websocket.message = Message;//InternalMessage;
-			//Log.Info(Websocket.message is null);
-			//Websocket.message = InternalMessage;
-
-			Websocket.message = new WebsocketMessage();
-			Websocket.message.UseJsonTags = true;
-			Log.Info(Websocket.message is null); 
-
-			WebSocketUtility.AddJsonTag(Websocket.message,"action","updateBalance");
-			WebSocketUtility.AddJsonTag(Websocket.message,"playerId","76561198087405083");
-			WebSocketUtility.AddJsonTag(Websocket.message,"currency","dollar");
-			WebSocketUtility.AddJsonTag(Websocket.message,"amount","100");
-
-			Log.Info(Websocket.message is null);
+			getCurrenciesMessage.UseJsonTags = true;
+			WebSocketUtility.AddJsonTag(getCurrenciesMessage, "action", "getBalances");
+			WebSocketUtility.AddJsonTag(getCurrenciesMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
 
 			Websocket.onMessageReceived = OnWSMessageReceived;
 
@@ -214,6 +250,19 @@ public sealed class Currencies : Component
 				return "etoken";
 			default:
 				return "invalid";
+		}
+	}
+
+	public CurrenciesEnum GetCurrencyEnumFromString(string currencyText)
+	{
+		switch (currencyText.ToLower())
+		{
+			case "dollar":
+				return CurrenciesEnum.Dollars;
+			case "etoken":
+				return CurrenciesEnum.EToken;
+			default:
+				return CurrenciesEnum.Invalid;
 		}
 	}
 }
