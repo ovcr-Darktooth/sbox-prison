@@ -176,15 +176,15 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 			mineWorld.GameObject.NetworkSpawn();
 			//clone.NetworkSpawn();
 			mineWorld.GameObject.Network.DropOwnership();
-			Transform.Position = entityStart.Transform.Position 
+			Transform.Position = entityStartPosition 
 											+ (Vector3.Backward * 16) 
 											+ (Vector3.Down * 16)
 											- (Vector3.Left * 16)
-											+ (Vector3.Backward * (entityStart.Transform.Position.x - entityEnd.Transform.Position.x) );
+											+ (Vector3.Backward * (entityStartPosition.x - entityEndPosition.x) );
 		
-			float differenceZ = entityEnd.Transform.Position.z - entityStart.Transform.Position.z;
-			float differenceX = entityStart.Transform.Position.x - entityEnd.Transform.Position.x;
-			float differenceY = entityEnd.Transform.Position.y - entityStart.Transform.Position.y;
+			float differenceZ = entityEndPosition.z - entityStartPosition.z;
+			float differenceX = entityStartPosition.x - entityEndPosition.x;
+			float differenceY = entityEndPosition.y - entityStartPosition.y;
 			/*Log.Info( $"Dif Z :{differenceZ}" );
 			Log.Info( $"Dif Z/32 (nb blocs technique) :{differenceZ / blockSize}" ); // compté 24
 			Log.Info( $"Dif X (rouge) :{differenceX}" );
@@ -238,22 +238,22 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 			FlattenedShapeMatrix = FlattenMatrix(ShapeMatrix);
 
 
-			Components.GetInChildren<BoxCollider>().Transform.Position = (entityStart.Transform.Position + entityEnd.Transform.Position) / 2;
+			Components.GetInChildren<BoxCollider>().Transform.Position = (entityStartPosition + entityEndPosition) / 2;
 			Components.GetInChildren<BoxCollider>().Scale = (Hauteur + Longueur + Largeur) * 26.5f;
 			//TODO: refaire un autre colliderbox trigger pour vraiment les tp, et utiliser celui la pour donner le status du world a ceux qui sont a cotés
 			Components.GetInChildren<BoxCollider>().OnTriggerEnter = this.OnAroundMineTriggerEnter;
 			Components.GetInChildren<BoxCollider>().OnTriggerExit = this.OnAroundMineTriggerExit;
 
-			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().Transform.Position = (entityStart.Transform.Position + entityEnd.Transform.Position) / 2 ;//- (Vector3.Up * 32f);
+			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().Transform.Position = (entityStartPosition + entityEndPosition) / 2 ;//- (Vector3.Up * 32f);
 			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().Scale = new Vector3(Longueur*blockSizeV, Largeur*blockSizeV, Hauteur*blockSizeV);
 			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().OnTriggerEnter = this.OnInsideMineTriggerEnter;
 			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().OnTriggerExit = this.OnInsideMineTriggerExit;
 
 			int hauteurPanel = 125;
-			Panel_Left.Transform.Position =  new Vector3(Transform.Position.x + Longueur*blockSize/2, Transform.Position.y, entityEnd.Transform.Position.z + hauteurPanel);
-			Panel_Right.Transform.Position = new Vector3(Transform.Position.x + Longueur*blockSize/2, Transform.Position.y + Largeur*blockSize, entityEnd.Transform.Position.z + hauteurPanel);
-			Panel_Front.Transform.Position = new Vector3(Transform.Position.x, Transform.Position.y + Largeur*blockSize/ 2, entityEnd.Transform.Position.z + hauteurPanel);
-			Panel_Back.Transform.Position =  new Vector3(Transform.Position.x + Longueur*blockSize, Transform.Position.y + Largeur*blockSize/ 2, entityEnd.Transform.Position.z + hauteurPanel);
+			Panel_Left.Transform.Position =  new Vector3(Transform.Position.x + Longueur*blockSize/2, Transform.Position.y,entityEndPosition.z + hauteurPanel);
+			Panel_Right.Transform.Position = new Vector3(Transform.Position.x + Longueur*blockSize/2, Transform.Position.y + Largeur*blockSize, entityEndPosition.z + hauteurPanel);
+			Panel_Front.Transform.Position = new Vector3(Transform.Position.x, Transform.Position.y + Largeur*blockSize/ 2, entityEndPosition.z + hauteurPanel);
+			Panel_Back.Transform.Position =  new Vector3(Transform.Position.x + Longueur*blockSize, Transform.Position.y + Largeur*blockSize/ 2, entityEndPosition.z + hauteurPanel);
 
 
 			Panel_Left.Level = LevelMine.ToString();
@@ -310,9 +310,9 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 			//int y = (int)(pos.y / blockSize);
 			//int z = (int)(pos.z / blockSize);
 
-			int x = (int)((entityStart.Transform.Position.x - pos.x ) / blockSize);
-			int y = (int)((pos.y - entityStart.Transform.Position.y) / blockSize);
-			int z = (int)((pos.z - entityStart.Transform.Position.z) / blockSize);
+			int x = (int)((entityStartPosition.x - pos.x ) / blockSize);
+			int y = (int)((pos.y - entityStartPosition.y) / blockSize);
+			int z = (int)((pos.z - entityStartPosition.z) / blockSize);
 
 			//Log.Info($"Suppresion bloc xyz {x}/{y}/{z}");
 
@@ -383,7 +383,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 		if (!IsProxy)
 		{
 			// Position de départ de la mine
-			Vector3 start = entityStart.Transform.Position;
+			Vector3 start = entityStartPosition;
 
 			// Conversion de la position réelle à l'index de la matrice pour la coordonnée z
 			int z = (int)((pos.z - start.z) / blockSize);
@@ -416,7 +416,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 				//Log.Info($"nb blocs supp:{compteBlocsSupp}");
 
 				// Logique pour la suppression visuelle de la couche
-				Vector3 layerPos = new Vector3(entityEnd.Transform.Position.x, entityStart.Transform.Position.y, pos.z);
+				Vector3 layerPos = new Vector3(entityEndPosition.x, entityStartPosition.y, pos.z);
 				//var cube = new BoxSdf3D(Vector3.Zero, new Vector3(shapeMatrix.GetLength(0) * blockSize, shapeMatrix.GetLength(1) * blockSize, blockSize), 0f).Transform(layerPos);
 				var cube = new BoxSdf3D(Vector3.Zero, new Vector3(Largeur*32f,Longueur*32f,32f), 0f).Transform(layerPos);
 				mineWorld.SubtractAsync(cube, mineVolume);
@@ -445,12 +445,12 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 
 		if(entityStart.IsValid() && entityEnd.IsValid())
 		{			
-			var posTrace = Scene.Trace.Ray( entityStart.Transform.Position, entityEnd.Transform.Position ).Run();
+			var posTrace = Scene.Trace.Ray( entityStartPosition, entityEndPosition ).Run();
 			Gizmo.Draw.Color = Color.Red;
   			Gizmo.Draw.LineThickness = 3;
 			Gizmo.Draw.Line(posTrace.StartPosition, posTrace.EndPosition);
 			
-			if (timeSinceReset > 20f) // 60 * 5 = 300
+			if (timeSinceReset > 300f) // 60 * 5 = 300
 			{
 				resetMine();
 				timeSinceReset = 0;

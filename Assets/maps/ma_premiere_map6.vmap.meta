@@ -1,0 +1,19 @@
+{
+  "publish": {
+    "Enabled": false,
+    "ProjectConfig": {
+      "Title": "ma_premiere_map6",
+      "Type": "map",
+      "Org": "local",
+      "Ident": "ma_premiere_map6",
+      "Schema": 0,
+      "IncludeSourceFiles": false,
+      "Resources": null,
+      "PackageReferences": [],
+      "EditorReferences": [],
+      "Metadata": {
+        "SingleAssetSource": "maps/ma_premiere_map6.vmap"
+      }
+    }
+  }
+}
