@@ -32,7 +32,14 @@ public sealed class Enchantments : Component
 	{
 		if (!IsProxy && hasLoaded && nextSaveDB <= 0f)
 		{
-			saveDB();
+			try {
+				saveDB();
+			}
+			catch
+			{
+				Log.Info("Error on sending enchants WS for save");
+			}
+			
 			nextSaveDB = 5f;
 		}
 
@@ -41,7 +48,15 @@ public sealed class Enchantments : Component
 			Log.Info("Trying to load player enchants");
 			Websocket.message = getEnchantmentsMessage;
 
-			_ = WebSocketUtility.SendAsync(Websocket);
+			try {
+				_ = WebSocketUtility.SendAsync(Websocket);
+			}
+			catch
+			{
+				Log.Info("Error on sending enchants WS for load");
+			}
+			
+
 			nextLoadEnchants = 5f;
 		}
 	}
@@ -102,12 +117,12 @@ public sealed class Enchantments : Component
 		switch (enchantment)
 		{
 			case Enchants.Jackhammer:
-				return 1;
+				return 0.1f;
 			case Enchants.Laser:
 				return 1;
-			case Enchants.Fortune:
+			case Enchants.Fortune: //no uses
 				return 1;
-			case Enchants.Efficiency:
+			case Enchants.Efficiency: //no uses
 				return 1;
 			default:
 				return 0.0f;
@@ -171,13 +186,13 @@ public sealed class Enchantments : Component
 		switch (enchantment)
 		{
 			case Enchants.Jackhammer:
-				return 5;
+				return 10000;
 			case Enchants.Laser:
-				return 5;
+				return 15000;
 			case Enchants.Fortune:
-				return 15;
+				return 50000;
 			case Enchants.Efficiency:
-				return 20;
+				return 25000;
 			default:
 				return 0.0f;
 		} 
@@ -205,7 +220,7 @@ public sealed class Enchantments : Component
 	{
 		if (!IsProxy && hasLoaded)
 		{
-			Log.Info("Saving to database");
+			//Log.Info("Saving to database");
 
 			string jsonCurrencies = JsonSerializer.Serialize(_enchants);
 
@@ -214,6 +229,7 @@ public sealed class Enchantments : Component
 			WebSocketUtility.ChangeJsonTagValue(Websocket.message, "enchants", jsonCurrencies);
 
 			await WebSocketUtility.SendAsync(Websocket);
+			
 		}
 	}
 

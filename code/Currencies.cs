@@ -49,7 +49,7 @@ public sealed class Currencies : Component
 	{
 		if (!IsProxy && hasLoaded)
 		{
-			Log.Info("Saving to database");
+			//Log.Info("Saving to database");
 
 			string jsonCurrencies = JsonSerializer.Serialize(_balances);
 

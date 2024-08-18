@@ -185,12 +185,17 @@
       },
       {
         "__type": "Enchantments",
-        "__guid": "a6ceff02-f4a2-4b65-be06-05b3c683edb7"
+        "__guid": "a6ceff02-f4a2-4b65-be06-05b3c683edb7",
+        "Currencies": {
+          "_type": "component",
+          "component_id": "63ac087d-5529-46ef-9bf9-fb83b222f201",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Currencies"
+        }
       },
       {
         "__type": "Currencies",
-        "__guid": "63ac087d-5529-46ef-9bf9-fb83b222f201",
-        "Message": "webmessages/test2.message"
+        "__guid": "63ac087d-5529-46ef-9bf9-fb83b222f201"
       }
     ],
     "Children": [
@@ -1324,6 +1329,8 @@
   "MenuPath": null,
   "MenuIcon": null,
   "ResourceVersion": 1,
-  "__references": [],
+  "__references": [
+    "ambi.myog"
+  ],
   "__version": 1
 }
