@@ -30,6 +30,12 @@
         },
         "DuckHeight": 28,
         "EnableCrouching": false,
+        "Enchantments": {
+          "_type": "component",
+          "component_id": "a6ceff02-f4a2-4b65-be06-05b3c683edb7",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Enchantments"
+        },
         "Eye": {
           "_type": "gameobject",
           "go": "5a17506e-5b90-4cca-b279-5aefb9ab17bc"
@@ -1329,8 +1335,6 @@
   "MenuPath": null,
   "MenuIcon": null,
   "ResourceVersion": 1,
-  "__references": [
-    "ambi.myog"
-  ],
+  "__references": [],
   "__version": 1
 }

@@ -2,6 +2,7 @@ using Sandbox;
 using System.Collections.Generic;
 using static WebSocketUtility;
 using System.Text.Json;
+using System;
 
 
 public enum Enchants
@@ -24,6 +25,8 @@ public sealed class Enchantments : Component
 	private TimeUntil nextSaveDB = 5f;
 	private TimeUntil nextLoadEnchants = 0f;
 	private bool hasLoaded = false;
+
+	public bool hasLoadError = false;
 
 	public Dictionary<string, int> _enchants;
 
@@ -48,24 +51,20 @@ public sealed class Enchantments : Component
 			Log.Info("Trying to load player enchants");
 			Websocket.message = getEnchantmentsMessage;
 
-			try {
-				_ = WebSocketUtility.SendAsync(Websocket);
-			}
-			catch
-			{
-				Log.Info("Error on sending enchants WS for load");
-			}
-			
+			GetDB();			
 
 			nextLoadEnchants = 5f;
 		}
 	}
+
+	
 
 	protected override void OnStart()
 	{
 		base.OnStart();
 		if (!IsProxy)
 		{
+			Log.Info("enchants onstart");
 			Websocket = new WebsocketTools();
 			Websocket.url = "wss://overcreep.loca.lt";
 			//Websocket.url = "ws://136.243.63.156:10706";
@@ -81,6 +80,8 @@ public sealed class Enchantments : Component
 			WebSocketUtility.AddJsonTag(getEnchantmentsMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
 
 			Websocket.onMessageReceived = OnWSMessageReceived;
+
+			Websocket.message = getEnchantmentsMessage;	
 
 			_enchants = new Dictionary<string, int>();
 
@@ -228,8 +229,38 @@ public sealed class Enchantments : Component
 
 			WebSocketUtility.ChangeJsonTagValue(Websocket.message, "enchants", jsonCurrencies);
 
-			await WebSocketUtility.SendAsync(Websocket);
+			await Task.RunInThreadAsync( async () =>
+			{
+				try
+				{
+					await WebSocketUtility.SendAsync( Websocket );
+				}
+				catch ( Exception ex )
+				{
+					hasLoadError = true;
+					Log.Info($"[Enchants]saveDB, error on websocket: {ex.Message}");
+				}
+			} );
 			
+		}
+	}
+
+	private async void GetDB()
+	{
+		if (!IsProxy)
+		{
+			await Task.RunInThreadAsync( async () =>
+			{
+				try
+				{
+					await WebSocketUtility.SendAsync( Websocket );
+				}
+				catch ( Exception ex )
+				{
+					hasLoadError = true;
+					Log.Info($"[Enchants]GetDB, error on websocket: {ex.Message}");
+				}
+			} );
 		}
 	}
 
@@ -260,6 +291,7 @@ public sealed class Enchantments : Component
                             {
                                 LoadEnchants(enchantsElement);
 								hasLoaded = true;
+								hasLoadError = false;
                             }
                             else
                                 Log.Info("Enchants property is missing");

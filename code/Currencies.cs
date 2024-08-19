@@ -22,6 +22,7 @@ public sealed class Currencies : Component
 	private TimeUntil nextLoadCurrencies = 0f;
 	private WebsocketTools Websocket;
 	private bool hasLoaded = false;
+	public bool hasLoadError = false;
 
 	private WebsocketMessage saveCurrenciesMessage {get;set;} = new();
 	private WebsocketMessage getCurrenciesMessage {get;set;} = new();
@@ -40,7 +41,7 @@ public sealed class Currencies : Component
 			Log.Info("Trying to load player currencies");
 			Websocket.message = getCurrenciesMessage;
 
-			_ = WebSocketUtility.SendAsync(Websocket);
+			GetDB();
 			nextLoadCurrencies = 5f;
 		}
 	}
@@ -57,7 +58,37 @@ public sealed class Currencies : Component
 
 			WebSocketUtility.ChangeJsonTagValue(Websocket.message, "currencies", jsonCurrencies);
 
-			await WebSocketUtility.SendAsync(Websocket);
+			await Task.RunInThreadAsync( async () =>
+			{
+				try
+				{
+					await WebSocketUtility.SendAsync( Websocket );
+				}
+				catch ( Exception ex )
+				{
+					hasLoadError = true;
+					Log.Info($"[Currencies]saveDB, error on websocket: {ex.Message}");
+				}
+			} );
+		}
+	}
+
+	private async void GetDB()
+	{
+		if (!IsProxy)
+		{
+			await Task.RunInThreadAsync( async () =>
+			{
+				try
+				{
+					await WebSocketUtility.SendAsync( Websocket );
+				}
+				catch ( Exception ex )
+				{
+					hasLoadError = true;
+					Log.Info($"[Currencies]GetDB, error on websocket: {ex.Message}");
+				}
+			} );
 		}
 	}
 

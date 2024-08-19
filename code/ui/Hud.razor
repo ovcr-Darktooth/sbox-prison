@@ -31,6 +31,16 @@
 	<div class="center">
 		<div class="crosshair"></div>
 	</div>
+
+	@if (LocalPlayer.Currencies.IsValid() && LocalPlayer.Enchantments.IsValid())
+	{
+		<div class="bottom">
+			@if (LocalPlayer.Enchantments.hasLoadError || LocalPlayer.Currencies.hasLoadError)
+			{
+				<div class="loadError">Server is offline, there will be no saving & no loading, trying to reconnect...</div>
+			}
+		</div>
+	}
 </root>
 
 @code
