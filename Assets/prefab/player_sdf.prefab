@@ -1300,6 +1300,10 @@
                   "go": "eac9f9ba-8fe7-42b3-a268-dd9ae033a9a9",
                   "component_type": "ColorAdjustments"
                 }
+              },
+              {
+                "__type": "Facepunch.Arena.Enchants",
+                "__guid": "3f028996-765b-4a33-b61e-d3a322bc323b"
               }
             ]
           }
@@ -1335,6 +1339,8 @@
   "MenuPath": null,
   "MenuIcon": null,
   "ResourceVersion": 1,
-  "__references": [],
+  "__references": [
+    "ambi.myog"
+  ],
   "__version": 1
 }

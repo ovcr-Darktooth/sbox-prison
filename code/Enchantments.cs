@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using static WebSocketUtility;
 using System.Text.Json;
 using System;
-
+using Sandbox.UI.Construct;
 
 public enum Enchants
 {
@@ -13,6 +13,8 @@ public enum Enchants
     Fortune,
     Efficiency
 }
+
+
 
 public sealed class Enchantments : Component
 {
@@ -27,6 +29,8 @@ public sealed class Enchantments : Component
 	private bool hasLoaded = false;
 
 	public bool hasLoadError = false;
+	
+	public bool isMenuOpen = false;
 
 	public Dictionary<string, int> _enchants;
 
@@ -55,8 +59,11 @@ public sealed class Enchantments : Component
 
 			nextLoadEnchants = 5f;
 		}
-	}
 
+		if (Input.Pressed("Enchant_menu") && !IsProxy)
+			isMenuOpen = !isMenuOpen;
+			
+	}
 	
 
 	protected override void OnStart()
@@ -66,8 +73,7 @@ public sealed class Enchantments : Component
 		{
 			Log.Info("enchants onstart");
 			Websocket = new WebsocketTools();
-			Websocket.url = "wss://overcreep.loca.lt";
-			//Websocket.url = "ws://136.243.63.156:10706";
+			Websocket.url = "ws://websocket.overcreep.ovh:10706";
 			//Websocket.url = "ws://localhost:8080";
 
 			saveEnchantmentsMessage.UseJsonTags = true;
@@ -113,6 +119,45 @@ public sealed class Enchantments : Component
 		}
     }
 
+	public void UpgradeEnchant(string enchantDbName)
+	{
+
+		//Log.Info($"Click enchant: {enchantDbName}");
+		/*if (!IsProxy)
+		{
+
+			// Définir le coût d'amélioration pour cet enchantement
+			float cost = GetEnchantUpgradeCost(enchantDbName);
+
+			// Vérifier si le joueur a assez d'etokens
+			double currentBalance = Currencies.GetBalance(CurrenciesEnum.EToken);
+			if (currentBalance < cost)
+			{
+				Log.Info($"Not enough E-Tokens to upgrade {enchantDbName}. Required: {cost}, Available: {currentBalance}");
+				return;
+			}
+
+			// Retirer les E-Tokens nécessaires
+			bool withdrawalSuccess = Currencies.WithdrawCurrency(CurrenciesEnum.EToken, cost);
+			if (!withdrawalSuccess)
+			{
+				Log.Info($"Failed to withdraw E-Tokens for upgrading {enchantDbName}.");
+				return;
+			}
+
+			// Mettre à jour l'enchantement
+			if (_enchants.ContainsKey(enchantDbName))
+			{
+				_enchants[enchantDbName]++;
+				Log.Info($"Successfully upgraded {enchantDbName}. New level: {_enchants[enchantDbName]}");
+			}
+			else
+			{
+				Log.Info($"Enchantments key {enchantDbName} not found.");
+			}
+		}*/
+	}
+
 	public float getDefaultChanceOfEnchant(Enchants enchantment)
 	{
 		switch (enchantment)
@@ -145,6 +190,24 @@ public sealed class Enchantments : Component
 			default:
 				return 0.0f;
 		} 
+	}
+
+	private float GetEnchantUpgradeCost(string enchantmentKey)
+	{
+		switch (enchantmentKey)
+		{
+			case "jackhammer":
+				return 10f;
+			case "laser":
+				return 15f;
+			case "fortune":
+				return 20f;
+			case "efficiency":
+				return 25f;
+			default:
+				Log.Info($"Unknown enchantment key: {enchantmentKey}");
+				return 0f;
+		}
 	}
 
 	public static string GetEnchantmentText(Enchants enchantment)

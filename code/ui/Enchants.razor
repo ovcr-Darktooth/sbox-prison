@@ -1,0 +1,58 @@
+﻿@using System
+@using System.Linq
+@using Sandbox;
+@inherits PanelComponent
+@namespace Facepunch.Arena
+
+@if ( !LocalPlayer.IsValid() ) return;
+
+<root>
+	@{
+		//var weapon = LocalPlayer.Weapons.Deployed;
+	}
+	@if (LocalPlayer.Enchantments.IsValid() && LocalPlayer.Enchantments.isMenuOpen)
+	{
+		<div class="enchantment-menu-container">
+			<div class="enchantment-menu">
+				<h2>Enchantments</h2>
+				<div class="enchantment-list">
+					@foreach (var enchantment in LocalPlayer.Enchantments._enchants)
+					{
+						<div class="enchantment-item">
+							<button onclick=@( () => UpgradeEnchant( enchantment.Key ))>
+								<span>@enchantment.Key</span>
+								<span class="level">Level: @enchantment.Value</span>
+							</button>
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+	}
+</root>
+
+@code
+{
+	private PlayerController LocalPlayer { get; set; }
+	
+	protected override void OnFixedUpdate()
+	{
+		if ( !LocalPlayer.IsValid() )
+		{
+			LocalPlayer = Scene.GetAllComponents<PlayerController>().FirstOrDefault( p => p.Network.OwnerConnection == Connection.Local );
+		}
+	}
+
+	protected override void OnUpdate()
+	{
+	}
+
+	private void UpgradeEnchant(string dbName)
+	{
+		//Log.Info("test");
+		//Log.Info(dbName);
+		LocalPlayer.Enchantments.UpgradeEnchant(dbName);
+	}
+	
+	protected override int BuildHash() => HashCode.Combine( RealTime.Now );
+}

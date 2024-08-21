@@ -170,8 +170,7 @@ public sealed class Currencies : Component
 		if (!IsProxy)
 		{
 			Websocket = new WebsocketTools();
-			Websocket.url = "wss://overcreep.loca.lt";
-			//Websocket.url = "ws://136.243.63.156:10706";
+			Websocket.url = "ws://websocket.overcreep.ovh:10706";
 			//Websocket.url = "ws://localhost:8080";
 
 			saveCurrenciesMessage.UseJsonTags = true;

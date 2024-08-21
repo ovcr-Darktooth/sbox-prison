@@ -8,6 +8,7 @@
   "Resources": null,
   "PackageReferences": [],
   "EditorReferences": null,
+  "IsWhitelistDisabled": false,
   "Metadata": {
     "MaxPlayers": 64,
     "MinPlayers": 1,
@@ -29,7 +30,7 @@
       "Actions": [
         {
           "Name": "Forward",
-          "KeyboardCode": "Z",
+          "KeyboardCode": "w",
           "GamepadCode": "None",
           "GroupName": "Movement"
         },
@@ -41,7 +42,7 @@
         },
         {
           "Name": "Left",
-          "KeyboardCode": "Q",
+          "KeyboardCode": "a",
           "GamepadCode": "None",
           "GroupName": "Movement"
         },
@@ -190,7 +191,7 @@
           "GroupName": "Other"
         },
         {
-          "Name": "Flashlight",
+          "Name": "Fly",
           "KeyboardCode": "f",
           "GamepadCode": "DpadNorth",
           "GroupName": "Other"
@@ -216,6 +217,12 @@
         {
           "Name": "See_own_model",
           "KeyboardCode": "F4",
+          "GamepadCode": "None",
+          "GroupName": "Other"
+        },
+        {
+          "Name": "Enchant_menu",
+          "KeyboardCode": "t",
           "GamepadCode": "None",
           "GroupName": "Other"
         }

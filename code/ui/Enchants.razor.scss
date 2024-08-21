@@ -1,0 +1,65 @@
+﻿Enchants {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+
+
+    .enchantment-menu-container {
+        pointer-events: all;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%; /* Centrage vertical */
+    }
+    
+    .enchantment-menu {
+        width: 400px;
+        background-color: #2c3e50;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        color: #ecf0f1;
+    
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            color: #e74c3c;
+        }
+    
+        .enchantment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Espacement entre les items */
+        }
+    
+        .enchantment-item {
+            button {
+                width: 100%;
+                padding: 10px;
+                background-color: #34495e;
+                border: none;
+                border-radius: 5px;
+                color: #ecf0f1;
+                font-size: 1rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+    
+                &:hover {
+                    background-color: #1abc9c;
+                }
+    
+                .level {
+                    font-size: 0.9rem;
+                    color: #bdc3c7;
+                }
+            }
+        }
+    }
+
+}

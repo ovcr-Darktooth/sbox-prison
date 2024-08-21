@@ -54,9 +54,13 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 
 	private RealTimeSince LastGroundedTime { get; set; }
 	private RealTimeSince LastUngroundedTime { get; set; }
+
+	private TimeSince LastJumpPressed { get; set; }
 	private RealTimeSince TimeSinceDamaged { get; set; }
 	private bool WantsToCrouch { get; set; }
 	private Angles Recoil { get; set; }
+
+	private bool isFlying = false;
 
 
 	public void SetSteamId(ulong steamId)
@@ -432,36 +436,68 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 	{
 		BuildWishVelocity();
 
-		if ( CharacterController.IsOnGround && Input.Down( "Jump" ) )
+		if (isFlying)
 		{
-			CharacterController.Punch( Vector3.Up * JumpForce );
-			SendJumpMessage();
-		}
+			//HandleFlyingMovement();
+			/*Vector3 moveDirection = Vector3.Zero;
+			
+			if (Input.Down("Forward")) moveDirection += Vector3.Forward;
+			if (Input.Down("Backward")) moveDirection += Vector3.Backward;
+			if (Input.Down("Left")) moveDirection += Vector3.Left;
+			if (Input.Down("Right")) moveDirection += Vector3.Right;
+			if (Input.Down("Jump")) moveDirection += Vector3.Up;
+			if (Input.Down("Duck")) moveDirection += Vector3.Down;
+			
+			// Normaliser la direction et appliquer la vitesse de vol
+			moveDirection = moveDirection.Normal;
+			
+			// Appliquer la vitesse de vol à la vélocité
+			CharacterController.Velocity = moveDirection * flySpeed;
 
-		if ( CharacterController.IsOnGround )
-		{
-			CharacterController.Velocity = CharacterController.Velocity.WithZ( 0f );
+			// Vous pouvez ajouter des ajustements supplémentaires comme la friction ici
+			CharacterController.ApplyFriction(0f); // Ajuster selon les besoins*/
+
+			//CharacterController.Velocity = CharacterController.Velocity.WithZ( 0f );
 			CharacterController.Accelerate( WishVelocity );
-			CharacterController.ApplyFriction( 4.0f );
-		}
-		else
-		{
-			CharacterController.Velocity -= Gravity * Time.Delta * 0.5f;
-			CharacterController.Accelerate( WishVelocity.ClampLength( 50f ) );
-			CharacterController.ApplyFriction( 0.1f );
-		}
-		
-		CharacterController.Move();
+			CharacterController.ApplyFriction( 4f );
 
-		if ( !CharacterController.IsOnGround )
-		{
-			CharacterController.Velocity -= Gravity * Time.Delta * 0.5f;
-			LastUngroundedTime = 0f;
+
+			CharacterController.Move();
 		}
 		else
 		{
-			CharacterController.Velocity = CharacterController.Velocity.WithZ( 0 );
-			LastGroundedTime = 0f;
+
+			if ( CharacterController.IsOnGround && Input.Down( "Jump" ) )
+			{
+				CharacterController.Punch( Vector3.Up * JumpForce );
+				SendJumpMessage();
+			}
+
+			if ( CharacterController.IsOnGround )
+			{
+				CharacterController.Velocity = CharacterController.Velocity.WithZ( 0f );
+				CharacterController.Accelerate( WishVelocity );
+				CharacterController.ApplyFriction( 4.0f );
+			}
+			else
+			{
+				CharacterController.Velocity -= Gravity * Time.Delta * 0.5f;
+				CharacterController.Accelerate( WishVelocity.ClampLength( 50f ) );
+				CharacterController.ApplyFriction( 0.1f );
+			}
+			
+			CharacterController.Move();
+
+			if ( !CharacterController.IsOnGround )
+			{
+				CharacterController.Velocity -= Gravity * Time.Delta * 0.5f;
+				LastUngroundedTime = 0f;
+			}
+			else
+			{
+				CharacterController.Velocity = CharacterController.Velocity.WithZ( 0 );
+				LastGroundedTime = 0f;
+			}
 		}
 
 		Transform.Rotation = Rotation.FromYaw( EyeAngles.ToRotation().Yaw() );
@@ -481,9 +517,11 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 			Health = MathF.Min( Health, MaxHealth );
 		}
 
+		HandleFlyInput();
+
 		DoCrouchingInput();
 		DoMovementInput();
-		
+
 		if (Input.Pressed("See_own_model"))
 		{
 			Log.Info("see own");
@@ -502,19 +540,34 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 		if ( Input.Down( "Attack1" ) )
 		{
 			if ( weapon.DoPrimaryAttack() )
-			{
 				SendAttackMessage();
-			}
 		}
 
 		if ( Input.Released( "Reload" ) )
 		{
 			if ( weapon.DoReload() )
-			{
 				SendReloadMessage();
-			}
 		}
 	}
+
+	public void HandleFlyInput()
+	{
+		if (Input.Pressed("Jump") && !CharacterController.IsOnGround && LastJumpPressed < 0.5) // Supposons que la touche 'F' active/désactive le vol
+			ToggleFlight();
+
+		if (Input.Pressed("Jump"))
+			LastJumpPressed = 0f;
+
+		if (CharacterController.IsOnGround)
+			isFlying = false;
+	}
+
+	public void ToggleFlight()
+    {
+        isFlying = !isFlying;
+        Log.Info($"Flight mode {(isFlying ? "enabled" : "disabled")}");
+		LastJumpPressed = 0f;
+    }
 	
 	void ITriggerListener.OnTriggerEnter( Collider other )
 	{
@@ -549,6 +602,35 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 	private void BuildWishVelocity()
 	{
 		var rotation = EyeAngles.ToRotation();
+		Vector3 moveDirection;
+
+		if (Input.Down("Jump"))
+			moveDirection = (Vector3.Up*10f); //* Input.AnalogMove.WithZ(0f) ?
+		else if (Input.Down("Duck"))
+			moveDirection = (Vector3.Down*10f);
+		else
+		{
+			moveDirection = rotation * Input.AnalogMove.WithZ(0f);
+			moveDirection = moveDirection.WithZ(0f);
+		}
+		
+		if (isFlying)
+			WishVelocity = moveDirection;
+		else
+			WishVelocity = moveDirection.WithZ(0f); // Ignorer la composante verticale en mode terrestre
+
+		if (!WishVelocity.IsNearZeroLength)
+			WishVelocity = WishVelocity.Normal;
+
+		if (IsCrouching)
+			WishVelocity *= CrouchSpeed;
+		else if (IsRunning)
+			WishVelocity *= RunSpeed;
+		else
+			WishVelocity *= WalkSpeed;
+
+
+		/*var rotation = EyeAngles.ToRotation();
 
 		WishVelocity = rotation * Input.AnalogMove;
 		WishVelocity = WishVelocity.WithZ( 0f );
@@ -561,7 +643,7 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 		else if ( IsRunning )
 			WishVelocity *= RunSpeed;
 		else
-			WishVelocity *= WalkSpeed;
+			WishVelocity *= WalkSpeed;*/
 	}
 
 	[Broadcast]
