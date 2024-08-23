@@ -66,24 +66,28 @@ public sealed class Enchantments : Component
 	}
 	
 
-	protected override void OnStart()
+	protected override async void OnStart()
 	{
 		base.OnStart();
 		if (!IsProxy)
 		{
-			Log.Info("enchants onstart");
 			Websocket = new WebsocketTools();
 			Websocket.url = "ws://websocket.overcreep.ovh:10706";
 			//Websocket.url = "ws://localhost:8080";
+
+			var getEnchantsToken = await Sandbox.Services.Auth.GetToken( "getEnchants" );
+			var saveEnchantsToken = await Sandbox.Services.Auth.GetToken( "saveEnchants" );
 
 			saveEnchantmentsMessage.UseJsonTags = true;
 			WebSocketUtility.AddJsonTag(saveEnchantmentsMessage, "action", "updateEnchants");
 			WebSocketUtility.AddJsonTag(saveEnchantmentsMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
 			WebSocketUtility.AddJsonTag(saveEnchantmentsMessage, "enchants", "{}");
+			WebSocketUtility.AddJsonTag(saveEnchantmentsMessage, "token", saveEnchantsToken);
 
 			getEnchantmentsMessage.UseJsonTags = true;
 			WebSocketUtility.AddJsonTag(getEnchantmentsMessage, "action", "getEnchants");
 			WebSocketUtility.AddJsonTag(getEnchantmentsMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
+			WebSocketUtility.AddJsonTag(getEnchantmentsMessage, "token", getEnchantsToken);
 
 			Websocket.onMessageReceived = OnWSMessageReceived;
 
