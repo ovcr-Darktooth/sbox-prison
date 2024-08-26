@@ -164,7 +164,7 @@ public sealed class Currencies : Component
     }
 
 
-	protected override void OnStart()
+	protected override async void OnStart()
 	{
 		base.OnStart();
 		if (!IsProxy)
@@ -173,14 +173,19 @@ public sealed class Currencies : Component
 			Websocket.url = "ws://websocket.overcreep.ovh:10706";
 			//Websocket.url = "ws://localhost:8080";
 
+			var getCurrenciesToken = await Sandbox.Services.Auth.GetToken( "getCurrencies" );
+			var saveCurrenciesToken = await Sandbox.Services.Auth.GetToken( "saveCurrencies" );
+
 			saveCurrenciesMessage.UseJsonTags = true;
 			WebSocketUtility.AddJsonTag(saveCurrenciesMessage, "action", "updateBalance");
 			WebSocketUtility.AddJsonTag(saveCurrenciesMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
 			WebSocketUtility.AddJsonTag(saveCurrenciesMessage, "currencies", "{}");
+			WebSocketUtility.AddJsonTag(saveCurrenciesMessage, "token", saveCurrenciesToken);
 
 			getCurrenciesMessage.UseJsonTags = true;
 			WebSocketUtility.AddJsonTag(getCurrenciesMessage, "action", "getBalances");
 			WebSocketUtility.AddJsonTag(getCurrenciesMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
+			WebSocketUtility.AddJsonTag(getCurrenciesMessage, "token", getCurrenciesToken);
 
 			Websocket.onMessageReceived = OnWSMessageReceived;
 

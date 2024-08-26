@@ -123,15 +123,14 @@ public sealed class Enchantments : Component
 		}
     }
 
-	public void UpgradeEnchant(string enchantDbName)
+	public void UpgradeEnchant(string enchantDbName, int nbLevel=1)
 	{
 
 		//Log.Info($"Click enchant: {enchantDbName}");
-		/*if (!IsProxy)
+		if (!IsProxy)
 		{
-
 			// Définir le coût d'amélioration pour cet enchantement
-			float cost = GetEnchantUpgradeCost(enchantDbName);
+			float cost = GetEnchantUpgradeCost(enchantDbName,nbLevel);
 
 			// Vérifier si le joueur a assez d'etokens
 			double currentBalance = Currencies.GetBalance(CurrenciesEnum.EToken);
@@ -156,10 +155,8 @@ public sealed class Enchantments : Component
 				Log.Info($"Successfully upgraded {enchantDbName}. New level: {_enchants[enchantDbName]}");
 			}
 			else
-			{
 				Log.Info($"Enchantments key {enchantDbName} not found.");
-			}
-		}*/
+		}
 	}
 
 	public float getDefaultChanceOfEnchant(Enchants enchantment)
@@ -167,7 +164,7 @@ public sealed class Enchantments : Component
 		switch (enchantment)
 		{
 			case Enchants.Jackhammer:
-				return 0.1f;
+				return 0.001f;
 			case Enchants.Laser:
 				return 1;
 			case Enchants.Fortune: //no uses
@@ -196,21 +193,78 @@ public sealed class Enchantments : Component
 		} 
 	}
 
-	private float GetEnchantUpgradeCost(string enchantmentKey)
+	private float GetEnchantUpgradeCost(string enchantmentKey, int nbOfLevel = 1)
+	{
+		float total = 0f;
+		for(int i=1 ; i <= nbOfLevel; i++)
+		{
+			float tmpTotal = 0f;
+			float enchantRule = GetEnchantUpgradeRule(enchantmentKey, _enchants[enchantmentKey]+i);
+			switch (enchantmentKey)
+			{
+				case "jackhammer":
+					tmpTotal = 10000f;
+					break;
+				case "laser":
+					tmpTotal = 15000f;
+					break;
+				case "fortune":
+					tmpTotal = 50000f;
+					break;
+				case "efficiency":
+					tmpTotal = 25000f;
+					break;
+				default:
+					Log.Info($"[GetEnchantUpgradeCost] Unknown enchantment key: {enchantmentKey}");
+					tmpTotal = 0f;
+					break;
+			}
+			total += (tmpTotal + enchantRule);
+		}
+		return total;
+	}
+
+	private float GetEnchantUpgradeRule(string enchantmentKey, int levelToCalculate)
+	{
+		if (_enchants.ContainsKey(enchantmentKey))
+		{
+			switch (enchantmentKey)
+			{
+				case "jackhammer":
+					return 20f+(0.0018f*20f*levelToCalculate);
+				case "laser":
+					return 15000f;
+				case "fortune":
+					return 50000f;
+				case "efficiency":
+					return _enchants[enchantmentKey] * 100f;
+				default:
+					Log.Info($"[GetEnchantUpgradeRule] Unknown enchantment key: {enchantmentKey}");
+					return 0f;
+			}
+		}
+		else
+		{
+			Log.Info($"[GetEnchantUpgradeRule] Player enchants doesn't contain enchantment key: {enchantmentKey}");
+			return -1f;
+		}
+	}
+
+	public bool CanUpgradeEnchant(string enchantmentKey)
 	{
 		switch (enchantmentKey)
 		{
 			case "jackhammer":
-				return 10f;
+				return true;
 			case "laser":
-				return 15f;
+				return false;
 			case "fortune":
-				return 20f;
+				return false;
 			case "efficiency":
-				return 25f;
+				return false;
 			default:
-				Log.Info($"Unknown enchantment key: {enchantmentKey}");
-				return 0f;
+				Log.Info($"[CanUpgradeEnchant] Unknown enchantment key: {enchantmentKey}");
+				return false;
 		}
 	}
 
@@ -246,24 +300,6 @@ public sealed class Enchantments : Component
 			default:
 				return "invalid";
 		}
-	}
-
-
-	public float getPriceOfEnum(Enchants enchantment, int level)
-	{
-		switch (enchantment)
-		{
-			case Enchants.Jackhammer:
-				return 10000;
-			case Enchants.Laser:
-				return 15000;
-			case Enchants.Fortune:
-				return 50000;
-			case Enchants.Efficiency:
-				return 25000;
-			default:
-				return 0.0f;
-		} 
 	}
 
 	public Enchants GetEnchantEnumFromString(string currencyText)

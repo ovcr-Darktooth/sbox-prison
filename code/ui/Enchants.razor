@@ -18,8 +18,8 @@
 				<div class="enchantment-list">
 					@foreach (var enchantment in LocalPlayer.Enchantments._enchants)
 					{
-						<div class="enchantment-item">
-							<button onclick=@( () => UpgradeEnchant( enchantment.Key ))>
+						<div class="enchantment-item ">
+							<button class="@(LocalPlayer.Enchantments.CanUpgradeEnchant(enchantment.Key) ? "enchantOn" : "enchantOff")" onclick=@( () => UpgradeEnchant( enchantment.Key ))>
 								<span>@enchantment.Key</span>
 								<span class="level">Level: @enchantment.Value</span>
 							</button>
@@ -38,9 +38,7 @@
 	protected override void OnFixedUpdate()
 	{
 		if ( !LocalPlayer.IsValid() )
-		{
 			LocalPlayer = Scene.GetAllComponents<PlayerController>().FirstOrDefault( p => p.Network.OwnerConnection == Connection.Local );
-		}
 	}
 
 	protected override void OnUpdate()
@@ -49,9 +47,10 @@
 
 	private void UpgradeEnchant(string dbName)
 	{
-		//Log.Info("test");
-		//Log.Info(dbName);
-		LocalPlayer.Enchantments.UpgradeEnchant(dbName);
+		Log.Info(dbName);
+		Log.Info(LocalPlayer.Enchantments.CanUpgradeEnchant(dbName));
+		if (LocalPlayer.Enchantments.CanUpgradeEnchant(dbName))
+			LocalPlayer.Enchantments.UpgradeEnchant(dbName);
 	}
 	
 	protected override int BuildHash() => HashCode.Combine( RealTime.Now );

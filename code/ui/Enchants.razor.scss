@@ -50,16 +50,18 @@
                 cursor: pointer;
                 transition: background-color 0.3s ease;
     
-                &:hover {
-                    background-color: #1abc9c;
-                }
-    
                 .level {
                     font-size: 0.9rem;
                     color: #bdc3c7;
                 }
             }
+            .enchantOff:hover {
+                background-color: #cc041f;
+            }
+
+            .enchantOn:hover {
+                background-color: #1abc9c;
+            }
         }
     }
-
 }
