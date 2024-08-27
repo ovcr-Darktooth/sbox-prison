@@ -246,6 +246,8 @@ public sealed class Currencies : Component
 				_balances[saveDbName] += amount;
 			else
 				_balances[saveDbName] = amount;
+
+			_balances[saveDbName] = Math.Round(_balances[saveDbName], 2);
 		}
     }
 
