@@ -142,6 +142,13 @@ public sealed class Enchantments : Component
 		//Log.Info($"Click enchant: {enchantDbName}");
 		if (!IsProxy)
 		{
+			// Ne peut pas dépasser le niveau d'enchantement
+			if (_enchants[enchantDbName] + nbLevel > GetMaxEnchantLevel(enchantDbName))
+			{
+				Log.Info($"Cannot bypass enchanment level {enchantDbName}. Actual: {_enchants[enchantDbName]}, Wanted: {_enchants[enchantDbName]+nbLevel}, Max: {GetMaxEnchantLevel(enchantDbName)}");
+				return;
+			}
+
 			// Définir le coût d'amélioration pour cet enchantement
 			float cost = GetEnchantUpgradeCost(enchantDbName,nbLevel);
 
@@ -278,6 +285,24 @@ public sealed class Enchantments : Component
 			default:
 				Log.Info($"[CanUpgradeEnchant] Unknown enchantment key: {enchantmentKey}");
 				return false;
+		}
+	}
+
+	public int GetMaxEnchantLevel(string enchantmentKey)
+	{
+		switch (enchantmentKey)
+		{
+			case "jackhammer":
+				return 5000;
+			case "laser":
+				return 5000;
+			case "fortune":
+				return 250;
+			case "efficiency":
+				return 100;
+			default:
+				Log.Info($"[GetMaxEnchantLevel] Unknown enchantment key: {enchantmentKey}");
+				return 0;
 		}
 	}
 
