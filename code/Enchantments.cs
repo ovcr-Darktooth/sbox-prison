@@ -21,14 +21,16 @@ public sealed class Enchantments : Component
 	[Property]
 	public Currencies Currencies;
 	private WebsocketTools Websocket;
+	private WebsocketMessage authEnchantsMessage {get;set;} = new();
 	private WebsocketMessage saveEnchantmentsMessage {get;set;} = new();
 	private WebsocketMessage getEnchantmentsMessage {get;set;} = new();
 
 	private TimeUntil nextSaveDB = 5f;
 	private TimeUntil nextLoadEnchants = 0f;
+	private TimeUntil nextAuth = 2f;
 	private bool hasLoaded = false;
-
 	public bool hasLoadError = false;
+	private bool isAuth = false;
 	
 	public bool isMenuOpen = false;
 
@@ -37,7 +39,7 @@ public sealed class Enchantments : Component
 
 	protected override void OnUpdate()
 	{
-		if (!IsProxy && hasLoaded && nextSaveDB <= 0f)
+		if (!IsProxy && hasLoaded && isAuth && nextSaveDB <= 0f)
 		{
 			try {
 				saveDB();
@@ -50,7 +52,7 @@ public sealed class Enchantments : Component
 			nextSaveDB = 5f;
 		}
 
-		if (!IsProxy && !hasLoaded && nextLoadEnchants <= 0f)
+		if (!IsProxy && !hasLoaded && isAuth && nextLoadEnchants <= 0f)
 		{
 			Log.Info("Trying to load player enchants");
 			Websocket.message = getEnchantmentsMessage;
@@ -58,6 +60,15 @@ public sealed class Enchantments : Component
 			GetDB();			
 
 			nextLoadEnchants = 5f;
+		}
+
+		if (!IsProxy && !isAuth && nextAuth <= 0f)
+		{
+			Log.Info("Trying to auth");
+			Websocket.message = authEnchantsMessage;
+
+			WSAuth();
+			nextAuth = 3f;
 		}
 
 		if (Input.Pressed("Enchant_menu") && !IsProxy)
@@ -75,19 +86,21 @@ public sealed class Enchantments : Component
 			Websocket.url = "ws://websocket.overcreep.ovh:10706";
 			//Websocket.url = "ws://localhost:8080";
 
-			var getEnchantsToken = await Sandbox.Services.Auth.GetToken( "getEnchants" );
-			var saveEnchantsToken = await Sandbox.Services.Auth.GetToken( "saveEnchants" );
+			var enchantsToken = await Sandbox.Services.Auth.GetToken( "enchants" );
+
+			authEnchantsMessage.UseJsonTags = true;
+			WebSocketUtility.AddJsonTag(authEnchantsMessage, "action", "auth");
+			WebSocketUtility.AddJsonTag(authEnchantsMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
+			WebSocketUtility.AddJsonTag(authEnchantsMessage, "token", enchantsToken);
 
 			saveEnchantmentsMessage.UseJsonTags = true;
 			WebSocketUtility.AddJsonTag(saveEnchantmentsMessage, "action", "updateEnchants");
 			WebSocketUtility.AddJsonTag(saveEnchantmentsMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
 			WebSocketUtility.AddJsonTag(saveEnchantmentsMessage, "enchants", "{}");
-			WebSocketUtility.AddJsonTag(saveEnchantmentsMessage, "token", saveEnchantsToken);
 
 			getEnchantmentsMessage.UseJsonTags = true;
 			WebSocketUtility.AddJsonTag(getEnchantmentsMessage, "action", "getEnchants");
 			WebSocketUtility.AddJsonTag(getEnchantmentsMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
-			WebSocketUtility.AddJsonTag(getEnchantmentsMessage, "token", getEnchantsToken);
 
 			Websocket.onMessageReceived = OnWSMessageReceived;
 
@@ -367,6 +380,25 @@ public sealed class Enchantments : Component
 		}
 	}
 
+	private async void WSAuth()
+	{
+		if (!IsProxy)
+		{
+			await Task.RunInThreadAsync( async () =>
+			{
+				try
+				{
+					await WebSocketUtility.SendAsync( Websocket );
+				}
+				catch ( Exception ex )
+				{
+					hasLoadError = true;
+					Log.Info($"[Enchants]WSAuth, error on websocket: {ex.Message}");
+				}
+			} );
+		}
+	}
+
 	private void OnWSMessageReceived(string message)
     {
         Log.Info("Server responded: " + message);
@@ -385,6 +417,9 @@ public sealed class Enchantments : Component
 
                     switch (action)
                     {
+						case "auth":
+							isAuth = true;
+							break;
                         case "enchantsUpdated":
                             // Ne rien faire ou ajouter votre logique si nécessaire
                             break;

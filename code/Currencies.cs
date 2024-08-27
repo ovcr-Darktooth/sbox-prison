@@ -19,30 +19,42 @@ public sealed class Currencies : Component
 {
 	public Dictionary<string, double> _balances;
 	private TimeUntil nextSaveDB = 5f;
-	private TimeUntil nextLoadCurrencies = 0f;
+	private TimeUntil nextLoadCurrencies = 3f;
+	private TimeUntil nextAuth = 2f;
 	private WebsocketTools Websocket;
 	private bool hasLoaded = false;
+	private bool isAuth = false;
 	public bool hasLoadError = false;
 
+	private WebsocketMessage authCurrenciesMessage {get;set;} = new();
 	private WebsocketMessage saveCurrenciesMessage {get;set;} = new();
 	private WebsocketMessage getCurrenciesMessage {get;set;} = new();
 
 	protected override void OnUpdate()
 	{
-		if (!IsProxy && hasLoaded && nextSaveDB <= 0f)
+		if (!IsProxy && hasLoaded && isAuth && nextSaveDB <= 0f)
 		{
 			//DisplayBalances();
 			saveDB();
 			nextSaveDB = 5f;
 		}
 
-		if (!IsProxy && !hasLoaded && nextLoadCurrencies <= 0f)
+		if (!IsProxy && !hasLoaded && isAuth && nextLoadCurrencies <= 0f)
 		{
 			Log.Info("Trying to load player currencies");
 			Websocket.message = getCurrenciesMessage;
 
 			GetDB();
 			nextLoadCurrencies = 5f;
+		}
+
+		if (!IsProxy && !isAuth && nextAuth <= 0f)
+		{
+			Log.Info("Trying to auth");
+			Websocket.message = authCurrenciesMessage;
+
+			WSAuth();
+			nextAuth = 3f;
 		}
 	}
 
@@ -92,6 +104,25 @@ public sealed class Currencies : Component
 		}
 	}
 
+	private async void WSAuth()
+	{
+		if (!IsProxy)
+		{
+			await Task.RunInThreadAsync( async () =>
+			{
+				try
+				{
+					await WebSocketUtility.SendAsync( Websocket );
+				}
+				catch ( Exception ex )
+				{
+					hasLoadError = true;
+					Log.Info($"[Currencies]WSAuth, error on websocket: {ex.Message}");
+				}
+			} );
+		}
+	}
+
 	private void OnWSMessageReceived(string message)
     {
         Log.Info("Server responded: " + message);
@@ -110,6 +141,9 @@ public sealed class Currencies : Component
 
                     switch (action)
                     {
+						case "auth":
+							isAuth = true;
+							break;
                         case "balanceUpdated":
                             // Ne rien faire ou ajouter votre logique si nécessaire
                             break;
@@ -173,19 +207,21 @@ public sealed class Currencies : Component
 			Websocket.url = "ws://websocket.overcreep.ovh:10706";
 			//Websocket.url = "ws://localhost:8080";
 
-			var getCurrenciesToken = await Sandbox.Services.Auth.GetToken( "getCurrencies" );
-			var saveCurrenciesToken = await Sandbox.Services.Auth.GetToken( "saveCurrencies" );
+			var currenciesToken = await Sandbox.Services.Auth.GetToken( "currencies" );
+
+			authCurrenciesMessage.UseJsonTags = true;
+			WebSocketUtility.AddJsonTag(authCurrenciesMessage, "action", "auth");
+			WebSocketUtility.AddJsonTag(authCurrenciesMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
+			WebSocketUtility.AddJsonTag(authCurrenciesMessage, "token", currenciesToken);
 
 			saveCurrenciesMessage.UseJsonTags = true;
 			WebSocketUtility.AddJsonTag(saveCurrenciesMessage, "action", "updateBalance");
 			WebSocketUtility.AddJsonTag(saveCurrenciesMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
 			WebSocketUtility.AddJsonTag(saveCurrenciesMessage, "currencies", "{}");
-			WebSocketUtility.AddJsonTag(saveCurrenciesMessage, "token", saveCurrenciesToken);
 
 			getCurrenciesMessage.UseJsonTags = true;
 			WebSocketUtility.AddJsonTag(getCurrenciesMessage, "action", "getBalances");
 			WebSocketUtility.AddJsonTag(getCurrenciesMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
-			WebSocketUtility.AddJsonTag(getCurrenciesMessage, "token", getCurrenciesToken);
 
 			Websocket.onMessageReceived = OnWSMessageReceived;
 
