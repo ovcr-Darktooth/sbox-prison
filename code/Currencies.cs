@@ -256,7 +256,7 @@ public sealed class Currencies : Component
 			string saveDbName = GetCurrencyTextSaveDB(currencyEnum);
 			if (_balances.ContainsKey(saveDbName) && _balances[saveDbName] >= amount)
 			{
-				_balances[saveDbName] -= amount;
+				_balances[saveDbName] = Math.Round(_balances[saveDbName] - amount, 2);
 				return true;
 			}
 			return false;
