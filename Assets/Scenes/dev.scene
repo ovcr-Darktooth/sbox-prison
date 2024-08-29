@@ -9,23 +9,8 @@
       "Enabled": true,
       "Components": [
         {
-          "__type": "Sandbox.NetworkHelperCustom",
-          "__guid": "e8c14dbd-fae9-4706-a3a7-b96b8db0af07",
-          "__enabled": false,
-          "MinePrefab": {
-            "_type": "gameobject",
-            "prefab": "prefab/mine.prefab"
-          },
-          "PlayerPrefab": {
-            "_type": "gameobject",
-            "prefab": "prefab/player.prefab"
-          },
-          "SpawnPoints": [],
-          "StartServer": true
-        },
-        {
-          "__type": "Sandbox.NetworkManager",
-          "__guid": "5f3167a6-e97c-477a-9e4b-2d066278fa9e",
+          "__type": "NetworkManager",
+          "__guid": "0a0efbbb-55ab-4d37-be3e-4d267c419d7a",
           "MinePrefab": {
             "_type": "gameobject",
             "prefab": "prefab/mine.prefab"
@@ -34,41 +19,6 @@
             "_type": "gameobject",
             "prefab": "prefab/player_sdf.prefab"
           }
-        }
-      ]
-    },
-    {
-      "__guid": "985258af-bede-4a9d-86bb-f1e1fce9795f",
-      "Flags": 0,
-      "Name": "WeaponManager",
-      "Enabled": true,
-      "Components": [
-        {
-          "__type": "Facepunch.Arena.WeaponManager",
-          "__guid": "b93a3a2d-8e13-4986-83f4-4cc92814c42d",
-          "Prefabs": [
-            {
-              "_type": "gameobject",
-              "prefab": "prefab/weapon_mp5.prefab"
-            },
-            {
-              "_type": "gameobject",
-              "prefab": "prefab/weapon_usp.prefab"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "__guid": "b0a20179-5dd6-48ad-a670-e038ce528321",
-      "Flags": 0,
-      "Name": "Teleporter",
-      "Position": "-308.6357,726.2,40.38953",
-      "Enabled": true,
-      "Components": [
-        {
-          "__type": "TeleportComponent",
-          "__guid": "01388da0-e846-4399-9d3b-8dde14c4ba41"
         }
       ]
     },
@@ -236,157 +186,6 @@
       ]
     },
     {
-      "__guid": "9c2a9e83-732d-4bfa-b45d-1a7865f528cf",
-      "Flags": 0,
-      "Name": "Pickups",
-      "Children": [
-        {
-          "__guid": "2341f49c-3788-4d34-880d-70b88eb45e89",
-          "Flags": 0,
-          "Name": "pickup_mp5",
-          "Position": "-1024,-1408,32",
-          "Enabled": true,
-          "Components": [
-            {
-              "__type": "Facepunch.Arena.PickupSpawner",
-              "__guid": "242a0463-6097-448b-81f3-56d0dedf2c1b",
-              "PickupPrefab": {
-                "_type": "gameobject",
-                "prefab": "prefab/pickups/pickup_mp5.prefab"
-              },
-              "RespawnTime": 30
-            }
-          ]
-        },
-        {
-          "__guid": "491ee723-c579-49d2-b5d6-b3fdee5c11b1",
-          "Flags": 0,
-          "Name": "pickup_mp5",
-          "Position": "-1088,-1376,128",
-          "Enabled": true,
-          "Components": [
-            {
-              "__type": "Facepunch.Arena.PickupSpawner",
-              "__guid": "d39f9357-a8a5-4c37-8083-dca128adf667",
-              "PickupPrefab": {
-                "_type": "gameobject",
-                "prefab": "prefab/pickups/pickup_mp5.prefab"
-              },
-              "RespawnTime": 30
-            }
-          ]
-        },
-        {
-          "__guid": "ae1f1bb1-be22-40a6-b9e8-b940d38d74f8",
-          "Flags": 0,
-          "Name": "pickup_mp5",
-          "Position": "-960,-1312,64",
-          "Enabled": true,
-          "Components": [
-            {
-              "__type": "Facepunch.Arena.PickupSpawner",
-              "__guid": "86ffdb2e-88b8-4b76-8885-70e0f3cd64b7",
-              "PickupPrefab": {
-                "_type": "gameobject",
-                "prefab": "prefab/pickups/pickup_mp5.prefab"
-              },
-              "RespawnTime": 30
-            }
-          ]
-        },
-        {
-          "__guid": "8dad90d3-1c5d-4c12-b132-1d2b4cc05094",
-          "Flags": 0,
-          "Name": "pickup_mp5",
-          "Position": "-137.0698,1.605691,480.6712",
-          "Enabled": true,
-          "Components": [
-            {
-              "__type": "Facepunch.Arena.PickupSpawner",
-              "__guid": "5f3e056c-410a-4f14-82ff-f3e03ab46794",
-              "PickupPrefab": {
-                "_type": "gameobject",
-                "prefab": "prefab/pickups/pickup_mp5.prefab"
-              },
-              "RespawnTime": 30
-            }
-          ]
-        },
-        {
-          "__guid": "856c11fe-55e3-4743-b867-62ec05f5d275",
-          "Flags": 0,
-          "Name": "pickup_usp",
-          "Position": "151.9507,-256.2728,13.43349",
-          "Enabled": true,
-          "Components": [
-            {
-              "__type": "Facepunch.Arena.PickupSpawner",
-              "__guid": "5d84d821-f480-472b-9840-9c214020d0fa",
-              "PickupPrefab": {
-                "_type": "gameobject",
-                "prefab": "prefab/pickups/pickup_usp.prefab"
-              },
-              "RespawnTime": 30
-            }
-          ]
-        },
-        {
-          "__guid": "41d118ba-47dc-4a11-9a86-b04dba875a7b",
-          "Flags": 0,
-          "Name": "pickup_usp",
-          "Position": "-504.3683,1086.62,13.43345",
-          "Enabled": true,
-          "Components": [
-            {
-              "__type": "Facepunch.Arena.PickupSpawner",
-              "__guid": "b8709b7d-0b5c-4445-9203-4ab3b65c9f5b",
-              "PickupPrefab": {
-                "_type": "gameobject",
-                "prefab": "prefab/pickups/pickup_usp.prefab"
-              },
-              "RespawnTime": 30
-            }
-          ]
-        },
-        {
-          "__guid": "cde8255c-75db-47d9-83e9-af4fa10da6f1",
-          "Flags": 0,
-          "Name": "pickup_usp",
-          "Position": "-26.94098,1137.205,116.7191",
-          "Enabled": true,
-          "Components": [
-            {
-              "__type": "Facepunch.Arena.PickupSpawner",
-              "__guid": "501bf7b2-6d8f-4e63-902c-7d3c568a5b1e",
-              "PickupPrefab": {
-                "_type": "gameobject",
-                "prefab": "prefab/pickups/pickup_usp.prefab"
-              },
-              "RespawnTime": 30
-            }
-          ]
-        },
-        {
-          "__guid": "ab3f3d6c-be23-4afb-9d4a-87c8b2b10360",
-          "Flags": 0,
-          "Name": "pickup_usp",
-          "Position": "919.1946,282.2023,17.69174",
-          "Enabled": true,
-          "Components": [
-            {
-              "__type": "Facepunch.Arena.PickupSpawner",
-              "__guid": "73cd99d4-d81a-4c32-b9e5-58a261bc0ce0",
-              "PickupPrefab": {
-                "_type": "gameobject",
-                "prefab": "prefab/pickups/pickup_usp.prefab"
-              },
-              "RespawnTime": 30
-            }
-          ]
-        }
-      ]
-    },
-    {
       "__guid": "e23163bf-7610-469e-b058-28203fab144c",
       "Flags": 0,
       "Name": "Map",
@@ -425,82 +224,11 @@
       ]
     },
     {
-      "__guid": "7ba11b75-3f5a-408e-b079-6070051394bd",
-      "Flags": 0,
-      "Name": "Terrain",
-      "Position": "-109.7477,-31.45787,45.21332",
-      "Components": [
-        {
-          "__type": "Sandbox.Terrain",
-          "__guid": "4379ed43-117e-4636-ab60-d95396724ef7",
-          "__version": 1,
-          "ClipMapLodExtentTexels": 128,
-          "ClipMapLodLevels": 7,
-          "DebugView": "None",
-          "EnableCollision": true,
-          "IsTrigger": false,
-          "RenderType": "Off",
-          "Static": true,
-          "Storage": "new terrain.terrain",
-          "TerrainHeight": 10000,
-          "TerrainSize": 20000
-        },
-        {
-          "__type": "Sandbox.TerrainCollider",
-          "__guid": "6b8a4c09-6b25-40f4-9d5e-89ba4a00b757",
-          "IsTrigger": false,
-          "Static": true
-        }
-      ]
-    },
-    {
       "__guid": "76dec1f0-9017-4f64-a8fd-716cbdd1bbf6",
       "Flags": 0,
       "Name": "Mines",
       "Position": "-1509.113,-2041.443,243.2538",
       "Enabled": true
-    },
-    {
-      "__guid": "d430691e-28ee-4a55-9d92-3b7e3737e83e",
-      "Flags": 0,
-      "Name": "Test sdf",
-      "Position": "-1126,-1822,64",
-      "Components": [
-        {
-          "__type": "BoxBrush",
-          "__guid": "41440897-126f-4d8a-b7e6-1bdc5c2b8969",
-          "__enabled": false,
-          "sdf3DVolume": "sdfvol/box.sdfvol",
-          "Size": 100
-        }
-      ],
-      "Children": [
-        {
-          "__guid": "b60eaf10-14ee-48f1-9b73-265561804daf",
-          "Flags": 0,
-          "Name": "sdfworld",
-          "Position": "0,0,0",
-          "Enabled": true,
-          "Components": [
-            {
-              "__type": "Sandbox.Sdf.Sdf3DWorld",
-              "__guid": "94565980-bf15-4257-8d68-27697146c385",
-              "__enabled": false
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "__guid": "fd190b45-3cc4-4077-b2b5-f95025409d49",
-      "Flags": 0,
-      "Name": "Test SdfWorld",
-      "Components": [
-        {
-          "__type": "Sandbox.Sdf.Sdf3DWorld",
-          "__guid": "42fe2210-2c2b-43e6-bfc8-828b26779906"
-        }
-      ]
     }
   ],
   "SceneProperties": {

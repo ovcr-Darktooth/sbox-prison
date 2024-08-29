@@ -12,6 +12,8 @@ public sealed class SDFGun : Component
 	[Property] public CameraComponent ViewModelCamera { get; set; } 
 
 	[Property] public Currencies Currencies { get; set; } 
+	[Property] public Backpack Backpack { get; set; } 
+	[Property] public Multiplicators Multiplicators { get; set; } 
 
 	private TimeUntil nextDestroy = 0.1f;	
 	public bool buildMode = false; 
@@ -159,9 +161,13 @@ public sealed class SDFGun : Component
 			int nbBlocsSupp = Mine.PreRemoveCube(snappedPosition);
 			Mine.RemoveCube(snappedPosition);
 
-			if (Currencies.IsValid() && nbBlocsSupp > 0)
+			if (Currencies.IsValid() && Multiplicators.IsValid() && nbBlocsSupp > 0)
 			{
-				Currencies.AddCurrency(CurrenciesEnum.Dollars, 3 * nbBlocsSupp);
+				float multiplicator = Multiplicators.getMultiplicator(Multiplicator.Dollars);
+				//Backpack.AddBlocks(nbBlocsSupp);
+				//Chance to add 2x blocs (pickaxe enchant)
+				//Chance to sell to 2x (backpack enchant)
+				Currencies.AddCurrency(CurrenciesEnum.Dollars, 3 * multiplicator * nbBlocsSupp);
 				Currencies.AddCurrency(CurrenciesEnum.EToken, nbBlocsSupp);
 			}
 		}

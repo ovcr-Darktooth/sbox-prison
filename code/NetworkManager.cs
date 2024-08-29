@@ -3,17 +3,14 @@ using System.Linq;
 using Sandbox;
 using System.Collections.Generic;
 using Sandbox.Network;
-using Facepunch.Arena;
 
-namespace Sandbox;
 
-[Group( "Arena" )]
 [Title( "Network Manager")]
 public class NetworkManager : Component, Component.INetworkListener
 {
 	[Property] public PrefabScene PlayerPrefab { get; set; }
 	[Property] public GameObject MinePrefab { get; set; }
-	private bool areMinesInit = false;
+	private bool areMinesInit = false; 
 
 	protected override void OnStart()
 	{

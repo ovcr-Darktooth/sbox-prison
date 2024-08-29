@@ -20,18 +20,14 @@ public sealed class Enchantments : Component
 {
 	[Property]
 	public Currencies Currencies;
-	private WebsocketTools Websocket;
-	private WebsocketMessage authEnchantsMessage {get;set;} = new();
+	[Property] public OvcrServer OvcrServer { get; set; }
 	private WebsocketMessage saveEnchantmentsMessage {get;set;} = new();
 	private WebsocketMessage getEnchantmentsMessage {get;set;} = new();
 
 	private TimeUntil nextSaveDB = 5f;
 	private TimeUntil nextLoadEnchants = 0f;
-	private TimeUntil nextAuth = 2f;
-	private bool hasLoaded = false;
+	public bool hasLoaded = false;
 	public bool hasLoadError = false;
-	private bool isAuth = false;
-	
 	public bool isMenuOpen = false;
 
 	public Dictionary<string, int> _enchants;
@@ -39,7 +35,7 @@ public sealed class Enchantments : Component
 
 	protected override void OnUpdate()
 	{
-		if (!IsProxy && hasLoaded && isAuth && nextSaveDB <= 0f)
+		if (!IsProxy && hasLoaded && OvcrServer.isAuth && nextSaveDB <= 0f)
 		{
 			try {
 				saveDB();
@@ -52,23 +48,11 @@ public sealed class Enchantments : Component
 			nextSaveDB = 5f;
 		}
 
-		if (!IsProxy && !hasLoaded && isAuth && nextLoadEnchants <= 0f)
+		if (!IsProxy && !hasLoaded && OvcrServer.isAuth && nextLoadEnchants <= 0f)
 		{
 			Log.Info("Trying to load player enchants");
-			Websocket.message = getEnchantmentsMessage;
-
 			GetDB();			
-
 			nextLoadEnchants = 5f;
-		}
-
-		if (!IsProxy && !isAuth && nextAuth <= 0f)
-		{
-			Log.Info("Trying to auth");
-			Websocket.message = authEnchantsMessage;
-
-			WSAuth();
-			nextAuth = 3f;
 		}
 
 		if (Input.Pressed("Enchant_menu") && !IsProxy)
@@ -77,22 +61,11 @@ public sealed class Enchantments : Component
 	}
 	
 
-	protected override async void OnStart()
+	protected override void OnStart()
 	{
 		base.OnStart();
 		if (!IsProxy)
 		{
-			Websocket = new WebsocketTools();
-			Websocket.url = "ws://websocket.overcreep.ovh:10706";
-			//Websocket.url = "ws://localhost:8080";
-
-			var enchantsToken = await Sandbox.Services.Auth.GetToken( "enchants" );
-
-			authEnchantsMessage.UseJsonTags = true;
-			WebSocketUtility.AddJsonTag(authEnchantsMessage, "action", "auth");
-			WebSocketUtility.AddJsonTag(authEnchantsMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
-			WebSocketUtility.AddJsonTag(authEnchantsMessage, "token", enchantsToken);
-
 			saveEnchantmentsMessage.UseJsonTags = true;
 			WebSocketUtility.AddJsonTag(saveEnchantmentsMessage, "action", "updateEnchants");
 			WebSocketUtility.AddJsonTag(saveEnchantmentsMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
@@ -101,10 +74,6 @@ public sealed class Enchantments : Component
 			getEnchantmentsMessage.UseJsonTags = true;
 			WebSocketUtility.AddJsonTag(getEnchantmentsMessage, "action", "getEnchants");
 			WebSocketUtility.AddJsonTag(getEnchantmentsMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
-
-			Websocket.onMessageReceived = OnWSMessageReceived;
-
-			Websocket.message = getEnchantmentsMessage;	
 
 			_enchants = new Dictionary<string, int>();
 
@@ -358,7 +327,7 @@ public sealed class Enchantments : Component
 	}
 
 
-	private async void saveDB()
+	private void saveDB()
 	{
 		if (!IsProxy && hasLoaded)
 		{
@@ -366,116 +335,20 @@ public sealed class Enchantments : Component
 
 			string jsonCurrencies = JsonSerializer.Serialize(_enchants);
 
-			Websocket.message = saveEnchantmentsMessage;
+			WebSocketUtility.ChangeJsonTagValue(saveEnchantmentsMessage, "enchants", jsonCurrencies);
 
-			WebSocketUtility.ChangeJsonTagValue(Websocket.message, "enchants", jsonCurrencies);
-
-			await Task.RunInThreadAsync( async () =>
-			{
-				try
-				{
-					await WebSocketUtility.SendAsync( Websocket );
-				}
-				catch ( Exception ex )
-				{
-					hasLoadError = true;
-					Log.Info($"[Enchants]saveDB, error on websocket: {ex.Message}");
-				}
-			} );
-			
+			if (OvcrServer.IsValid())
+				OvcrServer.SendMessage(saveEnchantmentsMessage);	
 		}
 	}
 
-	private async void GetDB()
+	private void GetDB()
 	{
-		if (!IsProxy)
-		{
-			await Task.RunInThreadAsync( async () =>
-			{
-				try
-				{
-					await WebSocketUtility.SendAsync( Websocket );
-				}
-				catch ( Exception ex )
-				{
-					hasLoadError = true;
-					Log.Info($"[Enchants]GetDB, error on websocket: {ex.Message}");
-				}
-			} );
-		}
+		if (!IsProxy && OvcrServer.IsValid())
+			OvcrServer.SendMessage(getEnchantmentsMessage);
 	}
 
-	private async void WSAuth()
-	{
-		if (!IsProxy)
-		{
-			await Task.RunInThreadAsync( async () =>
-			{
-				try
-				{
-					await WebSocketUtility.SendAsync( Websocket );
-				}
-				catch ( Exception ex )
-				{
-					hasLoadError = true;
-					Log.Info($"[Enchants]WSAuth, error on websocket: {ex.Message}");
-				}
-			} );
-		}
-	}
-
-	private void OnWSMessageReceived(string message)
-    {
-        Log.Info("Server responded: " + message);
-
-		try
-        {
-            // Désérialiser le message en un JsonDocument
-            using (JsonDocument doc = JsonDocument.Parse(message))
-            {
-                JsonElement root = doc.RootElement;
-
-                // Vérifier le type d'action
-                if (root.TryGetProperty("action", out JsonElement actionElement))
-                {
-                    string action = actionElement.GetString();
-
-                    switch (action)
-                    {
-						case "auth":
-							isAuth = true;
-							break;
-                        case "enchantsUpdated":
-                            // Ne rien faire ou ajouter votre logique si nécessaire
-                            break;
-
-                        case "getEnchants":
-                            if (root.TryGetProperty("enchants", out JsonElement enchantsElement))
-                            {
-                                LoadEnchants(enchantsElement);
-								hasLoaded = true;
-								hasLoadError = false;
-                            }
-                            else
-                                Log.Info("Enchants property is missing");
-                            break;
-
-                        default:
-                            Log.Info("Unknown action: " + action);
-                            break;
-                    }
-                }
-                else
-                    Log.Info("Action property is missing");
-            }
-        }
-        catch (JsonException ex)
-        {
-            Log.Info("Error parsing server response: " + ex.Message);
-        }
-    }
-
-	private void LoadEnchants(JsonElement enchants)
+	public void LoadEnchants(JsonElement enchants)
     {
         if (enchants.ValueKind == JsonValueKind.Object)
         {

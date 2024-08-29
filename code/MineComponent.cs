@@ -57,22 +57,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	private TimeSince timeSinceReset = 0;
 	private TimeSince timeSincePercentage = 0;
 
-	// Matrice de données représentant la forme
-	
-    /*int[,,] _shapeMatrix;
-	//[Sync( Query = true )]
-	[HostSync( Query = true )]
-	public int[,,] shapeMatrix 
-	{
-		get => _shapeMatrix;
-		set => _shapeMatrix = value;
-	}
-
-	void SetShapeMatrix(int[,,] val)
-	{
-		_shapeMatrix = val;
-	}*/
-
+	// Matrice de données représentant la forme (dans un seul tableau vertical), parcourir avec longeur / hauteur (voir calcul déja effectué)
 	private int[] _flattenedShapeMatrix;
 
 	[HostSync(Query = true)]
@@ -445,10 +430,11 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 
 		if(entityStart.IsValid() && entityEnd.IsValid())
 		{			
-			var posTrace = Scene.Trace.Ray( entityStartPosition, entityEndPosition ).Run();
+			//Ligne entre le start/end
+			/*var posTrace = Scene.Trace.Ray( entityStartPosition, entityEndPosition ).Run();
 			Gizmo.Draw.Color = Color.Red;
   			Gizmo.Draw.LineThickness = 3;
-			Gizmo.Draw.Line(posTrace.StartPosition, posTrace.EndPosition);
+			Gizmo.Draw.Line(posTrace.StartPosition, posTrace.EndPosition);*/
 			
 			if (timeSinceReset > 300f) // 60 * 5 = 300
 			{
@@ -467,15 +453,6 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 		{
 			Log.Info("pas valide");
 		}*/
-
-		if (gizmoTest != Vector3.Zero)
-		{
-			Gizmo.Draw.Color = Color.Green;
-  			Gizmo.Draw.LineThickness = 3;
-			Gizmo.Draw.LineBBox(BBox.FromPositionAndSize(gizmoTest, blockSizeF));
-		}
-
-
 	}
 
 	void OnAroundMineTriggerEnter(Collider collider)

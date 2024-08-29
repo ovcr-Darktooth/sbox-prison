@@ -174,11 +174,23 @@
       {
         "__type": "SDFGun",
         "__guid": "8f1ad832-8ad3-4dff-b468-eca959936ef7",
+        "Backpack": {
+          "_type": "component",
+          "component_id": "511d5c6e-fcc4-480b-8b9d-eafc6dc0a800",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Backpack"
+        },
         "Currencies": {
           "_type": "component",
           "component_id": "63ac087d-5529-46ef-9bf9-fb83b222f201",
           "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
           "component_type": "Currencies"
+        },
+        "Multiplicators": {
+          "_type": "component",
+          "component_id": "cd22f5fb-4fbd-4427-9b93-a9fbed92dab3",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Multiplicators"
         },
         "sdf3DVolume": "sdfvol/box.sdfvol",
         "SphereSize": 100,
@@ -197,11 +209,71 @@
           "component_id": "63ac087d-5529-46ef-9bf9-fb83b222f201",
           "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
           "component_type": "Currencies"
+        },
+        "OvcrServer": {
+          "_type": "component",
+          "component_id": "12d5f1b0-7b3d-47f6-831c-6145948a3b2e",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "OvcrServer"
         }
       },
       {
         "__type": "Currencies",
-        "__guid": "63ac087d-5529-46ef-9bf9-fb83b222f201"
+        "__guid": "63ac087d-5529-46ef-9bf9-fb83b222f201",
+        "OvcrServer": {
+          "_type": "component",
+          "component_id": "12d5f1b0-7b3d-47f6-831c-6145948a3b2e",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "OvcrServer"
+        }
+      },
+      {
+        "__type": "Multiplicators",
+        "__guid": "cd22f5fb-4fbd-4427-9b93-a9fbed92dab3"
+      },
+      {
+        "__type": "OvcrServer",
+        "__guid": "12d5f1b0-7b3d-47f6-831c-6145948a3b2e",
+        "Currencies": {
+          "_type": "component",
+          "component_id": "63ac087d-5529-46ef-9bf9-fb83b222f201",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Currencies"
+        },
+        "Enchantments": {
+          "_type": "component",
+          "component_id": "a6ceff02-f4a2-4b65-be06-05b3c683edb7",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Enchantments"
+        },
+        "Multiplicators": {
+          "_type": "component",
+          "component_id": "cd22f5fb-4fbd-4427-9b93-a9fbed92dab3",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Multiplicators"
+        }
+      },
+      {
+        "__type": "Backpack",
+        "__guid": "511d5c6e-fcc4-480b-8b9d-eafc6dc0a800",
+        "Currencies": {
+          "_type": "component",
+          "component_id": "63ac087d-5529-46ef-9bf9-fb83b222f201",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Currencies"
+        },
+        "Enchantments": {
+          "_type": "component",
+          "component_id": "a6ceff02-f4a2-4b65-be06-05b3c683edb7",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Enchantments"
+        },
+        "OvcrServer": {
+          "_type": "component",
+          "component_id": "12d5f1b0-7b3d-47f6-831c-6145948a3b2e",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "OvcrServer"
+        }
       }
     ],
     "Children": [
@@ -1198,6 +1270,7 @@
                 "AutoScreenScale": true,
                 "Opacity": 1,
                 "Scale": 1,
+                "ScaleStrategy": "ConsistentHeight",
                 "ZIndex": 100
               },
               {
