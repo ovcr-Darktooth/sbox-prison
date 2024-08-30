@@ -141,7 +141,7 @@ public sealed class Multiplicators : Component
 
 	private float getBoosterMultiplicator(Boosters booster)
 	{
-        if (activeBoosters[booster].timeUntilExpiration > 0)
+        if (activeBoosters.ContainsKey(booster) && activeBoosters[booster].timeUntilExpiration > 0)
             return activeBoosters[booster].multiplicator;
 		return 0.0f;
 	}
