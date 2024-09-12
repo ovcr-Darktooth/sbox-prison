@@ -2,12 +2,19 @@ using Sandbox;
 using System.Collections.Generic;
 using System.Text.Json;
 
+public enum BlockType
+{
+    Invalid = -1,
+	Normal = 0,
+    VIP
+}
+
 public sealed class Backpack : Component
 {
 	[Property] public OvcrServer OvcrServer { get; set; } 
 	[Property] public Enchantments Enchantments { get; set; } 
 	[Property] public Currencies Currencies { get; set; } 
-	public Dictionary<string, int> _inventory;
+	public Dictionary<string, double> _inventory;
     private TimeUntil nextSaveDB = 5f;
     private TimeUntil nextLoadInventory = 3f;
     public bool hasLoaded = false;
@@ -31,6 +38,8 @@ public sealed class Backpack : Component
             GetDB();
             nextLoadInventory = 5f;
         }
+
+        //todo: vendre le backpack, saveDB quand fini
     }
 
     private void SaveDB()
@@ -41,7 +50,7 @@ public sealed class Backpack : Component
 
             string jsonInventory = JsonSerializer.Serialize(_inventory);
 
-            WebSocketUtility.ChangeJsonTagValue(saveInventoryMessage, "inventory", jsonInventory);
+            WebSocketUtility.ChangeJsonTagValue(saveInventoryMessage, "backpack", jsonInventory);
 
             if (OvcrServer.IsValid())
                 OvcrServer.SendMessage(saveInventoryMessage);
@@ -60,16 +69,12 @@ public sealed class Backpack : Component
         {
             foreach (JsonProperty blockProperty in inventory.EnumerateObject())
             {
-                string blockType = blockProperty.Name;
+                BlockType blockType = GetBlockTypeFromString(blockProperty.Name);
 
-                if (int.TryParse(blockProperty.Value.GetString(), out var quantity))
-                {
+                if (double.TryParse(blockProperty.Value.GetString(), out var quantity))
                     AddBlock(blockType, quantity);
-                }
                 else
-                {
                     Log.Info($"Invalid quantity for block type '{blockType}': {blockProperty.Value}");
-                }
             }
         }
         else
@@ -92,9 +97,9 @@ public sealed class Backpack : Component
             WebSocketUtility.AddJsonTag(getInventoryMessage, "action", "getBackpack");
             WebSocketUtility.AddJsonTag(getInventoryMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
 
-            _inventory = new Dictionary<string, int>();
+            _inventory = new Dictionary<string, double>();
 
-            AddBlock("normalBlocks", 0);
+            //AddBlock(BlockType.Normal, 0);
             //AddBlock("Stone", 0);
         }
     }
@@ -104,37 +109,40 @@ public sealed class Backpack : Component
         base.OnDestroy();
     }
 
-    public void AddBlock(string blockType, int quantity)
+    public void AddBlock(BlockType blockType, double quantity)
     {
-        if (!IsProxy)
+        if (!IsProxy && hasLoaded)
         {
-            if (_inventory.ContainsKey(blockType))
-                _inventory[blockType] += quantity;
+            string blockDbName = GetBlockTypeTextSaveDB(blockType);
+            if (_inventory.ContainsKey(blockDbName))
+                _inventory[blockDbName] += quantity;
             else
-                _inventory[blockType] = quantity;
+                _inventory[blockDbName] = quantity;
 
-            Log.Info($"{quantity} {blockType}(s) added to backpack. Total: {_inventory[blockType]}.");
+            Log.Info($"{quantity} {blockDbName}(s) added to backpack. Total: {_inventory[blockDbName]}.");
         }
     }
 
-    public void RemoveBlock(string blockType, int quantity)
+    public void RemoveBlock(BlockType blockType, double quantity)
     {
-        if (!IsProxy && _inventory.ContainsKey(blockType))
+        if (!IsProxy && hasLoaded) 
         {
-            _inventory[blockType] -= quantity;
-            if (_inventory[blockType] <= 0)
+            string blockDbName = GetBlockTypeTextSaveDB(blockType);
+            if (_inventory.ContainsKey(blockDbName))
             {
-                _inventory.Remove(blockType);
-                Log.Info($"{blockType} removed from backpack.");
-            }
-            else
-            {
-                Log.Info($"{quantity} {blockType}(s) removed from backpack. Remaining: {_inventory[blockType]}.");
+                _inventory[blockDbName] -= quantity;
+                if (_inventory[blockDbName] <= 0)
+                {
+                    _inventory.Remove(blockDbName);
+                    Log.Info($"{blockDbName} removed from backpack.");
+                }
+                else
+                    Log.Info($"{quantity} {blockDbName}(s) removed from backpack. Remaining: {_inventory[blockDbName]}.");
             }
         }
     }
 
-    public int GetBlockCount(string blockType)
+    public double GetBlockCount(string blockType)
     {
         if (_inventory.ContainsKey(blockType))
         {
@@ -150,4 +158,27 @@ public sealed class Backpack : Component
             Log.Info($"Block Type: {item.Key}, Quantity: {item.Value}");
         }
     }
+
+
+    public string GetBlockTypeTextSaveDB(BlockType blockValue)
+	{
+		switch (blockValue)
+		{
+			case BlockType.Normal:
+				return "normal";
+			default:
+				return "invalid";
+		}
+	}
+
+    public BlockType GetBlockTypeFromString(string blockName)
+	{
+		switch (blockName.ToLower())
+		{
+			case "dollar":
+				return BlockType.Normal;
+			default:
+				return BlockType.Invalid;
+		}
+	}
 }

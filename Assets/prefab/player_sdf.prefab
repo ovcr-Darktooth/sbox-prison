@@ -234,6 +234,12 @@
       {
         "__type": "OvcrServer",
         "__guid": "12d5f1b0-7b3d-47f6-831c-6145948a3b2e",
+        "Backpack": {
+          "_type": "component",
+          "component_id": "511d5c6e-fcc4-480b-8b9d-eafc6dc0a800",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Backpack"
+        },
         "Currencies": {
           "_type": "component",
           "component_id": "63ac087d-5529-46ef-9bf9-fb83b222f201",
@@ -289,6 +295,13 @@
             "BodyGroups": 341,
             "CreateBoneObjects": true,
             "Model": "models/citizen/citizen.vmdl",
+            "Morphs": {},
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
             "RenderType": "Off",
             "Tint": "1,1,1,1",
             "UseAnimGraph": true
@@ -1197,6 +1210,13 @@
             "BodyGroups": 341,
             "CreateBoneObjects": false,
             "Model": "models/citizen/citizen.vmdl",
+            "Morphs": {},
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
             "RenderType": "ShadowsOnly",
             "Tint": "1,1,1,1",
             "UseAnimGraph": true
@@ -1396,6 +1416,12 @@
             "InteractionRange": 1000,
             "LookAtCamera": true,
             "PanelSize": "512,512",
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
             "RenderScale": 1,
             "VerticalAlign": "Center"
           },
@@ -1412,8 +1438,6 @@
   "MenuPath": null,
   "MenuIcon": null,
   "ResourceVersion": 1,
-  "__references": [
-    "ambi.myog"
-  ],
+  "__references": [],
   "__version": 1
 }

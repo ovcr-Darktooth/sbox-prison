@@ -31,8 +31,7 @@ public sealed class Multiplicators : Component
 	[Property] public OvcrServer OvcrServer { get; set; } 
 	[Property] public Currencies Currencies { get; set; } 
 	[Property] public Enchantments Enchantments { get; set; } 
-	private bool hasLoaded = false;
-	private bool isAuth = false;
+	public bool hasLoaded = false;
 	public bool hasLoadError = false;
 	private TimeUntil nextLoadMultiplicators = 3f;
     private TimeUntil nextCheckBoosters = 5f;
@@ -63,7 +62,7 @@ public sealed class Multiplicators : Component
         }
             
 
-		if (!IsProxy && !hasLoaded && isAuth && nextLoadMultiplicators <= 0f)
+		if (!IsProxy && !hasLoaded && nextLoadMultiplicators <= 0f)
 		{
 			Log.Info("Trying to load player boosters");
 			//Websocket.message = getCurrenciesMessage;

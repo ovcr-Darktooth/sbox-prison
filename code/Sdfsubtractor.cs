@@ -164,7 +164,7 @@ public sealed class SDFGun : Component
 			if (Currencies.IsValid() && Multiplicators.IsValid() && nbBlocsSupp > 0)
 			{
 				float multiplicator = Multiplicators.getMultiplicator(Multiplicator.Dollars);
-				//Backpack.AddBlocks(nbBlocsSupp);
+				//Backpack.AddBlock(BlockType.Normal, nbBlocsSupp);
 				//Chance to add 2x blocs (pickaxe enchant)
 				//Chance to sell to 2x (backpack enchant)
 				Currencies.AddCurrency(CurrenciesEnum.Dollars, 3 * multiplicator * nbBlocsSupp);

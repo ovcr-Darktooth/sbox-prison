@@ -12,6 +12,7 @@ public sealed class OvcrServer : Component
 	[Property] public Currencies Currencies { get; set; }
 	[Property] public Enchantments Enchantments { get; set; }
 	[Property] public Multiplicators Multiplicators { get; set; } 
+	[Property] public Backpack Backpack { get; set; } 
 
 	
 	protected override void OnUpdate()
@@ -93,12 +94,10 @@ public sealed class OvcrServer : Component
 
 		try
         {
-            // Désérialiser le message en un JsonDocument
             using (JsonDocument doc = JsonDocument.Parse(message))
             {
                 JsonElement root = doc.RootElement;
 
-                // Vérifier le type d'action
                 if (root.TryGetProperty("action", out JsonElement actionElement))
                 {
                     string action = actionElement.GetString();
@@ -111,12 +110,11 @@ public sealed class OvcrServer : Component
                         case "balanceUpdated":
                             break;
                         case "getBalances":
-                            // Charger les monnaies depuis la réponse
                             if (root.TryGetProperty("balances", out JsonElement balancesElement) && Currencies.IsValid())
                             {
-                                Currencies.LoadBalances(balancesElement);
 								Currencies.hasLoaded = true;
 								Currencies.hasLoadError = false;
+                                Currencies.LoadBalances(balancesElement);
                             }
                             else
                                 Log.Info("Balances property is missing");
@@ -126,13 +124,38 @@ public sealed class OvcrServer : Component
                         case "getEnchants":
                             if (root.TryGetProperty("enchants", out JsonElement enchantsElement) && Enchantments.IsValid())
                             {
-                                Enchantments.LoadEnchants(enchantsElement);
-								Enchantments.hasLoaded = true;
+                                Enchantments.hasLoaded = true;
 								Enchantments.hasLoadError = false;
+								Enchantments.LoadEnchants(enchantsElement);
                             }
                             else
                                 Log.Info("Enchants property is missing");
                             break;
+						case "boostersUpdated":
+							break;
+						case "getBoosters":
+							if (root.TryGetProperty("boosters", out JsonElement boostersElement) && Multiplicators.IsValid())
+                            {
+								Multiplicators.hasLoaded = true;
+								Multiplicators.hasLoadError = false;
+                                Multiplicators.LoadBoosters(boostersElement);
+                            }
+                            else
+                                Log.Info("Boosters property is missing");
+							break;
+						case "backpackUpdated":
+							break;
+						case "getBackpack":
+							if (root.TryGetProperty("backpack", out JsonElement backpackElement) && Backpack.IsValid())
+                            {
+								Backpack.hasLoaded = true;
+								Backpack.hasLoadError = false;
+                                Backpack.LoadInventory(backpackElement);
+                            }
+                            else
+                                Log.Info("Backpack property is missing");
+							break;
+						
                         default:
                             Log.Info("Unknown action: " + action);
                             break;
