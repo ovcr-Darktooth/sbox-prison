@@ -90,12 +90,12 @@ public sealed class Backpack : Component
         {
             saveInventoryMessage.UseJsonTags = true;
             WebSocketUtility.AddJsonTag(saveInventoryMessage, "action", "updateBackpack");
-            WebSocketUtility.AddJsonTag(saveInventoryMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
+            WebSocketUtility.AddJsonTag(saveInventoryMessage, "playerId", GameObject.Network.Owner.SteamId.ToString());
             WebSocketUtility.AddJsonTag(saveInventoryMessage, "backpack", "{}");
 
             getInventoryMessage.UseJsonTags = true;
             WebSocketUtility.AddJsonTag(getInventoryMessage, "action", "getBackpack");
-            WebSocketUtility.AddJsonTag(getInventoryMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
+            WebSocketUtility.AddJsonTag(getInventoryMessage, "playerId", GameObject.Network.Owner.SteamId.ToString());
 
             _inventory = new Dictionary<string, double>();
 

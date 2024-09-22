@@ -51,7 +51,7 @@
 	{
 		if ( !LocalPlayer.IsValid() )
 		{
-			LocalPlayer = Scene.GetAllComponents<PlayerController>().FirstOrDefault( p => p.Network.OwnerConnection == Connection.Local );
+			LocalPlayer = Scene.GetAllComponents<PlayerController>().FirstOrDefault( p => p.Network.Owner == Connection.Local );
 		}
 	}
 

@@ -163,7 +163,7 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 				var chat = Scene.GetAllComponents<Chat>().FirstOrDefault();
 
 				if ( chat.IsValid() )
-					chat.AddTextLocal( "💀️", $"{player.Network.OwnerConnection.DisplayName} has killed {Network.OwnerConnection.DisplayName}" );
+					chat.AddTextLocal( "💀️", $"{player.Network.Owner.DisplayName} has killed {Network.Owner.DisplayName}" );
 				
 				if ( !player.IsProxy )
 				{
@@ -210,7 +210,7 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 		{
 			//Respawn();
 			RespawnAsync(0.5f);
-			SetSteamId(GameObject.Network.OwnerConnection.SteamId);
+			SetSteamId(GameObject.Network.Owner.SteamId);
 		}
 
 		if ( IsProxy && ViewModelCamera.IsValid() )

@@ -96,12 +96,12 @@ public sealed class Currencies : Component
 		{
 			saveCurrenciesMessage.UseJsonTags = true;
 			WebSocketUtility.AddJsonTag(saveCurrenciesMessage, "action", "updateBalance");
-			WebSocketUtility.AddJsonTag(saveCurrenciesMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
+			WebSocketUtility.AddJsonTag(saveCurrenciesMessage, "playerId", GameObject.Network.Owner.SteamId.ToString());
 			WebSocketUtility.AddJsonTag(saveCurrenciesMessage, "currencies", "{}");
 
 			getCurrenciesMessage.UseJsonTags = true;
 			WebSocketUtility.AddJsonTag(getCurrenciesMessage, "action", "getBalances");
-			WebSocketUtility.AddJsonTag(getCurrenciesMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
+			WebSocketUtility.AddJsonTag(getCurrenciesMessage, "playerId", GameObject.Network.Owner.SteamId.ToString());
 
 			_balances = new Dictionary<string, double>();
 

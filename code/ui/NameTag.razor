@@ -3,7 +3,7 @@
 @namespace Facepunch.Arena
 
 @if ( Player.IsValid() && Player.LifeState == LifeState.Alive
-	&& Network.OwnerConnection is Connection owner
+	&& Network.Owner is Connection owner
 	&& owner != Connection.Local )
 {
 	<root>
@@ -42,5 +42,5 @@
 		}
 	}
 	
-	protected override int BuildHash() => System.HashCode.Combine( Network.OwnerConnection, IsVoicePlaying, Player?.LifeState );
+	protected override int BuildHash() => System.HashCode.Combine( Network.Owner, IsVoicePlaying, Player?.LifeState );
 }

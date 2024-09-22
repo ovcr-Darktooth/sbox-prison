@@ -37,6 +37,7 @@ public sealed class Multiplicators : Component
     private TimeUntil nextCheckBoosters = 5f;
     private TimeUntil nextCleanUpBoosters = 1f;
 	private WebsocketMessage getBoostersMessage {get;set;} = new();
+    private WebsocketMessage updateActiveBoostersMessage {get;set;} = new();
 	private Dictionary<Boosters, List<(float duration, float multiplicator)>> availableBoosters = new();
     private Dictionary<Boosters, (TimeUntil timeUntilExpiration, float multiplicator)> activeBoosters = new();
 	
@@ -80,7 +81,12 @@ public sealed class Multiplicators : Component
 		{
 			getBoostersMessage.UseJsonTags = true;
 			WebSocketUtility.AddJsonTag(getBoostersMessage, "action", "getBoosters");
-			WebSocketUtility.AddJsonTag(getBoostersMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
+			WebSocketUtility.AddJsonTag(getBoostersMessage, "playerId", GameObject.Network.Owner.SteamId.ToString());
+
+            updateActiveBoostersMessage.UseJsonTags = true;
+			WebSocketUtility.AddJsonTag(updateActiveBoostersMessage, "action", "updateActiveBoosters");
+            WebSocketUtility.AddJsonTag(updateActiveBoostersMessage, "activeBoosters", "{}");
+			WebSocketUtility.AddJsonTag(updateActiveBoostersMessage, "playerId", GameObject.Network.Owner.SteamId.ToString());
 
 
             //DEBUG:
@@ -95,6 +101,22 @@ public sealed class Multiplicators : Component
             //END OF DEBUG
 		}
 	}
+
+    protected override void OnDestroy()
+    { 
+        base.OnDestroy();
+        if (!IsProxy && OvcrServer.IsValid())
+        {
+            string jsonActiveBoosters= JsonSerializer.Serialize(activeBoosters);
+
+			WebSocketUtility.ChangeJsonTagValue(updateActiveBoostersMessage, "activeBoosters", jsonActiveBoosters);
+            OvcrServer.SendMessage(updateActiveBoostersMessage);
+        }
+        else if (!IsProxy && !OvcrServer.IsValid())
+        {
+            Log.Info("Peut pas envoyer le message sur le destroyed .......");
+        }
+    }
 
 	private void GetDB()
 	{

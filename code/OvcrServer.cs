@@ -40,7 +40,7 @@ public sealed class OvcrServer : Component
 
 			authMessage.UseJsonTags = true;
 			WebSocketUtility.AddJsonTag(authMessage, "action", "auth");
-			WebSocketUtility.AddJsonTag(authMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
+			WebSocketUtility.AddJsonTag(authMessage, "playerId", GameObject.Network.Owner.SteamId.ToString());
 			WebSocketUtility.AddJsonTag(authMessage, "token", authToken);
 
 			Websocket.onMessageReceived = OnWSMessageReceived;

@@ -68,12 +68,12 @@ public sealed class Enchantments : Component
 		{
 			saveEnchantmentsMessage.UseJsonTags = true;
 			WebSocketUtility.AddJsonTag(saveEnchantmentsMessage, "action", "updateEnchants");
-			WebSocketUtility.AddJsonTag(saveEnchantmentsMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
+			WebSocketUtility.AddJsonTag(saveEnchantmentsMessage, "playerId", GameObject.Network.Owner.SteamId.ToString());
 			WebSocketUtility.AddJsonTag(saveEnchantmentsMessage, "enchants", "{}");
 
 			getEnchantmentsMessage.UseJsonTags = true;
 			WebSocketUtility.AddJsonTag(getEnchantmentsMessage, "action", "getEnchants");
-			WebSocketUtility.AddJsonTag(getEnchantmentsMessage, "playerId", GameObject.Network.OwnerConnection.SteamId.ToString());
+			WebSocketUtility.AddJsonTag(getEnchantmentsMessage, "playerId", GameObject.Network.Owner.SteamId.ToString());
 
 			_enchants = new Dictionary<string, int>();
 
