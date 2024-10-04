@@ -1,0 +1,62 @@
+
+menupanel
+{
+    position: absolute;
+    z-index: 1000;
+    pointer-events: all;
+    font-size: 12px;
+
+    .background
+    {
+        position: absolute;
+        left: -5000px;
+        right: -5000px;
+        top: -5000px;
+        bottom: -5000px;
+    }
+
+    .inner
+    {
+        min-width: 200px;
+        min-height: 20px;
+        flex-direction: column;
+        font-family: Poppins;
+        font-weight: bold;
+        border-radius: 10px;
+        box-shadow: 5px 5px 30px #000e;
+        overflow: hidden;
+        background-color: #2a2a2a;
+
+        .spacer
+        {
+            height: 1px;
+            background-color: #0005;
+        }
+
+        .option
+        {
+            color: #fffa;
+            padding: 0px 8px;
+            cursor: pointer;
+
+            .icon
+            {
+                padding: 8px;
+                font-family: Material Icons;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .text
+            {
+                padding: 8px;
+            }
+
+            &:hover
+            {
+                background-color: #3472e6;
+                color: #f5f8fe;
+            }
+        }
+    }
+}

@@ -1,0 +1,172 @@
+.root
+{
+	width: 100vw;
+	height: 100vh;
+	
+	justify-content: center;
+	align-items: center;
+
+	background-color: rgba(255, 255, 255, 0.6);
+	
+	transition: opacity 0.1s linear;
+	
+	pointer-events: all;
+}
+
+// === CARDS ===
+.card
+{
+	display: flex;
+	flex-direction: column;
+	
+	padding: 20px 20px 20px 20px;
+	//border: 5px solid #2a2a2a;
+	
+	width: 75vw;
+	height: 100vh;
+	
+	justify-content: center;
+}
+
+.card-title
+{
+	font-size: 94px;
+	font-family: 'Gentium Book Plus';
+	color: black;
+
+	font-weight: bold;
+}
+
+
+// === MENU ===
+.menu
+{
+	margin-top: 50px;
+
+	flex-direction: column;
+}
+
+
+// === SETTINGS ===
+.settings
+{
+	margin-top: 50px;
+
+	flex-direction: column;
+}
+
+
+// === ACHIEVEMENTS ===
+.achievements
+{
+	flex-direction: column;
+	
+	justify-content: flex-start;
+	
+	height: 80%;
+	margin-top: 50px;
+	
+	
+	.image
+	{
+		margin: 10px 10px 10px 10px;
+		
+		height: 80px;
+		width: 80px;
+	}
+	.image.locked
+	{
+		background-color: rgba(255, 67, 67, 0.6);
+	}
+	.image.unlocked
+	{
+		background-color: rgba(68, 182, 37, 0.6);
+	}
+	
+	.borders 
+	{
+		border: 1px solid #2a2a2a;
+
+		flex-shrink: 0;
+	}
+	
+	.info 
+	{
+		margin-left: 20px;
+		flex-direction: column;
+
+		justify-content: center;
+		
+		.title 
+		{
+			font-size: 32px;	
+		}
+		
+		.description 
+		{
+			font-size: 24px;
+		}
+	}
+}
+
+
+// === ELEMENTS ===
+.btn
+{
+	font-size: 54px;
+	font-family: 'Gentium Book Plus';
+	color: black;
+	
+	padding: 0px 10px 0px 10px;
+	margin: 10px 0px 10px 0px;
+	
+	width: 100%;
+	
+	&:hover 
+	{
+		padding: 0px 9px 0px 9px !important;
+		margin: 9px 0px 9px 0px !important;
+		
+		border: 1px solid #2a2a2a;
+		border-radius: 14px;
+		
+		background-color: rgba(235, 255, 255, 0.6);
+		font-style: italic;
+	}
+}
+.btn.outline
+{
+	border: 1px solid #2a2a2a;
+	border-radius: 14px;
+}
+
+.scroll 
+{
+	overflow: scroll;
+	flex-direction: column;
+}
+
+.slider
+{
+	font-size: 42px;
+	font-family: 'Gentium Book Plus';
+	color: black;
+	
+	flex-direction: column;
+	
+	flex-basis: 300px;
+	margin: 25px 0px 25px 0px;
+
+	.label
+	{
+		opacity: 1;
+		flex-grow: 1;
+		font-weight: bolder;
+	}
+
+	.output
+	{
+		justify-content: center;
+	}
+}
+

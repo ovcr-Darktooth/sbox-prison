@@ -196,7 +196,7 @@
   "MenuIcon": null,
   "ResourceVersion": 1,
   "__references": [
-    "ambi.myog"
+    "ambi.myog#52580"
   ],
   "__version": 1
 }

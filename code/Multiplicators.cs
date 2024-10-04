@@ -4,6 +4,7 @@ using static WebSocketUtility;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Linq;
+using System.Security.Cryptography;
 
 public enum Boosters
 {
@@ -39,7 +40,7 @@ public sealed class Multiplicators : Component
 	private WebsocketMessage getBoostersMessage {get;set;} = new();
     private WebsocketMessage updateActiveBoostersMessage {get;set;} = new();
 	private Dictionary<Boosters, List<(float duration, float multiplicator)>> availableBoosters = new();
-    private Dictionary<Boosters, (TimeUntil timeUntilExpiration, float multiplicator)> activeBoosters = new();
+    public Dictionary<Boosters, (TimeUntil timeUntilExpiration, float multiplicator)> activeBoosters = new();
 	
 	//niveaux ?
 	//récupérer le composant qui va gérer les niveaux
@@ -51,7 +52,7 @@ public sealed class Multiplicators : Component
 	{
 		if (!IsProxy && hasLoaded && nextCheckBoosters <= 0f)
 		{
-			DisplayBoosters();
+			//DisplayBoosters();
             CleanUpActiveBoosters();
 			nextCheckBoosters = 5f;
 		}
@@ -60,6 +61,7 @@ public sealed class Multiplicators : Component
         {
             CleanUpActiveBoosters();
             nextCleanUpBoosters = 1f;
+            //SendActiveBoosters();
         }
             
 
@@ -102,20 +104,15 @@ public sealed class Multiplicators : Component
 		}
 	}
 
-    protected override void OnDestroy()
+    protected override void OnDisabled()
     { 
-        base.OnDestroy();
-        if (!IsProxy && OvcrServer.IsValid())
+        if (!IsProxy)
         {
-            string jsonActiveBoosters= JsonSerializer.Serialize(activeBoosters);
+            Log.Info("Ondisabled multiplicators");
+            //DisplayBoosters();
+        }
 
-			WebSocketUtility.ChangeJsonTagValue(updateActiveBoostersMessage, "activeBoosters", jsonActiveBoosters);
-            OvcrServer.SendMessage(updateActiveBoostersMessage);
-        }
-        else if (!IsProxy && !OvcrServer.IsValid())
-        {
-            Log.Info("Peut pas envoyer le message sur le destroyed .......");
-        }
+        base.OnDisabled();
     }
 
 	private void GetDB()
@@ -295,8 +292,19 @@ public sealed class Multiplicators : Component
             }
         }
         else
-        {
             Log.Info("Format de boosters invalide reçu");
+    }
+
+    public void SendActiveBoosters()
+    {
+        Log.Info("OvcrServer.IsValid()" + OvcrServer.IsValid());
+        if (!IsProxy && OvcrServer.IsValid())
+        {
+            Log.Info("SendActiveboosters(multiplicators)");
+			OvcrServer.SendMessage(updateActiveBoostersMessage);
+        } else if (!IsProxy && !OvcrServer.IsValid())
+        {
+            Log.Info("SendActive, peut pas send les boosters");
         }
     }
 
@@ -355,6 +363,8 @@ public sealed class Multiplicators : Component
         {
             activeBoosters.Remove(boosterType);
             Log.Info($"Booster {boosterType} has expired and has been removed.");
+
+            //todo: remove from database
         }
 
         if (expiredBoosters.Count == 0)

@@ -1,18 +1,23 @@
 using Sandbox;
 using System;
 using System.Text.Json;
+using System.Collections.Generic;
 
 public sealed class OvcrServer : Component
 {
 	private WebsocketTools Websocket;
 	private TimeUntil nextAuth = 2f;
+	private TimeUntil nextActiveBoosterCopy = 1f;
 	public bool isAuth = false;
 	public bool hasLoadError = false;
 	private WebsocketMessage authMessage {get;set;} = new();
+	private WebsocketMessage updateActiveBoostersMessage {get;set;} = new();
 	[Property] public Currencies Currencies { get; set; }
 	[Property] public Enchantments Enchantments { get; set; }
 	[Property] public Multiplicators Multiplicators { get; set; } 
 	[Property] public Backpack Backpack { get; set; } 
+
+	private Dictionary<Boosters, (TimeUntil timeUntilExpiration, float multiplicator)> activeBoostersCopy = new();
 
 	
 	protected override void OnUpdate()
@@ -25,6 +30,16 @@ public sealed class OvcrServer : Component
 			WSAuth();
 			nextAuth = 3f;
 		}
+
+		if (!IsProxy && !isAuth && nextActiveBoosterCopy <= 0f)
+		{
+			Log.Info("Copying active boosters");
+
+			activeBoostersCopy = Multiplicators.activeBoosters;
+
+			nextActiveBoosterCopy = 1f;
+		}
+		
 	}
 
 	protected override async void OnStart()
@@ -42,6 +57,12 @@ public sealed class OvcrServer : Component
 			WebSocketUtility.AddJsonTag(authMessage, "action", "auth");
 			WebSocketUtility.AddJsonTag(authMessage, "playerId", GameObject.Network.Owner.SteamId.ToString());
 			WebSocketUtility.AddJsonTag(authMessage, "token", authToken);
+
+
+			updateActiveBoostersMessage.UseJsonTags = true;
+			WebSocketUtility.AddJsonTag(updateActiveBoostersMessage, "action", "updateActiveBoosters");
+            WebSocketUtility.AddJsonTag(updateActiveBoostersMessage, "activeBoosters", "{}");
+			WebSocketUtility.AddJsonTag(updateActiveBoostersMessage, "playerId", GameObject.Network.Owner.SteamId.ToString());
 
 			Websocket.onMessageReceived = OnWSMessageReceived;
 		}
@@ -65,9 +86,31 @@ public sealed class OvcrServer : Component
 			} );
 		}
 	}
+	private void DisplayBoosters()
+	{
+		Log.Info("=== Active Boosters ===");
+
+        if (activeBoostersCopy.Count == 0)
+        {
+            Log.Info("No active boosters.");
+        }
+        else
+        {
+            foreach (var booster in activeBoostersCopy)
+            {
+                var boosterType = booster.Key;
+                var (timeUntilExpiration, multiplicator) = booster.Value;
+                Log.Info($"{boosterType}: {multiplicator}x multiplier, Time left: {timeUntilExpiration.Relative:F2} seconds");
+            }
+        }
+
+
+        Log.Info("======================");
+	}
 
 	public async void SendMessage(WebsocketMessage message)
 	{
+		Log.Info("Tentative d'envoi du message");
 		if (!IsProxy && isAuth && !hasLoadError)
 		{
 			Websocket.message = message;
@@ -84,6 +127,25 @@ public sealed class OvcrServer : Component
 				}
 			} );
 		}
+		else 
+		{
+			Log.Info("Message pas envoyé");
+		}
+	}
+
+	protected override void OnDisabled()
+	{
+		Log.Info("OnDisabled ovcrserver");
+		if (!IsProxy)
+		{
+			Log.Info("ovcrserver SendActiveboosters");
+			string jsonActiveBoosters = JsonSerializer.Serialize(activeBoostersCopy);
+
+			WebSocketUtility.ChangeJsonTagValue(updateActiveBoostersMessage, "activeBoosters", jsonActiveBoosters);
+
+			SendMessage(updateActiveBoostersMessage);
+		}
+		base.OnDisabled();
 	}
 
 

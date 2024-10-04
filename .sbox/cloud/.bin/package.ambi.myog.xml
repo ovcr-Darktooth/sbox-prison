@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>package.ambi.myog</name>
+    </assembly>
+    <members>
+        <member name="P:SettingsData.FOV">
+            <summary>
+            От 60 до 120 
+            </summary>
+        </member>
+        <member name="P:SettingsData.MouseSensitivity">
+            <summary>
+            От 1 до 5
+            </summary>
+        </member>
+        <member name="P:SettingsData.Volume">
+            <summary>
+            От 0 до 100
+            </summary>
+        </member>
+        <member name="M:FirefliesStand.Play">
+            <summary>
+            Запускает светлячков которые показывают правильные варианты
+            </summary>
+        </member>
+        <member name="M:FirefliesStand.SwitchChangeCells(System.Int32)">
+            <summary>
+            Переключает лампочку выбора ячейки в указанной строке
+            </summary>
+        </member>
+        <member name="M:Monologs.MonologSystem.AddToQueue(Monologs.MonologResource)">
+            <summary>
+            Добавляет монолог в очередь
+            </summary>
+        </member>
+        <member name="M:Monologs.MonologSystem.ClearQueue(Monologs.MonologResource)">
+            <summary>
+            Удаляет все монологи из очереди
+            </summary>
+        </member>
+        <member name="M:Monologs.MonologSystem.Play">
+            <summary>
+            Запускает вопроизведение очереди монологов
+            </summary>
+        </member>
+        <member name="M:Monologs.MonologSystem.PlayForce(Monologs.MonologResource)">
+            <summary>
+            Перебивает воспроизведение очереди и воспроизводит переданный монолог 
+            </summary>
+        </member>
+        <member name="M:Monologs.MonologSystem.Stop(System.Boolean)">
+            <summary>
+            Останавливает воспроизведение очереди, не очищает очередь.
+            </summary>
+            <param name="force">Остановить ли воспроизведение очереди, не дав текущему монологу завершиться</param>
+        </member>
+        <member name="M:BlackScreen.BuildHash">
+            <summary>
+            the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+            </summary>
+        </member>
+        <member name="M:WorldText.BuildHash">
+            <summary>
+            the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+            </summary>
+        </member>
+        <member name="M:BlackScreenHui.BuildHash">
+            <summary>
+            the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+            </summary>
+        </member>
+        <member name="M:LevelPanel.BuildHash">
+            <summary>
+            the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+            </summary>
+        </member>
+        <member name="M:ReverseTimeHud.BuildHash">
+            <summary>
+            the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+            </summary>
+        </member>
+        <member name="P:SliderControl.Max">
+            <summary>
+            The right side of the slider.
+            </summary>
+        </member>
+        <member name="P:SliderControl.Min">
+            <summary>
+            The left side of the slider.
+            </summary>
+        </member>
+        <member name="P:SliderControl.Step">
+            <summary>
+            If set to 1, value will be rounded to 1's
+            If set to 10, value will be rounded to 10's
+            If set to 0.1, value will be rounded to 0.1's
+            </summary>
+        </member>
+        <member name="P:SliderControl.ShowRange">
+            <summary>
+            Show the range values above the slider
+            </summary>
+        </member>
+        <member name="P:SliderControl.ShowValueTooltip">
+            <summary>
+            When changing the value show the tooltip
+            </summary>
+        </member>
+        <member name="P:SliderControl.ShowTextEntry">
+            <summary>
+            When changing the value show the tooltip
+            </summary>
+        </member>
+        <member name="P:SliderControl.NumberFormat">
+            <summary>
+            How to display numbers in this control
+            </summary>
+        </member>
+        <member name="M:SliderControl.ScreenPosToValue(Vector2)">
+            <summary>
+            Convert a screen position to a value. The value is clamped, but not snapped.
+            </summary>
+        </member>
+        <member name="M:SliderControl.OnMouseMove(Sandbox.UI.MousePanelEvent)">
+            <summary>
+            If we move the mouse while we're being pressed then set the value
+            </summary>
+        </member>
+        <member name="M:SliderControl.OnMouseDown(Sandbox.UI.MousePanelEvent)">
+            <summary>
+            On mouse press jump to that position
+            </summary>
+        </member>
+    </members>
+</doc>
