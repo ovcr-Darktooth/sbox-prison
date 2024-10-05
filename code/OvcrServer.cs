@@ -3,6 +3,13 @@ using System;
 using System.Text.Json;
 using System.Collections.Generic;
 
+
+public class ActiveBoosterDTO
+{
+    public float TimeRemaining { get; set; }
+    public float Multiplicator { get; set; }
+}
+
 public sealed class OvcrServer : Component
 {
 	private WebsocketTools Websocket;
@@ -31,11 +38,12 @@ public sealed class OvcrServer : Component
 			nextAuth = 3f;
 		}
 
-		if (!IsProxy && !isAuth && nextActiveBoosterCopy <= 0f)
+		if (!IsProxy && isAuth && nextActiveBoosterCopy <= 0f)
 		{
 			Log.Info("Copying active boosters");
 
 			activeBoostersCopy = Multiplicators.activeBoosters;
+			
 
 			nextActiveBoosterCopy = 1f;
 		}
@@ -87,7 +95,7 @@ public sealed class OvcrServer : Component
 		}
 	}
 	private void DisplayBoosters()
-	{
+	{ 
 		Log.Info("=== Active Boosters ===");
 
         if (activeBoostersCopy.Count == 0)
@@ -139,16 +147,44 @@ public sealed class OvcrServer : Component
 		if (!IsProxy)
 		{
 			Log.Info("ovcrserver SendActiveboosters");
-			string jsonActiveBoosters = JsonSerializer.Serialize(activeBoostersCopy);
+			string jsonActiveBoosters = ConvertActiveBoostersToJson();
+
+			DisplayBoosters();
 
 			WebSocketUtility.ChangeJsonTagValue(updateActiveBoostersMessage, "activeBoosters", jsonActiveBoosters);
+
+			Log.Info("json envoyé:" + jsonActiveBoosters);
 
 			SendMessage(updateActiveBoostersMessage);
 		}
 		base.OnDisabled();
 	}
 
+	public string ConvertActiveBoostersToJson()
+	{
+		// Créer un dictionnaire temporaire pour stocker les boosters sous forme sérialisable
+		Dictionary<string, ActiveBoosterDTO> boostersToSerialize = new();
 
+		// Boucler sur les boosters actifs et les convertir en DTO
+		foreach (var booster in activeBoostersCopy)
+		{
+			var boosterType = booster.Key.ToString();
+			var timeRemaining = booster.Value.timeUntilExpiration.Relative;  // Durée restante
+			var multiplicator = booster.Value.multiplicator;
+
+			// Ajouter au dictionnaire sérialisable
+			boostersToSerialize[boosterType] = new ActiveBoosterDTO
+			{
+				TimeRemaining = timeRemaining,
+				Multiplicator = multiplicator
+			};
+		}
+
+		// Sérialiser en JSON
+		string json = JsonSerializer.Serialize(boostersToSerialize);
+
+		return json;
+	}
 
 	private void OnWSMessageReceived(string message)
     {

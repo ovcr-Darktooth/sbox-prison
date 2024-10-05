@@ -67,7 +67,7 @@ public sealed class Multiplicators : Component
 
 		if (!IsProxy && !hasLoaded && nextLoadMultiplicators <= 0f)
 		{
-			Log.Info("Trying to load player boosters");
+			//Log.Info("Trying to load player boosters");
 			//Websocket.message = getCurrenciesMessage;
 
 			//boosters not yet implemented
@@ -108,7 +108,7 @@ public sealed class Multiplicators : Component
     { 
         if (!IsProxy)
         {
-            Log.Info("Ondisabled multiplicators");
+            //Log.Info("Ondisabled multiplicators");
             //DisplayBoosters();
         }
 

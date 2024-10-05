@@ -1,25 +1,22 @@
 {
   "publish": {
-    "Allowed": true,
     "Enabled": false,
     "ProjectConfig": {
       "Title": "ma_premiere_map5",
       "Type": "map",
       "Org": "local",
       "Ident": "ma_premiere_map5",
-      "Tags": null,
       "Schema": 0,
-      "HasAssets": false,
-      "AssetsPath": null,
+      "IncludeSourceFiles": false,
       "Resources": null,
-      "HasCode": false,
-      "CodePath": null,
       "PackageReferences": [],
       "EditorReferences": [
         "ambi.myog#52580"
       ],
+      "IsWhitelistDisabled": false,
       "Metadata": {
-        "SingleAssetSource": "maps/ma_premiere_map5.vmap"
+        "SingleAssetSource": "maps/ma_premiere_map5.vmap",
+        "ParentPackage": "overcreep.prison"
       }
     }
   }
