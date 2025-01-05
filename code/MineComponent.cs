@@ -61,7 +61,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	// Matrice de données représentant la forme (dans un seul tableau vertical), parcourir avec longeur / hauteur (voir calcul déja effectué)
 	private int[] _flattenedShapeMatrix;
 
-	//[HostSync(Query = true)]
+	[Sync(SyncFlags.Query)]
 	public int[] FlattenedShapeMatrix
 	{
 		get => _flattenedShapeMatrix;
@@ -564,7 +564,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	public void teleportPlayers()
 	{ 
 		foreach (KeyValuePair<string, GameObject> entry in playersInside)
-			entry.Value.Components.Get<OvcrPlayerController>().tpAbove((int)(entityEnd.Transform.Position.z + 350));
+			entry.Value.Components.Get<OvcrPlayerController>().tpAbove((int)(entityEnd.WorldPosition.z + 350));
 	}
 
 	public void updateMinePercentage() 
