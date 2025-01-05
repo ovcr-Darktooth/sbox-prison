@@ -1,6 +1,7 @@
 ﻿@using System
 @using System.Linq
 @using Sandbox;
+@using Overcreep;
 @inherits PanelComponent
 @namespace Facepunch.Arena
 
@@ -33,12 +34,12 @@
 
 @code
 {
-	private PlayerController LocalPlayer { get; set; }
+	private OvcrPlayerController LocalPlayer { get; set; }
 	
 	protected override void OnFixedUpdate()
 	{
 		if ( !LocalPlayer.IsValid() )
-			LocalPlayer = Scene.GetAllComponents<PlayerController>().FirstOrDefault( p => p.Network.Owner == Connection.Local );
+			LocalPlayer = Scene.GetAllComponents<OvcrPlayerController>().FirstOrDefault( p => p.Network.Owner == Connection.Local );
 	}
 
 	protected override void OnUpdate()

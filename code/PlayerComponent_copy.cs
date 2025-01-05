@@ -130,7 +130,7 @@ public sealed class PlayerComponent_copy : Component
 	{
 		WishVelocity = 0;
 	
-		var rot = Head.Transform.Rotation;
+		var rot = Head.WorldRotation;
 		if (Input.Down( "Forward")) WishVelocity += rot.Forward; 
 		if (Input.Down( "Backward")) WishVelocity += rot.Backward; 
 		if (Input.Down( "Left" ) ) WishVelocity += rot.Left;
@@ -182,11 +182,11 @@ public sealed class PlayerComponent_copy : Component
 	{
 		if ( Body is null ) return;
 
-		var targetAngle = new Angles( 0, Head.Transform.Rotation.Yaw(), 0 ).ToRotation();
-		float rotateDifference = Body.Transform.Rotation.Distance( targetAngle );
+		var targetAngle = new Angles( 0, Head.WorldRotation.Yaw(), 0 ).ToRotation();
+		float rotateDifference = Body.WorldRotation.Distance( targetAngle );
 		if ( rotateDifference > 50f || characterController.Velocity.Length > 10f )
 		{
-			Body.Transform.Rotation = Rotation.Lerp( Body.Transform.Rotation, targetAngle, Time.Delta * 2f );
+			Body.WorldRotation = Rotation.Lerp( Body.WorldRotation, targetAngle, Time.Delta * 2f );
 		}
 	}
 
@@ -204,9 +204,9 @@ public sealed class PlayerComponent_copy : Component
 
 		animationHelper.WithWishVelocity(WishVelocity);
 		animationHelper.WithVelocity(characterController.Velocity);
-		animationHelper.AimAngle = Head.Transform.Rotation;
+		animationHelper.AimAngle = Head.WorldRotation;
 		animationHelper.IsGrounded = characterController.IsOnGround;
-		animationHelper.WithLook(Head.Transform.Rotation.Forward, 1f, 0.75f, 0.5f);
+		animationHelper.WithLook(Head.WorldRotation.Forward, 1f, 0.75f, 0.5f);
 		animationHelper.MoveStyle = CitizenAnimationHelper.MoveStyles.Run;
 		animationHelper.DuckLevel = IsCrouching ? 1f : 0f;
 	}
@@ -223,8 +223,8 @@ public sealed class PlayerComponent_copy : Component
 			characterController.Height /= 2f;
 		}
 
-		var fromPos = Body.Transform.Position + Vector3.Up * 15f;
-		var targetHit = Body.Transform.Position;
+		var fromPos = Body.WorldPosition + Vector3.Up * 15f;
+		var targetHit = Body.WorldPosition;
 		targetHit += Vector3.Up * 64f;
 		var upTrace = Scene.Trace.Sphere(10f, fromPos, targetHit)
 					.WithoutTags("player", "trigger" )

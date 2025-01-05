@@ -1,4 +1,5 @@
 ﻿@using Sandbox;
+@using Overcreep;
 @inherits PanelComponent
 @namespace Facepunch.Arena
 
@@ -21,14 +22,14 @@
 
 @code
 {
-	private PlayerController Player { get; set; }
+	private OvcrPlayerController Player { get; set; }
 	private Voice VoiceComponent { get; set; }
 
 	protected override void OnEnabled()
 	{
 		base.OnEnabled();
 		VoiceComponent = GameObject.Root.Components.GetInDescendantsOrSelf<Voice>();
-		Player = GameObject.Root.Components.GetInDescendantsOrSelf<PlayerController>();
+		Player = GameObject.Root.Components.GetInDescendantsOrSelf<OvcrPlayerController>();
 	}
 
 	public bool IsVoicePlaying

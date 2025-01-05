@@ -61,8 +61,8 @@ public sealed class WeaponContainer : Component
 		}
 		
 		weaponGo.SetParent( WeaponBone );
-		weaponGo.Transform.Position = WeaponBone.Transform.Position;
-		weaponGo.Transform.Rotation = WeaponBone.Transform.Rotation;
+		weaponGo.WorldPosition = WeaponBone.WorldPosition;
+		weaponGo.WorldRotation = WeaponBone.WorldRotation;
 
 		weapon.AmmoInClip = weapon.ClipSize;
 		weapon.IsDeployed = !Deployed.IsValid();

@@ -32,7 +32,7 @@ public abstract class PickupComponent : Component
 
 	protected override void OnStart()
 	{
-		StartPosition = Transform.Position;
+		StartPosition = WorldPosition;
 		Collider.IsTrigger = true;
 		
 		base.OnStart();
@@ -40,18 +40,18 @@ public abstract class PickupComponent : Component
 
 	protected override void OnFixedUpdate()
 	{
-		Transform.Position = StartPosition + Vector3.Up * MathF.Sin( Time.Now ) * 8f;
-		Transform.Rotation = Transform.Rotation.RotateAroundAxis( Vector3.Up, 90f * Time.Delta );
+		WorldPosition = StartPosition + Vector3.Up * MathF.Sin( Time.Now ) * 8f;
+		WorldRotation = WorldRotation.RotateAroundAxis( Vector3.Up, 90f * Time.Delta );
 		
 		base.OnFixedUpdate();
 	}
 
-	[Broadcast]
+	[Rpc.Broadcast]
 	private void PlayPickupSound()
 	{
 		if ( PickupSound is null )
 			return;
 		
-		Sound.Play( PickupSound, Transform.Position );
+		Sound.Play( PickupSound, WorldPosition );
 	}
 }

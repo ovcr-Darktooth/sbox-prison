@@ -40,7 +40,7 @@ public sealed class OvcrServer : Component
 
 		if (!IsProxy && isAuth && nextActiveBoosterCopy <= 0f)
 		{
-			Log.Info("Copying active boosters");
+			//Log.Info("Copying active boosters");
 
 			activeBoostersCopy = Multiplicators.activeBoosters;
 			

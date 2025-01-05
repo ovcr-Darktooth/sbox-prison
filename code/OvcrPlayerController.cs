@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Sandbox;
 using Sandbox.Citizen;
+using Facepunch.Arena;
 
-namespace Facepunch.Arena;
+namespace Overcreep;
 
-[Group( "Arena" )]
+[Group( "Overcreep" )]
 [Title( "Player Controller" )]
-public class PlayerController : Component, Component.ITriggerListener, IHealthComponent
+public class OvcrPlayerController : Component, Component.ITriggerListener, IHealthComponent
 {
 	public UInt64 SteamId { get; private set; } = 0;
 	[Property] public Vector3 Gravity { get; set; } = new ( 0f, 0f, 800f );
@@ -114,7 +115,7 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 		Health = MaxHealth;
 	}
 	
-	[Broadcast]
+	[Rpc.Broadcast]
 	public void TakeDamage( DamageType type, float damage, Vector3 position, Vector3 force, Guid attackerId )
 	{
 		if ( LifeState == LifeState.Dead )
@@ -125,7 +126,7 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 
 			if ( HurtSound is not null )
 			{
-				Sound.Play( HurtSound, Transform.Position );
+				Sound.Play( HurtSound, WorldPosition );
 			}
 		}
 		
@@ -157,7 +158,7 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 		if ( attacker.IsValid() )
 		{
 			
-			var player = attacker.Components.GetInAncestorsOrSelf<PlayerController>();
+			var player = attacker.Components.GetInAncestorsOrSelf<OvcrPlayerController>();
 			if ( player.IsValid() )
 			{
 				var chat = Scene.GetAllComponents<Chat>().FirstOrDefault();
@@ -328,16 +329,16 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 
 		if ( Ragdoll.IsRagdolled )
 		{
-			ViewModelCamera.Transform.Position = ViewModelCamera.Transform.Position.LerpTo( Eye.Transform.Position, Time.Delta * 32f );
-			ViewModelCamera.Transform.Rotation  = Rotation.Lerp( ViewModelCamera.Transform.Rotation, Eye.Transform.Rotation, Time.Delta * 16f );
-			//Scene.Camera.Transform.Position = Scene.Camera.Transform.Position.LerpTo( Eye.Transform.Position, Time.Delta * 32f );
-			//Scene.Camera.Transform.Rotation = Rotation.Lerp( Scene.Camera.Transform.Rotation, Eye.Transform.Rotation, Time.Delta * 16f );
+			ViewModelCamera.WorldPosition = ViewModelCamera.WorldPosition.LerpTo( Eye.WorldPosition, Time.Delta * 32f );
+			ViewModelCamera.WorldRotation  = Rotation.Lerp( ViewModelCamera.WorldRotation, Eye.WorldRotation, Time.Delta * 16f );
+			//Scene.Camera.WorldPosition = Scene.Camera.WorldPosition.LerpTo( Eye.WorldPosition, Time.Delta * 32f );
+			//Scene.Camera.WorldRotation = Rotation.Lerp( Scene.Camera.WorldRotation, Eye.WorldRotation, Time.Delta * 16f );
 			return;
 		}
 
-		var idealEyePos = Eye.Transform.Position;
-		var headPosition = Transform.Position + Vector3.Up * CharacterController.Height;
-		var headTrace = Scene.Trace.Ray( Transform.Position, headPosition )
+		var idealEyePos = Eye.WorldPosition;
+		var headPosition = WorldPosition + Vector3.Up * CharacterController.Height;
+		var headTrace = Scene.Trace.Ray( WorldPosition, headPosition )
 			.UsePhysicsWorld()
 			.IgnoreGameObjectHierarchy( GameObject )
 			.WithAnyTags( "solid" )
@@ -356,24 +357,24 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 		var hasViewModel = deployedWeapon.IsValid() && deployedWeapon.HasViewModel;
 
 		/*if ( hasViewModel )
-			Scene.Camera.Transform.Position = Head.Transform.Position;
+			Scene.Camera.WorldPosition = Head.WorldPosition;
 		else
-			Scene.Camera.Transform.Position = trace.Hit ? trace.EndPosition : idealEyePos;
+			Scene.Camera.WorldPosition = trace.Hit ? trace.EndPosition : idealEyePos;
 		
 		if ( SicknessMode )
-			Scene.Camera.Transform.Rotation = Rotation.LookAt( Eye.Transform.Rotation.Left ) * Rotation.FromPitch( -10f );
+			Scene.Camera.WorldRotation = Rotation.LookAt( Eye.WorldRotation.Left ) * Rotation.FromPitch( -10f );
 		else
-			Scene.Camera.Transform.Rotation = EyeAngles.ToRotation() * Rotation.FromPitch( -10f );*/
+			Scene.Camera.WorldRotation = EyeAngles.ToRotation() * Rotation.FromPitch( -10f );*/
 
 		if ( hasViewModel )
-			ViewModelCamera.Transform.Position = Head.Transform.Position;
+			ViewModelCamera.WorldPosition = Head.WorldPosition;
 		else
-			ViewModelCamera.Transform.Position = trace.Hit ? trace.EndPosition : idealEyePos;
+			ViewModelCamera.WorldPosition = trace.Hit ? trace.EndPosition : idealEyePos;
 		
 		if ( SicknessMode )
-			ViewModelCamera.Transform.Rotation = Rotation.LookAt( Eye.Transform.Rotation.Left ) * Rotation.FromPitch( -10f );
+			ViewModelCamera.WorldRotation = Rotation.LookAt( Eye.WorldRotation.Left ) * Rotation.FromPitch( -10f );
 		else
-			ViewModelCamera.Transform.Rotation = EyeAngles.ToRotation() * Rotation.FromPitch( -10f );
+			ViewModelCamera.WorldRotation = EyeAngles.ToRotation() * Rotation.FromPitch( -10f );
 	}
 
 	protected override void OnUpdate()
@@ -500,7 +501,7 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 			}
 		}
 
-		Transform.Rotation = Rotation.FromYaw( EyeAngles.ToRotation().Yaw() );
+		WorldRotation = Rotation.FromYaw( EyeAngles.ToRotation().Yaw() );
 	}
 
 	protected override void OnFixedUpdate()
@@ -587,16 +588,16 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 		var spawnpoints = Scene.GetAllComponents<SpawnPoint>();
 		var randomSpawnpoint = Game.Random.FromList( spawnpoints.ToList() );
 
-		Transform.Position = randomSpawnpoint.Transform.Position;
-		Transform.Rotation = Rotation.FromYaw( randomSpawnpoint.Transform.Rotation.Yaw() );
-		EyeAngles = Transform.Rotation;
+		WorldPosition = randomSpawnpoint.WorldPosition;
+		WorldRotation = Rotation.FromYaw( randomSpawnpoint.WorldRotation.Yaw() );
+		EyeAngles = WorldRotation;
 	}
 
-	[Authority]
+	[Rpc.Owner]
 	public void tpAbove(int positionAbove) 
 	{
 		if (!IsProxy)
-			Transform.Position = new Vector3(Transform.Position.x, Transform.Position.y, positionAbove);
+			WorldPosition = new Vector3(WorldPosition.x, WorldPosition.y, positionAbove);
 	}
 
 	private void BuildWishVelocity()
@@ -646,14 +647,14 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 			WishVelocity *= WalkSpeed;*/
 	}
 
-	[Broadcast]
+	[Rpc.Broadcast]
 	private void SendKilledMessage( Guid attackerId )
 	{
 		var attacker = Scene.Directory.FindByGuid( attackerId );
 		OnKilled( attacker );
 	}
 	
-	[Broadcast]
+	[Rpc.Broadcast]
 	private void SendReloadMessage()
 	{
 		foreach ( var animator in Animators )
@@ -663,7 +664,7 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 		}
 	}
 
-	[Broadcast]
+	[Rpc.Broadcast]
 	private void SendAttackMessage()
 	{
 		foreach ( var animator in Animators )
@@ -673,7 +674,7 @@ public class PlayerController : Component, Component.ITriggerListener, IHealthCo
 		}
 	}
 	
-	[Broadcast]
+	[Rpc.Broadcast]
 	private void SendJumpMessage()
 	{
 		foreach ( var animator in Animators )

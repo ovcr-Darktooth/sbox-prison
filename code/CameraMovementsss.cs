@@ -36,12 +36,12 @@ public sealed class CameraMovementsss : Component
 			return;
 		//base.OnUpdate();
 		// Rotate the head based on mouse movement 
-		var eyeAngles = Head.Transform.Rotation.Angles(); 
+		var eyeAngles = Head.WorldRotation.Angles(); 
 		eyeAngles.pitch += Input.MouseDelta.y * 0.1f;
 		eyeAngles.yaw -= Input.MouseDelta.x * 0.1f;
 		eyeAngles.roll = 0f;
 		eyeAngles.pitch = eyeAngles.pitch.Clamp(-89.9f, 89.9f );
-		Head.Transform.Rotation = eyeAngles.ToRotation();
+		Head.WorldRotation = eyeAngles.ToRotation();
 
 		var targetOffset =  Vector3.Zero;
 		//if (Player.IsCrouching) targetOffset += Vector3.Down * 32f;
@@ -50,7 +50,7 @@ public sealed class CameraMovementsss : Component
 		// Set the position of the camera
 		if ( Camera is not null)
 		{
-			var campos = Head.Transform.Position + CurrentOffset;
+			var campos = Head.WorldPosition + CurrentOffset;
 			if (!IsFirstPerson)
 			{
 
@@ -77,8 +77,8 @@ public sealed class CameraMovementsss : Component
 				BodyRenderer.RenderType = ModelRenderer.ShadowRenderType.ShadowsOnly;
 			}
 
-			Camera.Transform.Position = campos;
-			Camera.Transform.Rotation = eyeAngles.ToRotation();
+			Camera.WorldPosition = campos;
+			Camera.WorldRotation = eyeAngles.ToRotation();
 		}
 	}
 }

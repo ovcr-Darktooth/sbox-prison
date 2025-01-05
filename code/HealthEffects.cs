@@ -2,15 +2,15 @@ using Sandbox;
 using System;
 using System.Linq;
 
-namespace Facepunch.Arena;
+namespace Overcreep;
 
-[Group( "Arena" )]
+[Group( "Overcreep" )]
 [Title( "Health Effects" )]
 public sealed class HealthEffects : Component
 {
 	[Property] public ColorAdjustments Adjustments { get; set; }
 	
-	private PlayerController LocalPlayer { get; set; }
+	private OvcrPlayerController LocalPlayer { get; set; }
 	private Vignette Vignette { get; set; }
 
 	protected override void OnStart()
@@ -23,7 +23,7 @@ public sealed class HealthEffects : Component
 	{
 		if ( !LocalPlayer.IsValid() )
 		{
-			LocalPlayer = Scene.GetAllComponents<PlayerController>()
+			LocalPlayer = Scene.GetAllComponents<OvcrPlayerController>()
 				.FirstOrDefault( p => p.Network.IsOwner );
 		}
 

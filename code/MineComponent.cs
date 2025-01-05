@@ -6,19 +6,20 @@ using System.Threading.Tasks;
 using Sandbox.Sdf;
 using System.Numerics;
 using Facepunch.Arena;
+using Overcreep;
 
 
 public sealed class MineComponent : Component, Component.ITriggerListener
 {
 
 	[Property] public GameObject WorldPrefab { get; set; }
-	[HostSync]
+	[Sync( SyncFlags.FromHost )]
 	public GameObject entityStart {get; set;}
-	[HostSync]
+	[Sync( SyncFlags.FromHost )]
 	public GameObject entityEnd {get; set;}
-	[HostSync]
+	[Sync( SyncFlags.FromHost )]
 	public Vector3 entityStartPosition {get; set;}
-	[HostSync]
+	[Sync( SyncFlags.FromHost )]
 	public Vector3 entityEndPosition {get; set;}
 	[Property] 
 	public NameTagPanel Panel_Left { get; set; }
@@ -42,13 +43,13 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	//public List<MineBlockLines> MineBlockLines { get; set; }
 	public string BlockMaterial { get; set; }
 	//AxeX(Rouge)
-	[HostSync]
+	[Sync( SyncFlags.FromHost )]
 	public int Longueur { get; set; }
 	//AxeY(Vert)
-	[HostSync]
+	[Sync( SyncFlags.FromHost )]
 	public int Largeur { get; set; }
 	//AxeZ(Bleu)
-	[HostSync]
+	[Sync( SyncFlags.FromHost )]
 	public int Hauteur { get; set; }
 
 	private Dictionary<string, GameObject> playersInside = new Dictionary<string, GameObject>();
@@ -60,7 +61,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	// Matrice de données représentant la forme (dans un seul tableau vertical), parcourir avec longeur / hauteur (voir calcul déja effectué)
 	private int[] _flattenedShapeMatrix;
 
-	[HostSync(Query = true)]
+	//[HostSync(Query = true)]
 	public int[] FlattenedShapeMatrix
 	{
 		get => _flattenedShapeMatrix;
@@ -151,8 +152,8 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 
 		if(entityStart.IsValid() && entityEnd.IsValid())
 		{
-			entityStartPosition = entityStart.Transform.Position;
-			entityEndPosition = entityEnd.Transform.Position;
+			entityStartPosition = entityStart.WorldPosition;
+			entityEndPosition = entityEnd.WorldPosition;
 			//mineWorld = Scene.GetAllComponents<Sdf3DWorld>().FirstOrDefault(); //1 sdfworld
 			//mineWorld = Scene.CreateObject(true)
 			GameObject clone = WorldPrefab.Clone(new Transform(Vector3.Zero), name: "SdfWorld_" + idMine);
@@ -161,7 +162,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 			mineWorld.GameObject.NetworkSpawn();
 			//clone.NetworkSpawn();
 			mineWorld.GameObject.Network.DropOwnership();
-			Transform.Position = entityStartPosition 
+			WorldPosition = entityStartPosition 
 											+ (Vector3.Backward * 16) 
 											+ (Vector3.Down * 16)
 											- (Vector3.Left * 16)
@@ -223,22 +224,22 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 			FlattenedShapeMatrix = FlattenMatrix(ShapeMatrix);
 
 
-			Components.GetInChildren<BoxCollider>().Transform.Position = (entityStartPosition + entityEndPosition) / 2;
+			Components.GetInChildren<BoxCollider>().WorldPosition = (entityStartPosition + entityEndPosition) / 2;
 			Components.GetInChildren<BoxCollider>().Scale = (Hauteur + Longueur + Largeur) * 26.5f;
 			//TODO: refaire un autre colliderbox trigger pour vraiment les tp, et utiliser celui la pour donner le status du world a ceux qui sont a cotés
 			Components.GetInChildren<BoxCollider>().OnTriggerEnter = this.OnAroundMineTriggerEnter;
 			Components.GetInChildren<BoxCollider>().OnTriggerExit = this.OnAroundMineTriggerExit;
 
-			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().Transform.Position = (entityStartPosition + entityEndPosition) / 2 ;//- (Vector3.Up * 32f);
+			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().WorldPosition = (entityStartPosition + entityEndPosition) / 2 ;//- (Vector3.Up * 32f);
 			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().Scale = new Vector3(Longueur*blockSizeV, Largeur*blockSizeV, Hauteur*blockSizeV);
 			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().OnTriggerEnter = this.OnInsideMineTriggerEnter;
 			GameObject.GetAllObjects(true).Where(go => go.Name.Equals("Inside")).FirstOrDefault().Components.Get<BoxCollider>().OnTriggerExit = this.OnInsideMineTriggerExit;
 
 			int hauteurPanel = 125;
-			Panel_Left.Transform.Position =  new Vector3(Transform.Position.x + Longueur*blockSize/2, Transform.Position.y,entityEndPosition.z + hauteurPanel);
-			Panel_Right.Transform.Position = new Vector3(Transform.Position.x + Longueur*blockSize/2, Transform.Position.y + Largeur*blockSize, entityEndPosition.z + hauteurPanel);
-			Panel_Front.Transform.Position = new Vector3(Transform.Position.x, Transform.Position.y + Largeur*blockSize/ 2, entityEndPosition.z + hauteurPanel);
-			Panel_Back.Transform.Position =  new Vector3(Transform.Position.x + Longueur*blockSize, Transform.Position.y + Largeur*blockSize/ 2, entityEndPosition.z + hauteurPanel);
+			Panel_Left.WorldPosition =  new Vector3(WorldPosition.x + Longueur*blockSize/2, WorldPosition.y,entityEndPosition.z + hauteurPanel);
+			Panel_Right.WorldPosition = new Vector3(WorldPosition.x + Longueur*blockSize/2, WorldPosition.y + Largeur*blockSize, entityEndPosition.z + hauteurPanel);
+			Panel_Front.WorldPosition = new Vector3(WorldPosition.x, WorldPosition.y + Largeur*blockSize/ 2, entityEndPosition.z + hauteurPanel);
+			Panel_Back.WorldPosition =  new Vector3(WorldPosition.x + Longueur*blockSize, WorldPosition.y + Largeur*blockSize/ 2, entityEndPosition.z + hauteurPanel);
 
 
 			Panel_Left.Level = LevelMine.ToString();
@@ -285,7 +286,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 		return compteBlocsSupp;
 	}
 
-	[Broadcast]
+	[Rpc.Broadcast]
 	public void RemoveCube(Vector3 pos)
 	{
 		if (!IsProxy)
@@ -362,7 +363,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 		return compteBlocsSupp;
 	}
 
-	[Broadcast]
+	[Rpc.Broadcast]
 	public void RemoveLayer(Vector3 pos)
 	{
 		if (!IsProxy)
@@ -523,7 +524,7 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 	{
 		if (idMine != 0)
 		{
-			var cube = new BoxSdf3D(Vector3.Zero, new Vector3(Longueur*blockSizeF, Largeur*blockSizeF, Hauteur*blockSizeF), 0f).Transform(Transform.Position);
+			var cube = new BoxSdf3D(Vector3.Zero, new Vector3(Longueur*blockSizeF, Largeur*blockSizeF, Hauteur*blockSizeF), 0f).Transform(WorldPosition);
 			await mineWorld.AddAsync(cube, mineVolume);	
 		}
 	}
@@ -559,11 +560,11 @@ public sealed class MineComponent : Component, Component.ITriggerListener
 		ActualPercent = 100f;
 	}
 
-	[Broadcast]
+	[Rpc.Broadcast]
 	public void teleportPlayers()
 	{ 
 		foreach (KeyValuePair<string, GameObject> entry in playersInside)
-			entry.Value.Components.Get<PlayerController>().tpAbove((int)(entityEnd.Transform.Position.z + 350));
+			entry.Value.Components.Get<OvcrPlayerController>().tpAbove((int)(entityEnd.Transform.Position.z + 350));
 	}
 
 	public void updateMinePercentage() 

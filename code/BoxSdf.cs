@@ -22,7 +22,7 @@ public sealed class BoxSdf : Component
 		sdfWorld.GameObject.NetworkSpawn();
 		//var boxtest = new BoxSdf3D(Vector3.Zero, Vector3.One * 50);
 
-		_ = AddCube(sdfWorld, Transform.Position, 32, Volume);
+		_ = AddCube(sdfWorld, WorldPosition, 32, Volume);
 		//await sdfWorld.AddAsync(boxtest, Volume);
 		//boxtest = new BoxSdf3D(BBox.FromPositionAndSize(Vector3.Zero, 50f));
 		//await sdfWorld.AddAsync(boxtest, Volume);

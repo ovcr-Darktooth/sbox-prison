@@ -1,5 +1,6 @@
 using System;
 using Sandbox;
+using Overcreep;
 
 namespace Facepunch.Arena;
 
@@ -9,13 +10,13 @@ public class WeaponPickup : PickupComponent
 {
 	[Property] public PrefabScene WeaponPrefab { get; set; }
 	
-	[Broadcast]
+	[Rpc.Broadcast]
 	protected override void OnPickup( Guid pickerId )
 	{
 		var picker = Scene.Directory.FindByGuid( pickerId );
 		if ( !picker.IsValid() ) return;
 
-		var player = picker.Components.GetInDescendantsOrSelf<PlayerController>();
+		var player = picker.Components.GetInDescendantsOrSelf<OvcrPlayerController>();
 		if ( !player.IsValid() ) return;
 
 		if ( player.IsProxy )

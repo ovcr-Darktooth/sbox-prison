@@ -38,7 +38,7 @@ public class PlayerComponent : Component
 		var cam = Components.Get<CameraComponent>();
 		if ( cam is not null )
 		{
-			var ee = cam.Transform.Rotation.Angles();
+			var ee = cam.WorldRotation.Angles();
 			ee.roll = 0;
 			EyeAngles = ee;
 		}
@@ -60,13 +60,13 @@ public class PlayerComponent : Component
 
 			if ( FirstPerson )
 			{
-				cam.Transform.Position = Eye.Transform.Position;
-				cam.Transform.Rotation = lookDir;
+				cam.WorldPosition = Eye.WorldPosition;
+				cam.WorldRotation = lookDir;
 			}
 			else
 			{
-				cam.Transform.Position = Transform.Position + lookDir.Backward * 300 + Vector3.Up * 75.0f;
-				cam.Transform.Rotation = lookDir;
+				cam.WorldPosition = WorldPosition + lookDir.Backward * 300 + Vector3.Up * 75.0f;
+				cam.WorldRotation = lookDir;
 			}
 
 
@@ -91,17 +91,17 @@ public class PlayerComponent : Component
 				targetAngle = Rotation.LookAt( v, Vector3.Up );
 			}
 
-			rotateDifference = Body.Transform.Rotation.Distance( targetAngle );
+			rotateDifference = Body.WorldRotation.Distance( targetAngle );
 
 			if ( rotateDifference > 50.0f || cc.Velocity.Length > 10.0f )
 			{
-				Body.Transform.Rotation = Rotation.Lerp( Body.Transform.Rotation, targetAngle, Time.Delta * 2.0f );
+				Body.WorldRotation = Rotation.Lerp( Body.WorldRotation, targetAngle, Time.Delta * 2.0f );
 			}*/
 			var targetAngle = new Angles( 0, EyeAngles.yaw, 0 ).ToRotation();
-			rotateDifference = Body.Transform.Rotation.Distance( targetAngle );
+			rotateDifference = Body.WorldRotation.Distance( targetAngle );
 			if ( rotateDifference > 50f || characterController.Velocity.Length > 10f )
 			{
-				Body.Transform.Rotation = Rotation.Lerp( Body.Transform.Rotation, targetAngle, Time.Delta * 2f );
+				Body.WorldRotation = Rotation.Lerp( Body.WorldRotation, targetAngle, Time.Delta * 2f );
 			}
 		}
 
@@ -117,7 +117,7 @@ public class PlayerComponent : Component
 		}
 	}
 
-	[Broadcast]
+	[Rpc.Broadcast]
 	public void OnJump( float floatValue, string dataString, object[] objects, Vector3 position )
 	{
 		AnimationHelper?.TriggerJump();

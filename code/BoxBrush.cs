@@ -14,7 +14,6 @@ public sealed class BoxBrush : Component
     }
     protected override void OnUpdate()
     {
-
     }
 
     public async Task BuildTask()
@@ -27,7 +26,7 @@ public sealed class BoxBrush : Component
     public async Task DrawBrush(Sdf3DWorld world)
     {
         if (world is null) return;
-        var box = new BoxSdf3D(Vector3.Zero, Size).Transform(new Transform(Transform.Position, Rotation.Identity));
+        var box = new BoxSdf3D(Vector3.Zero, Size).Transform(new Transform(WorldPosition, Rotation.Identity));
         await world.AddAsync(box, sdf3DVolume);
     }
 

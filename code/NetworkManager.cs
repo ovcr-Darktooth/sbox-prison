@@ -14,9 +14,14 @@ public class NetworkManager : Component, Component.INetworkListener
 
 	protected override void OnStart()
 	{
-		if ( !GameNetworkSystem.IsActive )
+		if ( !Networking.IsActive )
 		{
-			GameNetworkSystem.CreateLobby();
+			Networking.CreateLobby(new LobbyConfig()
+				{
+				MaxPlayers = 8,
+				Privacy = LobbyPrivacy.Public,
+				Name = "My Lobby Name"
+				});
 		}
 		
 		base.OnStart();

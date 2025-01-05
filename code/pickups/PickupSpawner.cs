@@ -58,8 +58,8 @@ public class PickupSpawner : Component
 			
 		Pickup = go.Components.Get<PickupComponent>();
 			
-		go.Transform.Position = Transform.Position;
-		go.Transform.Rotation = Transform.Rotation;
+		go.WorldPosition = WorldPosition;
+		go.WorldRotation = WorldRotation;
 		go.NetworkSpawn();
 
 		TimeUntilRespawn = null;

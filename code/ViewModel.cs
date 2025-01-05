@@ -1,6 +1,7 @@
 using Sandbox;
+using Facepunch.Arena;
 
-namespace Facepunch.Arena;
+namespace Overcreep;
 
 [Group( "Arena" )]
 [Title( "View Model")]
@@ -12,7 +13,7 @@ public sealed class ViewModel : Component
 	/// <summary>
 	/// Looks up the tree to find the player controller.
 	/// </summary>
-	private PlayerController PlayerController => Weapon.Components.GetInAncestors<PlayerController>();
+	private OvcrPlayerController PlayerController => Weapon.Components.GetInAncestors<OvcrPlayerController>();
 	private CameraComponent Camera { get; set; }
 	private WeaponComponent Weapon { get; set; }
 
@@ -48,21 +49,21 @@ public sealed class ViewModel : Component
 
 	protected override void OnUpdate()
 	{
-		LocalRotation = Rotation.Identity;
-		LocalPosition = Vector3.Zero;
+		Local_Rotation = Rotation.Identity;
+		Local_Position = Vector3.Zero;
 
 		ApplyVelocity();
 		ApplyStates();
 		ApplyAnimationParameters();
 
-		LerpedLocalRotation = Rotation.Lerp( LerpedLocalRotation, LocalRotation, Time.Delta * 10f );
-		LerpedLocalPosition = LerpedLocalPosition.LerpTo( LocalPosition, Time.Delta * 10f );
+		LerpedLocalRotation = Rotation.Lerp( LerpedLocalRotation, Local_Rotation, Time.Delta * 10f );
+		LerpedLocalPosition = LerpedLocalPosition.LerpTo( Local_Position, Time.Delta * 10f );
 
-		Camera.Transform.Position = Scene.Camera.Transform.Position;
-		Camera.Transform.Rotation = Scene.Camera.Transform.Rotation;
+		Camera.WorldPosition = Scene.Camera.WorldPosition;
+		Camera.WorldRotation = Scene.Camera.WorldRotation;
 		
-		Transform.LocalRotation = LerpedLocalRotation;
-		Transform.LocalPosition = LerpedLocalPosition;
+		LocalRotation = LerpedLocalRotation;
+		LocalPosition = LerpedLocalPosition;
 	}
 
 	private void OnPlayerJumped()
@@ -71,8 +72,8 @@ public sealed class ViewModel : Component
 	}
 
 	private Vector3 LerpedWishLook { get; set; }
-	private Vector3 LocalPosition { get; set; }
-	private Rotation LocalRotation { get; set; }
+	private Vector3 Local_Position { get; set; }
+	private Rotation Local_Rotation { get; set; }
 	private Vector3 LerpedLocalPosition { get; set; }
 	private Rotation LerpedLocalRotation { get; set; }
 
@@ -87,8 +88,8 @@ public sealed class ViewModel : Component
 
 		LerpedWishLook = LerpedWishLook.LerpTo( wishLook, Time.Delta * 5.0f );
 
-		LocalRotation *= Rotation.From( 0, -LerpedWishLook.y * 3f, 0 );
-		LocalPosition += -LerpedWishLook;
+		Local_Rotation *= Rotation.From( 0, -LerpedWishLook.y * 3f, 0 );
+		Local_Position += -LerpedWishLook;
 
 		ModelRenderer.Set( "move_groundspeed", moveLen );
 	}
@@ -100,8 +101,8 @@ public sealed class ViewModel : Component
 			return;
 		}
 
-		LocalPosition += Vector3.Backward * 2f;
-		LocalRotation *= Rotation.From( 10f, 25f, -5f );
+		Local_Position += Vector3.Backward * 2f;
+		Local_Rotation *= Rotation.From( 10f, 25f, -5f );
 	}
 
 	private void ApplyAnimationParameters()

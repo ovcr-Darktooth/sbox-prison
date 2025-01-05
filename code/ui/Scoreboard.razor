@@ -1,6 +1,7 @@
 ﻿@using System
 @using System.Linq
 @using Sandbox;
+@using Overcreep;
 @inherits PanelComponent
 @namespace Facepunch.Arena
 
@@ -16,7 +17,7 @@
 		@foreach ( var entry in Connection.All )
 		{
 			var rowClass = string.Empty;
-			var player = Scene.GetAllComponents<PlayerController>().FirstOrDefault( p => p.Network.Owner == entry );
+			var player = Scene.GetAllComponents<OvcrPlayerController>().FirstOrDefault( p => p.Network.Owner == entry );
 			
 			if ( entry == Connection.Local )
 				rowClass = "me";

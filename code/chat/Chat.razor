@@ -72,7 +72,7 @@
 		SendText( Sandbox.Utility.Steam.PersonaName, text );
 	}
 
-	[Broadcast]
+	[Rpc.Broadcast]
 	private void SendText( string author, string message )
 	{
 		AddTextLocal( author, message );

@@ -59,7 +59,7 @@ public sealed class MineComponent_copy : Component, Component.ITriggerListener
 
 		if(entityStart.IsValid() && entityEnd.IsValid())
 		{			
-			var posTrace = Scene.Trace.Ray( entityStart.Transform.Position, entityEnd.Transform.Position ).Run();
+			var posTrace = Scene.Trace.Ray( entityStart.WorldPosition, entityEnd.WorldPosition ).Run();
 			Gizmo.Draw.Color = Color.Red;
   			Gizmo.Draw.LineThickness = 3;
 			Gizmo.Draw.Line(posTrace.StartPosition, posTrace.EndPosition);

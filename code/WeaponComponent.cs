@@ -1,5 +1,6 @@
 using Sandbox;
 using Sandbox.Citizen;
+using Overcreep;
 
 namespace Facepunch.Arena;
 
@@ -39,7 +40,7 @@ public abstract class WeaponComponent : Component
 	private TimeUntil NextAttackTime { get; set; }
 	private SkinnedModelRenderer EffectRenderer => ViewModel.IsValid() ? ViewModel.ModelRenderer : ModelRenderer;
 
-	[Broadcast]
+	[Rpc.Broadcast]
 	public void Deploy()
 	{
 		if ( !IsDeployed )
@@ -49,7 +50,7 @@ public abstract class WeaponComponent : Component
 		}
 	}
 
-	[Broadcast]
+	[Rpc.Broadcast]
 	public void Holster()
 	{
 		if ( IsDeployed )
@@ -71,12 +72,12 @@ public abstract class WeaponComponent : Component
 			return false;
 		}
 		
-		var player = Components.GetInAncestors<PlayerController>();
+		var player = Components.GetInAncestors<OvcrPlayerController>();
 		player.ApplyRecoil( Recoil );
 		
 		var attachment = EffectRenderer.GetAttachment( "muzzle" );
-		var startPos = Scene.Camera.Transform.Position;
-		var direction = Scene.Camera.Transform.Rotation.Forward;
+		var startPos = Scene.Camera.WorldPosition;
+		var direction = Scene.Camera.WorldRotation.Forward;
 		direction += Vector3.Random * Spread;
 		
 		var endPos = startPos + direction * 10000f;
@@ -128,7 +129,7 @@ public abstract class WeaponComponent : Component
 		if ( ammoToTake <= 0 )
 			return false;
 		
-		var player = Components.GetInAncestors<PlayerController>();
+		var player = Components.GetInAncestors<OvcrPlayerController>();
 		if ( !player.IsValid() )
 			return false;
 
@@ -156,7 +157,7 @@ public abstract class WeaponComponent : Component
 
 	protected virtual void OnDeployed()
 	{
-		var player = Components.GetInAncestors<PlayerController>();
+		var player = Components.GetInAncestors<OvcrPlayerController>();
 
 		if ( player.IsValid() )
 		{
@@ -171,7 +172,7 @@ public abstract class WeaponComponent : Component
 		
 		if ( DeploySound is not null )
 		{
-			Sound.Play( DeploySound, Transform.Position );
+			Sound.Play( DeploySound, WorldPosition );
 		}
 
 		if ( !IsProxy )
@@ -203,7 +204,7 @@ public abstract class WeaponComponent : Component
 			IsReloading = false;
 		}
 
-		ReloadSound?.Update( Transform.Position );
+		ReloadSound?.Update( WorldPosition );
 
 		base.OnUpdate();
 	}
@@ -230,7 +231,7 @@ public abstract class WeaponComponent : Component
 		if ( !ViewModelPrefab.IsValid() )
 			return;
 		
-		var player = Components.GetInAncestors<PlayerController>();
+		var player = Components.GetInAncestors<OvcrPlayerController>();
 
 		var viewModelGameObject = ViewModelPrefab.Clone();
 		viewModelGameObject.Flags |= GameObjectFlags.NotNetworked;
@@ -243,7 +244,7 @@ public abstract class WeaponComponent : Component
 		ModelRenderer.Enabled = false;
 	}
 
-	[Broadcast]
+	[Rpc.Broadcast]
 	private void SendReloadMessage()
 	{
 		if ( ReloadSoundSequence is null )
@@ -252,26 +253,26 @@ public abstract class WeaponComponent : Component
 		ReloadSound?.Stop();
 		
 		ReloadSound = new( ReloadSoundSequence );
-		ReloadSound.Start( Transform.Position );
+		ReloadSound.Start( WorldPosition );
 	}
 
-	[Broadcast]
+	[Rpc.Broadcast]
 	private void SendEmptyClipMessage()
 	{
 		if ( EmptyClipSound is not null )
 		{
-			Sound.Play( EmptyClipSound, Transform.Position );
+			Sound.Play( EmptyClipSound, WorldPosition );
 		}
 	}
 
-	[Broadcast]
+	[Rpc.Broadcast]
 	private void SendImpactMessage( Vector3 position, Vector3 normal )
 	{
 		if ( ImpactEffect is null ) return;
 
 	}
 
-	[Broadcast]
+	[Rpc.Broadcast]
 	private void SendAttackMessage( Vector3 startPos, Vector3 endPos, float distance )
 	{
 		
