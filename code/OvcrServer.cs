@@ -118,7 +118,7 @@ public sealed class OvcrServer : Component
 
 	public async void SendMessage(WebsocketMessage message)
 	{
-		Log.Info("Tentative d'envoi du message");
+		//Log.Info("Tentative d'envoi du message"); 
 		if (!IsProxy && isAuth && !hasLoadError)
 		{
 			Websocket.message = message;
@@ -241,8 +241,10 @@ public sealed class OvcrServer : Component
                             else
                                 Log.Info("Boosters property is missing");
 							break;
-						case "backpackUpdated":
+						case "giveBooster":
 							break;
+						case "backpackUpdated":
+							break;						
 						case "getBackpack":
 							if (root.TryGetProperty("backpack", out JsonElement backpackElement) && Backpack.IsValid())
                             {

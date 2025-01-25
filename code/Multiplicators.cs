@@ -37,8 +37,12 @@ public sealed class Multiplicators : Component
 	private TimeUntil nextLoadMultiplicators = 3f;
     private TimeUntil nextCheckBoosters = 5f;
     private TimeUntil nextCleanUpBoosters = 1f;
+    private TimeUntil nextPendingBoosterSend = 3f;
 	private WebsocketMessage getBoostersMessage {get;set;} = new();
     private WebsocketMessage updateActiveBoostersMessage {get;set;} = new();
+    private WebsocketMessage giveBoosterMessage {get;set;} = new();
+
+    private List<(Boosters type, float duration, float multiplicator)> pendingBoosters = new();
 	private Dictionary<Boosters, List<(float duration, float multiplicator)>> availableBoosters = new();
     public Dictionary<Boosters, (TimeUntil timeUntilExpiration, float multiplicator)> activeBoosters = new();
 	
@@ -50,14 +54,27 @@ public sealed class Multiplicators : Component
 
 	protected override void OnUpdate()
 	{
-		if (!IsProxy && hasLoaded && nextCheckBoosters <= 0f)
+
+        if (!IsProxy && hasLoaded && OvcrServer.isAuth && pendingBoosters.Count > 0 && nextPendingBoosterSend <= 0f)
+        {
+            var (type, duration, multiplicator) = pendingBoosters[0];
+            SendBoosterToServer(type, duration, multiplicator);
+            pendingBoosters.RemoveAt(0);
+            
+            // Réinitialiser le timer
+            nextPendingBoosterSend = 0.1f;
+            
+            Log.Info($"Envoi du booster en attente {type} au serveur. Reste {pendingBoosters.Count} boosters en attente.");
+        }
+
+		if (!IsProxy && hasLoaded && OvcrServer.isAuth && nextCheckBoosters <= 0f)
 		{
 			//DisplayBoosters();
             CleanUpActiveBoosters();
 			nextCheckBoosters = 5f;
 		}
 
-        if (!IsProxy && hasLoaded && nextCleanUpBoosters <= 0f)
+        if (!IsProxy && hasLoaded && OvcrServer.isAuth && nextCleanUpBoosters <= 0f)
         {
             CleanUpActiveBoosters();
             nextCleanUpBoosters = 1f;
@@ -65,14 +82,26 @@ public sealed class Multiplicators : Component
         }
             
 
-		if (!IsProxy && !hasLoaded && nextLoadMultiplicators <= 0f)
+		if (!IsProxy && !hasLoaded && OvcrServer.isAuth && nextLoadMultiplicators <= 0f)
 		{
-			//Log.Info("Trying to load player boosters");
+			Log.Info("Trying to load player boosters");
 			//Websocket.message = getCurrenciesMessage;
 
 			//boosters not yet implemented
 			//GetDB();
-			nextLoadMultiplicators = 5f;
+
+			//DEBUG:
+            AddActiveBooster(Boosters.Dollars, 10f, 2f);
+            AddActiveBooster(Boosters.EToken, 12f, 2f);
+
+            AddAvailableBooster(Boosters.Dollars, 50f, 2f);
+            AddAvailableBooster(Boosters.Dollars, 60f, 2f);
+            AddAvailableBooster(Boosters.EToken, 70f, 2f);
+            AddAvailableBooster(Boosters.EToken, 80f, 2f);
+            hasLoaded = true;
+            //END OF DEBUG  
+
+			nextLoadMultiplicators = 999f;
 		}
 	}
 
@@ -90,17 +119,9 @@ public sealed class Multiplicators : Component
             WebSocketUtility.AddJsonTag(updateActiveBoostersMessage, "activeBoosters", "{}");
 			WebSocketUtility.AddJsonTag(updateActiveBoostersMessage, "playerId", GameObject.Network.Owner.SteamId.ToString());
 
-
-            //DEBUG:
-            AddActiveBooster(Boosters.Dollars, 10f, 2f);
-            AddActiveBooster(Boosters.EToken, 12f, 2f);
-
-            AddAvailableBooster(Boosters.Dollars, 50f, 2f);
-            AddAvailableBooster(Boosters.Dollars, 60f, 2f);
-            AddAvailableBooster(Boosters.EToken, 70f, 2f);
-            AddAvailableBooster(Boosters.EToken, 80f, 2f);
-            hasLoaded = true;
-            //END OF DEBUG
+            giveBoosterMessage.UseJsonTags = true;
+            WebSocketUtility.AddJsonTag(giveBoosterMessage, "action", "giveBooster");
+            WebSocketUtility.AddJsonTag(giveBoosterMessage, "playerId", GameObject.Network.Owner.SteamId.ToString());
 		}
 	}
 
@@ -205,6 +226,16 @@ public sealed class Multiplicators : Component
             availableBoosters[boosterType] = new List<(float, float)>();
 
         availableBoosters[boosterType].Add((duration, multiplicator));
+
+        if (OvcrServer.isAuth)
+            SendBoosterToServer(boosterType, duration, multiplicator);
+        else
+        {
+            // Stocker le booster pour l'envoyer plus tard
+            pendingBoosters.Add((boosterType, duration, multiplicator));
+            Log.Info($"Booster {boosterType} mis en attente jusqu'à l'authentification.");
+        }
+
         Log.Info($"Booster {boosterType} ajouté à la liste des disponibles avec un multiplicateur de {multiplicator} pour une durée de {duration} secondes.");
     }
 
@@ -306,6 +337,16 @@ public sealed class Multiplicators : Component
         {
             Log.Info("SendActive, peut pas send les boosters");
         }
+    }
+
+
+    private void SendBoosterToServer(Boosters boosterType, float duration, float multiplicator)
+    {
+        WebSocketUtility.AddJsonTag(giveBoosterMessage, "boosterType", boosterType.ToString());
+        WebSocketUtility.AddJsonTag(giveBoosterMessage, "duration", duration.ToString());
+        WebSocketUtility.AddJsonTag(giveBoosterMessage, "multiplicator", multiplicator.ToString());
+        
+        OvcrServer.SendMessage(giveBoosterMessage);
     }
 
 
