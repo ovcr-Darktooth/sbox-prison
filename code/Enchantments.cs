@@ -4,6 +4,7 @@ using static WebSocketUtility;
 using System.Text.Json;
 using System;
 using Sandbox.UI.Construct;
+namespace Overcreep;
 
 public enum Enchants
 {

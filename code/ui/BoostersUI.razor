@@ -1,0 +1,79 @@
+@using System
+@using System.Linq
+@using Sandbox
+@using Overcreep;
+@inherits PanelComponent
+@namespace Facepunch.Arena
+
+@if ( !LocalPlayer.IsValid() ) return;
+
+<root>
+    @if (LocalPlayer.Multiplicators.IsValid() && LocalPlayer.Multiplicators.isMenuOpen)
+    {
+        <div class="boosters-container">
+            <div class="boosters-panel">
+                <div class="neon-title">BOOSTERS</div>
+                <div class="boosters-grid">
+                    @if (!LocalPlayer.Multiplicators.availableBoosters.Any() || LocalPlayer.Multiplicators.availableBoosters.All(b => !b.Value.Any()))
+                    {
+                        <div class="no-boosters">No boosters available</div>
+                    }
+                    else
+                    {
+                        @foreach (var boosterType in LocalPlayer.Multiplicators.availableBoosters)
+                        {
+                            @foreach (var booster in boosterType.Value)
+                            {
+                                bool isActive = LocalPlayer.Multiplicators.activeBoosters.TryGetValue(boosterType.Key, out var activeBooster);
+                                bool canActivate = !isActive || 
+                                    (isActive && activeBooster.multiplicator == booster.multiplicator);
+
+                                <div class="booster-card @(isActive ? "active" : "") @(canActivate ? "can-activate" : "cannot-activate")">
+                                    <div class="booster-type">@boosterType.Key</div>
+                                    <div class="booster-stats">
+                                        <div class="multiplier">@booster.multiplicator<span>x</span></div>
+                                        <div class="duration">@booster.duration<span>s</span></div>
+                                    </div>
+                                    @if (isActive)
+                                    {
+                                        //<div class="time-remaining">@activeBooster.timeUntilExpiration.ToString("F1")s</div>
+                                        <div class="time-remaining">@activeBooster.timeUntilExpiration s</div>
+                                    }
+                                    <button class="activate-btn @(canActivate ? "can-activate" : "cannot-activate")" 
+                                            disabled="@(!canActivate)"
+                                            onclick=@(() => ActivateBooster(boosterType.Key, booster.duration, booster.multiplicator))>
+                                        @(isActive ? "ACTIF" : "ACTIVER")
+                                    </button>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</root>
+
+@code
+{
+    private OvcrPlayerController LocalPlayer { get; set; }
+    
+    protected override void OnFixedUpdate()
+    {
+        if ( !LocalPlayer.IsValid() )
+            LocalPlayer = Scene.GetAllComponents<OvcrPlayerController>().FirstOrDefault( p => p.Network.Owner == Connection.Local );
+    }
+
+    protected override void OnUpdate()
+    {
+    }
+
+    private void ActivateBooster(Boosters type, float duration, float multiplier)
+    {
+        Log.Info($"Tentative d'activation: {type}, {multiplier}x, {duration}s");
+        if (LocalPlayer.Multiplicators.CanActivateBooster(type, multiplier))
+            LocalPlayer.Multiplicators.ActivateBooster(type, duration, multiplier);
+    }
+    
+    protected override int BuildHash() => HashCode.Combine( RealTime.Now );
+}

@@ -32,6 +32,7 @@ public class OvcrPlayerController : Component, Component.ITriggerListener, IHeal
 	[Property] public SoundEvent HurtSound { get; set; }
 	[Property] public Currencies Currencies { get; set; }
 	[Property] public Enchantments Enchantments { get; set; }
+	[Property] public Multiplicators Multiplicators { get; set; } 
 	[Property] public bool SicknessMode { get; set; }
 	[Property] public bool SeeOwnModel { get; set; } = true;
 	[Property] public bool EnableCrouching { get; set; }

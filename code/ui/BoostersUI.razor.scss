@@ -1,0 +1,142 @@
+BoostersUI {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    font-family: "Orbitron", sans-serif;
+
+    .boosters-container {
+        pointer-events: all;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        background: #000000 //rgba(0, 0, 0, 0.5);
+    }
+
+    .boosters-panel {
+        background: linear-gradient(45deg, #1a1a2e, #16213e);
+        border: 2px solid #ff2a6d;
+        border-radius: 15px;
+        padding: 30px;
+        width: 80%;
+        max-width: 1200px;
+        //box-shadow: 0 0 20px #ff2a6d, 0 0 40px #ff2a6d80;
+    }
+
+    .neon-title {
+        text-align: center;
+        font-size: 48px;
+        color: #05d9e8;
+        text-shadow: 0 0 10px #05d9e8, 0 0 20px #05d9e8;
+        margin-bottom: 30px;
+        letter-spacing: 5px;
+    }
+
+    .boosters-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        padding: 20px;
+
+        .booster-card {
+            flex: 1;
+            min-width: 250px;
+            max-width: calc(33.333% - 20px);
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border: 2px solid #7b2cbf;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+
+            &.active {
+                border-color: #05d9e8;
+                //box-shadow: 0 0 15px #05d9e880;
+            }
+
+            &.can-activate:hover {
+                transform: translateY(-5px);
+                //box-shadow: 0 5px 20px #7b2cbf80;
+            }
+
+            &.cannot-activate {
+                opacity: 0.6;
+            }
+
+            .booster-type {
+                font-size: 24px;
+                color: #ff2a6d;
+                margin-bottom: 15px;
+                text-align: center;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+            }
+
+            .booster-stats {
+                display: flex;
+                justify-content: space-around;
+                margin: 20px 0;
+
+                .multiplier, .duration {
+                    font-size: 32px;
+                    color: #05d9e8;
+                    text-shadow: 0 0 5px #05d9e8;
+
+                    span {
+                        font-size: 18px;
+                        opacity: 0.8;
+                    }
+                }
+            }
+
+            .time-remaining {
+                text-align: center;
+                color: #7b2cbf;
+                font-size: 20px;
+                margin: 10px 0;
+                text-shadow: 0 0 5px #7b2cbf;
+            }
+
+            .activate-btn {
+                width: 100%;
+                padding: 12px;
+                background: linear-gradient(90deg, #ff2a6d, #7b2cbf);
+                border: none;
+                border-radius: 5px;
+                color: white;
+                font-size: 18px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-family: "Orbitron", sans-serif;
+                letter-spacing: 2px;
+
+                /*&:hover:not(:disabled) {
+                    transform: scale(1.05);
+                    //box-shadow: 0 0 15px #ff2a6d80;
+                }*/
+
+                /*&:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                    background: #34495e;
+                }*/
+
+                &.cannot-activate {
+                    background: #34495e;
+                }
+            }
+        }
+
+        .no-boosters { 
+            width: 100%;
+            text-align: center;
+            color: #ff2a6d;
+            font-size: 1.5em;
+            padding: 20px;
+            text-shadow: 0 0 10px #ff2a6d;
+        }
+    }
+}

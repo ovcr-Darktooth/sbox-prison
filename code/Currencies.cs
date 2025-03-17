@@ -7,6 +7,7 @@ using static WebSocketUtility;
 using System;
 using System.Linq;
 using System.Text.Json;
+namespace Overcreep;
 
 public enum CurrenciesEnum
 {

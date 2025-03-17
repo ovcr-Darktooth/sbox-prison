@@ -8,7 +8,7 @@
   "Resources": null,
   "PackageReferences": [],
   "EditorReferences": null,
-  "IsWhitelistDisabled": false,
+  "IsStandaloneOnly": false,
   "Metadata": {
     "MaxPlayers": 64,
     "MinPlayers": 1,
@@ -24,7 +24,9 @@
     "CsProjName": "",
     "StartupScene": "scenes/dev.scene",
     "ControlModes": {
-      "Keyboard": true
+      "Keyboard": true,
+      "VR": false,
+      "Gamepad": false
     },
     "LaunchMode": "Normal"
   }

@@ -4,6 +4,8 @@ using System;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
+namespace Overcreep;
+
 public sealed class SDFGun : Component
 {
 	public MineComponent Mine { get; set; }

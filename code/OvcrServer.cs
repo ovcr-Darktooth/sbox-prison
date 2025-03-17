@@ -2,6 +2,8 @@ using Sandbox;
 using System;
 using System.Text.Json;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+namespace Overcreep;
 
 
 public class ActiveBoosterDTO
@@ -13,10 +15,11 @@ public class ActiveBoosterDTO
 public sealed class OvcrServer : Component
 {
 	private WebsocketTools Websocket;
-	private TimeUntil nextAuth = 2f;
+	private TimeUntil nextAuth = 3f;
 	private TimeUntil nextActiveBoosterCopy = 1f;
 	public bool isAuth = false;
 	public bool hasLoadError = false;
+	private string authToken = "";
 	private WebsocketMessage authMessage {get;set;} = new();
 	private WebsocketMessage updateActiveBoostersMessage {get;set;} = new();
 	[Property] public Currencies Currencies { get; set; }
@@ -29,7 +32,7 @@ public sealed class OvcrServer : Component
 	
 	protected override void OnUpdate()
 	{
-		if (!IsProxy && !isAuth && nextAuth <= 0f)
+		if (!IsProxy && !isAuth && authToken != "" && nextAuth <= 0f)
 		{
 			Log.Info("Trying to auth");
 			Websocket.message = authMessage;
@@ -59,12 +62,10 @@ public sealed class OvcrServer : Component
 			Websocket.url = "ws://websocket.overcreep.ovh:10706";
 			//Websocket.url = "ws://localhost:8080";
 
-			var authToken = await Sandbox.Services.Auth.GetToken( "auth" );
-
 			authMessage.UseJsonTags = true;
 			WebSocketUtility.AddJsonTag(authMessage, "action", "auth");
 			WebSocketUtility.AddJsonTag(authMessage, "playerId", GameObject.Network.Owner.SteamId.ToString());
-			WebSocketUtility.AddJsonTag(authMessage, "token", authToken);
+			WebSocketUtility.AddJsonTag(authMessage, "token", "");
 
 
 			updateActiveBoostersMessage.UseJsonTags = true;
@@ -73,6 +74,10 @@ public sealed class OvcrServer : Component
 			WebSocketUtility.AddJsonTag(updateActiveBoostersMessage, "playerId", GameObject.Network.Owner.SteamId.ToString());
 
 			Websocket.onMessageReceived = OnWSMessageReceived;
+
+
+			authToken = await Sandbox.Services.Auth.GetToken( "auth" );
+			Log.Info("Auth token received ;)");
 		}
 	}
 
@@ -140,6 +145,27 @@ public sealed class OvcrServer : Component
 			Log.Info("Message pas envoyé");
 		}
 	}
+
+	public async Task SendMessageAsync(WebsocketMessage message)
+{
+    if (!IsProxy && isAuth && !hasLoadError)
+    {
+        Websocket.message = message;
+        try
+        {
+            await WebSocketUtility.SendAsync(Websocket);
+        }
+        catch (Exception ex)
+        {
+            hasLoadError = true;
+            Log.Info($"[OvcrServer]SendMessageAsync, erreur sur websocket: {ex.Message}");
+        }
+    }
+    else 
+    {
+        Log.Info("Message pas envoyé");
+    }
+}
 
 	protected override void OnDisabled()
 	{
