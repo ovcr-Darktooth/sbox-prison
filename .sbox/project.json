@@ -11,17 +11,17 @@
   },
   ".Viewport0": {
     "Value": "{\u0022CameraPosition\u0022:\u002246.58221,-143.4887,64.55706\u0022,\u0022CameraRotation\u0022:\u00220.1242332,0.05674737,-0.901075,0.4115941\u0022,\u0022CameraOrthoHeight\u0022:1000}",
-    "Timeout": 1745439645,
+    "Timeout": 1745439772,
     "DeleteAt": 0
   },
   "prefab/player_sdf.prefab.Viewport0": {
     "Value": "{\u0022CameraPosition\u0022:\u0022-191.1221,202.2417,252.8267\u0022,\u0022CameraRotation\u0022:\u00220.0006544826,0.0005770045,-0.7501105,0.6613119\u0022,\u0022CameraOrthoHeight\u0022:1000}",
-    "Timeout": 1745439662,
+    "Timeout": 1745439782,
     "DeleteAt": 0
   },
   "scenes/dev.scene.Viewport0": {
     "Value": "{\u0022CameraPosition\u0022:\u00221106.308,-115.5663,543.2421\u0022,\u0022CameraRotation\u0022:\u00220.1692661,0.005318569,-0.9850699,0.03095222\u0022,\u0022CameraOrthoHeight\u0022:1000}",
-    "Timeout": 1745439662,
+    "Timeout": 1745439782,
     "DeleteAt": 0
   },
   "AssetBrowser.Map.History": {
@@ -51,17 +51,17 @@
   },
   "expand.e856bed1-9341-4a71-ae8a-93992e83d8d7.Enchantments": {
     "Value": "false",
-    "Timeout": 1745439631,
+    "Timeout": 1745439738,
     "DeleteAt": 0
   },
   "SceneView.Viewport0.Settings": {
     "Value": "{\u0022CameraPosition\u0022:\u00222.720634,814.327,-4.129208\u0022,\u0022CameraRotation\u0022:\u00220.02498195,0.003467371,-0.9901899,0.1374334\u0022,\u0022View\u0022:0,\u0022RenderMode\u0022:0,\u0022WireframeMode\u0022:false,\u0022EnablePostProcessing\u0022:true,\u0022EnablePrefabLighting\u0022:true,\u0022ShowGrid\u0022:true,\u0022GridOpacity\u0022:0.2,\u0022GridAxis\u0022:0,\u0022CameraOrthoHeight\u0022:1000}",
-    "Timeout": 1745439662,
+    "Timeout": 1745439782,
     "DeleteAt": 0
   },
   "SceneView.Layout": {
     "Value": "{\u0022Layout\u0022:0,\u0022SplitterState\u0022:[]}",
-    "Timeout": 1745439645,
+    "Timeout": 1745439772,
     "DeleteAt": 0
   },
   "AssetBrowser.History": {
@@ -75,8 +75,8 @@
     "DeleteAt": 0
   },
   "Window.SboxSceneEditor.Dock": {
-    "Value": "{\u0022floatingWindows\u0022:[],\u0022mainWrapper\u0022:{\u0022geometry\u0022:\u0022AdnQywADAAAAAAAAAAAAAAAAB1IAAAOKAAAAAAAAAAAAAAdSAAADigAAAAAAAAAAB4AAAAAAAAAAAAAAB1IAAAOK\u0022,\u0022splitter\u0022:{\u0022items\u0022:[{\u0022items\u0022:[{\u0022currentIndex\u0022:0,\u0022objects\u0022:[{\u0022data\u0022:null,\u0022managedType\u0022:\u0022SceneTreeWidget\u0022,\u0022name\u0022:\u0022Hierarchy\u0022}],\u0022type\u0022:\u0022area\u0022},{\u0022items\u0022:[{\u0022items\u0022:[{\u0022currentIndex\u0022:0,\u0022objects\u0022:[{\u0022data\u0022:null,\u0022managedType\u0022:\u0022\u0022,\u0022name\u0022:\u0022GameFrame\u0022},{\u0022data\u0022:null,\u0022managedType\u0022:\u0022SceneDock\u0022,\u0022name\u0022:\u0022SceneDock:scenes/dev.scene\u0022},{\u0022data\u0022:null,\u0022managedType\u0022:\u0022SceneDock\u0022,\u0022name\u0022:\u0022SceneDock:prefab/player_sdf.prefab\u0022},{\u0022data\u0022:null,\u0022managedType\u0022:\u0022SceneDock\u0022,\u0022name\u0022:\u0022SceneDock:prefab/player_sdf_x.prefab\u0022},{\u0022data\u0022:null,\u0022managedType\u0022:\u0022SceneDock\u0022,\u0022name\u0022:\u0022SceneDock:untitled\u0022}],\u0022type\u0022:\u0022area\u0022},{\u0022currentIndex\u0022:0,\u0022objects\u0022:[{\u0022data\u0022:null,\u0022managedType\u0022:\u0022ConsoleWidget\u0022,\u0022name\u0022:\u0022Console\u0022},{\u0022data\u0022:null,\u0022managedType\u0022:\u0022MainAssetBrowser\u0022,\u0022name\u0022:\u0022Asset Browser\u0022},{\u0022data\u0022:null,\u0022managedType\u0022:\u0022LibraryManagerDock\u0022,\u0022name\u0022:\u0022Library Manager\u0022}],\u0022type\u0022:\u0022area\u0022}],\u0022state\u0022:\u0022AAAA/wAAAAEAAAACAAACIAAAAdcA/////wEAAAACAA==\u0022,\u0022type\u0022:\u0022splitter\u0022},{\u0022currentIndex\u0022:0,\u0022objects\u0022:[{\u0022data\u0022:null,\u0022managedType\u0022:\u0022Inspector\u0022,\u0022name\u0022:\u0022Inspector\u0022}],\u0022type\u0022:\u0022area\u0022}],\u0022state\u0022:\u0022AAAA/wAAAAEAAAACAAAEnwAAAaQA/////wEAAAABAA==\u0022,\u0022type\u0022:\u0022splitter\u0022}],\u0022state\u0022:\u0022AAAA/wAAAAEAAAACAAABCAAABkcA/////wEAAAABAA==\u0022,\u0022type\u0022:\u0022splitter\u0022}],\u0022state\u0022:\u0022AAAA/wAAAAEAAAABAAADnQD/////AQAAAAIA\u0022,\u0022type\u0022:\u0022splitter\u0022}},\u0022toolWindowManagerStateFormat\u0022:1}",
-    "Timeout": 1745439112,
+    "Value": "{\u0022floatingWindows\u0022:[],\u0022mainWrapper\u0022:{\u0022geometry\u0022:\u0022AdnQywADAAAAAAAAAAAAAAAAB1IAAAOKAAAAAAAAAAAAAAdSAAADigAAAAAAAAAAB4AAAAAAAAAAAAAAB1IAAAOK\u0022,\u0022splitter\u0022:{\u0022items\u0022:[{\u0022items\u0022:[{\u0022currentIndex\u0022:0,\u0022objects\u0022:[{\u0022data\u0022:null,\u0022managedType\u0022:\u0022SceneTreeWidget\u0022,\u0022name\u0022:\u0022Hierarchy\u0022}],\u0022type\u0022:\u0022area\u0022},{\u0022items\u0022:[{\u0022items\u0022:[{\u0022currentIndex\u0022:3,\u0022objects\u0022:[{\u0022data\u0022:null,\u0022managedType\u0022:\u0022\u0022,\u0022name\u0022:\u0022GameFrame\u0022},{\u0022data\u0022:null,\u0022managedType\u0022:\u0022SceneDock\u0022,\u0022name\u0022:\u0022SceneDock:scenes/dev.scene\u0022},{\u0022data\u0022:null,\u0022managedType\u0022:\u0022SceneDock\u0022,\u0022name\u0022:\u0022SceneDock:prefab/player_sdf.prefab\u0022},{\u0022data\u0022:null,\u0022managedType\u0022:\u0022SceneDock\u0022,\u0022name\u0022:\u0022SceneDock:prefab/player_sdf_x.prefab\u0022}],\u0022type\u0022:\u0022area\u0022},{\u0022currentIndex\u0022:0,\u0022objects\u0022:[{\u0022data\u0022:null,\u0022managedType\u0022:\u0022ConsoleWidget\u0022,\u0022name\u0022:\u0022Console\u0022},{\u0022data\u0022:null,\u0022managedType\u0022:\u0022MainAssetBrowser\u0022,\u0022name\u0022:\u0022Asset Browser\u0022},{\u0022data\u0022:null,\u0022managedType\u0022:\u0022LibraryManagerDock\u0022,\u0022name\u0022:\u0022Library Manager\u0022}],\u0022type\u0022:\u0022area\u0022}],\u0022state\u0022:\u0022AAAA/wAAAAEAAAACAAACHgAAAcUA/////wEAAAACAA==\u0022,\u0022type\u0022:\u0022splitter\u0022},{\u0022currentIndex\u0022:0,\u0022objects\u0022:[{\u0022data\u0022:null,\u0022managedType\u0022:\u0022Inspector\u0022,\u0022name\u0022:\u0022Inspector\u0022}],\u0022type\u0022:\u0022area\u0022}],\u0022state\u0022:\u0022AAAA/wAAAAEAAAACAAAEnwAAAaQA/////wEAAAABAA==\u0022,\u0022type\u0022:\u0022splitter\u0022}],\u0022state\u0022:\u0022AAAA/wAAAAEAAAACAAABCAAABkcA/////wEAAAABAA==\u0022,\u0022type\u0022:\u0022splitter\u0022}],\u0022state\u0022:\u0022AAAA/wAAAAEAAAABAAADnQD/////AQAAAAIA\u0022,\u0022type\u0022:\u0022splitter\u0022}},\u0022toolWindowManagerStateFormat\u0022:1}",
+    "Timeout": 1745439772,
     "DeleteAt": 0
   },
   "Window.SoundEditor.Dock": {
@@ -96,27 +96,27 @@
   },
   "prefab/player_sdf_x.prefab.Viewport0": {
     "Value": "{\u0022CameraPosition\u0022:\u00222.720634,814.327,-4.129208\u0022,\u0022CameraRotation\u0022:\u00220.02498195,0.003467371,-0.9901899,0.1374334\u0022,\u0022CameraOrthoHeight\u0022:1000}",
-    "Timeout": 1745439662,
+    "Timeout": 1745439782,
     "DeleteAt": 0
   },
   "expand.e856bed1-9341-4a71-ae8a-93992e83d8d7.Multiplicators": {
     "Value": "false",
-    "Timeout": 1745439631,
+    "Timeout": 1745439738,
     "DeleteAt": 0
   },
   "expand.e856bed1-9341-4a71-ae8a-93992e83d8d7.Currencies": {
     "Value": "false",
-    "Timeout": 1745439631,
+    "Timeout": 1745439738,
     "DeleteAt": 0
   },
   "expand.e856bed1-9341-4a71-ae8a-93992e83d8d7.OvcrServer": {
     "Value": "false",
-    "Timeout": 1745439631,
+    "Timeout": 1745439738,
     "DeleteAt": 0
   },
   "expand.e856bed1-9341-4a71-ae8a-93992e83d8d7.Backpack": {
     "Value": "false",
-    "Timeout": 1745439631,
+    "Timeout": 1745439738,
     "DeleteAt": 0
   },
   "AssetBrowser.Model.ViewMode": {
@@ -171,7 +171,7 @@
   },
   "expand.e856bed1-9341-4a71-ae8a-93992e83d8d7.VRAnchor": {
     "Value": "false",
-    "Timeout": 1745439631,
+    "Timeout": 1745439738,
     "DeleteAt": 0
   },
   "AssetBrowser.Map.HistoryIdx": {
@@ -186,12 +186,12 @@
   },
   "expand.e856bed1-9341-4a71-ae8a-93992e83d8d7.Voice": {
     "Value": "false",
-    "Timeout": 1745439631,
+    "Timeout": 1745439738,
     "DeleteAt": 0
   },
   "expand.e856bed1-9341-4a71-ae8a-93992e83d8d7.CitizenAnimationHelper": {
     "Value": "false",
-    "Timeout": 1745439631,
+    "Timeout": 1745439738,
     "DeleteAt": 0
   }
 }
