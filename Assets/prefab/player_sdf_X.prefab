@@ -1,0 +1,558 @@
+{
+  "RootObject": {
+    "__guid": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+    "Flags": 0,
+    "Name": "player_sdf_x",
+    "Position": "0,0,-207485.6",
+    "Tags": "player",
+    "Enabled": true,
+    "Components": [
+      {
+        "__type": "Sandbox.Voice",
+        "__guid": "9d7afc4a-fff8-4a6f-bc90-bea5adba76cd",
+        "Distance": 15000,
+        "Falloff": [
+          {
+            "x": 0,
+            "y": 1,
+            "in": 0,
+            "out": -1.8,
+            "mode": "Mirrored"
+          },
+          {
+            "x": 0.05,
+            "y": 0.22,
+            "in": 3.5,
+            "out": -3.5,
+            "mode": "Mirrored"
+          },
+          {
+            "x": 0.2,
+            "y": 0.04,
+            "in": 0.16,
+            "out": -0.16,
+            "mode": "Mirrored"
+          },
+          {
+            "x": 1,
+            "y": 0,
+            "in": 0,
+            "out": 0,
+            "mode": "Mirrored"
+          }
+        ],
+        "Loopback": false,
+        "Mode": "PushToTalk",
+        "MorphScale": 2,
+        "MorphSmoothTime": 0.1,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "PushToTalkInput": "voice",
+        "Renderer": {
+          "_type": "component",
+          "component_id": "7d1c28e6-6e55-4f4f-966c-b32a66574df1",
+          "go": "4857de54-deea-4da4-8a13-ae319ed01438",
+          "component_type": "SkinnedModelRenderer"
+        },
+        "VoiceMixer": {
+          "Name": "unknown",
+          "Id": "00000000-0000-0000-0000-000000000000"
+        },
+        "Volume": 1,
+        "WorldspacePlayback": true
+      },
+      {
+        "__type": "Overcreep.SDFGun",
+        "__guid": "8f1ad832-8ad3-4dff-b468-eca959936ef7",
+        "Backpack": {
+          "_type": "component",
+          "component_id": "511d5c6e-fcc4-480b-8b9d-eafc6dc0a800",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Backpack"
+        },
+        "Currencies": {
+          "_type": "component",
+          "component_id": "63ac087d-5529-46ef-9bf9-fb83b222f201",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Currencies"
+        },
+        "Multiplicators": {
+          "_type": "component",
+          "component_id": "cd22f5fb-4fbd-4427-9b93-a9fbed92dab3",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Multiplicators"
+        },
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "sdf3DVolume": "sdfvol/box.sdfvol",
+        "SphereSize": 100,
+        "ViewModelCamera": {
+          "_type": "component",
+          "component_id": "9af4ef9e-2793-4c88-9382-9f15ac321151",
+          "go": "03dd9159-9302-48a5-ae2e-1afe91613e80",
+          "component_type": "CameraComponent"
+        }
+      },
+      {
+        "__type": "Overcreep.Enchantments",
+        "__guid": "a6ceff02-f4a2-4b65-be06-05b3c683edb7",
+        "Currencies": {
+          "_type": "component",
+          "component_id": "63ac087d-5529-46ef-9bf9-fb83b222f201",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Currencies"
+        },
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "OvcrServer": {
+          "_type": "component",
+          "component_id": "12d5f1b0-7b3d-47f6-831c-6145948a3b2e",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "OvcrServer"
+        }
+      },
+      {
+        "__type": "Overcreep.Currencies",
+        "__guid": "63ac087d-5529-46ef-9bf9-fb83b222f201",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "OvcrServer": {
+          "_type": "component",
+          "component_id": "12d5f1b0-7b3d-47f6-831c-6145948a3b2e",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "OvcrServer"
+        }
+      },
+      {
+        "__type": "Overcreep.Multiplicators",
+        "__guid": "cd22f5fb-4fbd-4427-9b93-a9fbed92dab3",
+        "Currencies": {
+          "_type": "component",
+          "component_id": "63ac087d-5529-46ef-9bf9-fb83b222f201",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Currencies"
+        },
+        "Enchantments": {
+          "_type": "component",
+          "component_id": "a6ceff02-f4a2-4b65-be06-05b3c683edb7",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Enchantments"
+        },
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "OvcrServer": {
+          "_type": "component",
+          "component_id": "12d5f1b0-7b3d-47f6-831c-6145948a3b2e",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "OvcrServer"
+        }
+      },
+      {
+        "__type": "Overcreep.OvcrServer",
+        "__guid": "12d5f1b0-7b3d-47f6-831c-6145948a3b2e",
+        "Backpack": {
+          "_type": "component",
+          "component_id": "511d5c6e-fcc4-480b-8b9d-eafc6dc0a800",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Backpack"
+        },
+        "Currencies": {
+          "_type": "component",
+          "component_id": "63ac087d-5529-46ef-9bf9-fb83b222f201",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Currencies"
+        },
+        "Enchantments": {
+          "_type": "component",
+          "component_id": "a6ceff02-f4a2-4b65-be06-05b3c683edb7",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Enchantments"
+        },
+        "Multiplicators": {
+          "_type": "component",
+          "component_id": "cd22f5fb-4fbd-4427-9b93-a9fbed92dab3",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Multiplicators"
+        },
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null
+      },
+      {
+        "__type": "Overcreep.Backpack",
+        "__guid": "511d5c6e-fcc4-480b-8b9d-eafc6dc0a800",
+        "Currencies": {
+          "_type": "component",
+          "component_id": "63ac087d-5529-46ef-9bf9-fb83b222f201",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Currencies"
+        },
+        "Enchantments": {
+          "_type": "component",
+          "component_id": "a6ceff02-f4a2-4b65-be06-05b3c683edb7",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Enchantments"
+        },
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "OvcrServer": {
+          "_type": "component",
+          "component_id": "12d5f1b0-7b3d-47f6-831c-6145948a3b2e",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "OvcrServer"
+        }
+      },
+      {
+        "__type": "XMovement.OvcrPlayerControllerX",
+        "__guid": "fb5fd808-e5d6-4106-81bc-e3d06575437b",
+        "AllowPogosticking": false,
+        "Body": {
+          "_type": "gameobject",
+          "go": "4857de54-deea-4da4-8a13-ae319ed01438"
+        },
+        "BodyModelRenderer": {
+          "_type": "component",
+          "component_id": "7d1c28e6-6e55-4f4f-966c-b32a66574df1",
+          "go": "4857de54-deea-4da4-8a13-ae319ed01438",
+          "component_type": "SkinnedModelRenderer"
+        },
+        "Camera": {
+          "_type": "component",
+          "component_id": "9af4ef9e-2793-4c88-9382-9f15ac321151",
+          "go": "03dd9159-9302-48a5-ae2e-1afe91613e80",
+          "component_type": "CameraComponent"
+        },
+        "CameraMode": "FirstPerson",
+        "CameraToggleAction": "View",
+        "ClimbSpeed": 100,
+        "CrouchAction": "Duck",
+        "CrouchSpeed": 63.27,
+        "Currencies": {
+          "_type": "component",
+          "component_id": "63ac087d-5529-46ef-9bf9-fb83b222f201",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Currencies"
+        },
+        "DefaultSpeed": 344.59998,
+        "EnableCrouching": true,
+        "EnableJumping": true,
+        "EnableLadders": true,
+        "EnableNoclipping": false,
+        "EnableRunning": true,
+        "EnableSwimming": true,
+        "EnableUse": false,
+        "EnableVR": false,
+        "EnableWalking": true,
+        "Enchantments": {
+          "_type": "component",
+          "component_id": "a6ceff02-f4a2-4b65-be06-05b3c683edb7",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Enchantments"
+        },
+        "FirstPersonOffset": "0,0,0",
+        "Head": {
+          "_type": "gameobject",
+          "go": "beb34699-94c2-4472-b01a-b86ca7f8d023"
+        },
+        "HeadHeight": 64,
+        "HeadTracker": null,
+        "Height": 72,
+        "JumpAction": "Jump",
+        "JumpPower": 370.10004,
+        "LadderTag": "ladder",
+        "MovementPreset": "HalfLife2",
+        "Multiplicators": {
+          "_type": "component",
+          "component_id": "cd22f5fb-4fbd-4427-9b93-a9fbed92dab3",
+          "go": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+          "component_type": "Multiplicators"
+        },
+        "NoclipAction": "Noclip",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "OnlyAllowHost": true,
+        "PlayerShadowsOnly": true,
+        "RotationAngleLimit": 45,
+        "RotationFaceLadders": true,
+        "RotationSpeed": 1,
+        "RunAction": "Run",
+        "RunByDefault": false,
+        "RunSpeed": 582.4,
+        "SwimDownAction": "",
+        "SwimmingFriction": 1,
+        "SwimmingSpeedScale": 0.8,
+        "SwimUpAction": "Jump",
+        "ThirdPersonOffset": "-180,0,0",
+        "UseAction": "Use",
+        "UseDistance": 130,
+        "WalkAction": "Walk",
+        "WalkSpeed": 150,
+        "WaterTag": "water"
+      },
+      {
+        "__type": "XMovement.PlayerMovement",
+        "__guid": "940ec7fd-6373-4b12-b74e-aca175cad395",
+        "Acceleration": 10,
+        "AirAcceleration": 78.8,
+        "AirControl": 305.5,
+        "BaseAcceleration": 10,
+        "BaseFriction": 4,
+        "BaseVelocity": "0,0,0",
+        "Bounciness": 0,
+        "DoClassicPlatforms": true,
+        "Gravity": "0,0,600",
+        "GroundAngle": 45.5734,
+        "Height": 72,
+        "IgnoreLayers": "",
+        "IsOnGround": false,
+        "Mass": 65.1,
+        "MovementFrequency": "PerFixedUpdate",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "PhysicsIntegration": true,
+        "PlayerColliderModel": null,
+        "PushScale": 0.7,
+        "Radius": 16,
+        "StepHeight": 18,
+        "StopSpeed": 100,
+        "UseCollisionRules": false,
+        "Velocity": "0,0,-27168"
+      },
+      {
+        "__type": "Sandbox.VR.VRAnchor",
+        "__guid": "b03e5433-3373-44ad-a406-32603ecee36d",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null
+      },
+      {
+        "__type": "Sandbox.Citizen.CitizenAnimationHelper",
+        "__guid": "60bd7f2e-460e-4176-8b8a-f502d91c7b78",
+        "BodyWeight": 1,
+        "EyeSource": null,
+        "EyesWeight": 1,
+        "HeadWeight": 1,
+        "Height": null,
+        "IkLeftFoot": null,
+        "IkLeftHand": null,
+        "IkRightFoot": null,
+        "IkRightHand": null,
+        "LookAt": null,
+        "LookAtEnabled": false,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "Target": {
+          "_type": "component",
+          "component_id": "7d1c28e6-6e55-4f4f-966c-b32a66574df1",
+          "go": "4857de54-deea-4da4-8a13-ae319ed01438",
+          "component_type": "SkinnedModelRenderer"
+        }
+      }
+    ],
+    "Children": [
+      {
+        "__guid": "4857de54-deea-4da4-8a13-ae319ed01438",
+        "Flags": 0,
+        "Name": "Body",
+        "Enabled": true,
+        "Components": [
+          {
+            "__type": "Sandbox.SkinnedModelRenderer",
+            "__guid": "7d1c28e6-6e55-4f4f-966c-b32a66574df1",
+            "AnimationGraph": null,
+            "BodyGroups": 341,
+            "BoneMergeTarget": null,
+            "CreateAttachments": false,
+            "CreateBoneObjects": false,
+            "MaterialGroup": null,
+            "MaterialOverride": null,
+            "Model": "models/citizen/citizen.vmdl",
+            "Morphs": {},
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "Parameters": {
+              "bools": {},
+              "ints": {},
+              "floats": {},
+              "vectors": {},
+              "rotations": {}
+            },
+            "PlaybackRate": 1,
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
+            "RenderType": "ShadowsOnly",
+            "Sequence": {
+              "Name": null
+            },
+            "Tint": "1,1,1,1",
+            "UseAnimGraph": true
+          }
+        ]
+      },
+      {
+        "__guid": "beb34699-94c2-4472-b01a-b86ca7f8d023",
+        "Flags": 0,
+        "Name": "Head",
+        "Position": "0,0,63.99992",
+        "Enabled": true,
+        "Children": [
+          {
+            "__guid": "03dd9159-9302-48a5-ae2e-1afe91613e80",
+            "Flags": 0,
+            "Name": "Camera",
+            "Tags": "maincamera",
+            "Enabled": true,
+            "Components": [
+              {
+                "__type": "Sandbox.CameraComponent",
+                "__guid": "9af4ef9e-2793-4c88-9382-9f15ac321151",
+                "BackgroundColor": "0.33333,0.46275,0.52157,1",
+                "ClearFlags": "All",
+                "FieldOfView": 115.43,
+                "FovAxis": "Horizontal",
+                "IsMainCamera": true,
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "Orthographic": false,
+                "OrthographicHeight": 1204,
+                "Priority": 1,
+                "RenderExcludeTags": "",
+                "RenderTags": "",
+                "TargetEye": "None",
+                "Viewport": "0,0,1,1",
+                "ZFar": 10000,
+                "ZNear": 10
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "__guid": "42908074-885a-4464-8133-e1e85c143c00",
+        "Flags": 0,
+        "Name": "NameTag",
+        "Position": "0,0,75",
+        "Enabled": true,
+        "Components": [
+          {
+            "__type": "Sandbox.WorldPanel",
+            "__guid": "45d9cf1b-b4e4-441f-8be6-37e6dbcd9455",
+            "HorizontalAlign": "Center",
+            "InteractionRange": 1000,
+            "LookAtCamera": true,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "PanelSize": "512,512",
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
+            "RenderScale": 1,
+            "VerticalAlign": "Center"
+          },
+          {
+            "__type": "Facepunch.Arena.NameTag",
+            "__guid": "69d57e5d-000d-4faa-8e86-ef72d2b8cdf6",
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          }
+        ]
+      }
+    ],
+    "__variables": [],
+    "__properties": {
+      "FixedUpdateFrequency": 50,
+      "MaxFixedUpdates": 5,
+      "NetworkFrequency": 30,
+      "NetworkInterpolation": true,
+      "PhysicsSubSteps": 1,
+      "ThreadedAnimation": true,
+      "TimeScale": 1,
+      "UseFixedUpdate": true,
+      "Metadata": {},
+      "NavMesh": {
+        "Enabled": false,
+        "IncludeStaticBodies": true,
+        "IncludeKeyframedBodies": true,
+        "EditorAutoUpdate": true,
+        "AgentHeight": 64,
+        "AgentRadius": 16,
+        "AgentStepSize": 18,
+        "AgentMaxSlope": 40,
+        "ExcludedBodies": "",
+        "IncludedBodies": ""
+      }
+    }
+  },
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "DontBreakAsTemplate": false,
+  "ResourceVersion": 1,
+  "__references": [],
+  "__version": 1
+}

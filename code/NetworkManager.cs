@@ -20,7 +20,7 @@ public class NetworkManager : Component, Component.INetworkListener
 				{
 				MaxPlayers = 8,
 				Privacy = LobbyPrivacy.Public,
-				Name = "My Lobby Name"
+				Name = "Overcreep testing server"
 				});
 		}
 		

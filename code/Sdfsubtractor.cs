@@ -30,8 +30,8 @@ public sealed class SDFGun : Component
 		if (ViewModelCamera.IsValid())
 		{
 			var tr = Scene.Trace.Ray(ViewModelCamera.ScreenNormalToRay(0.5f), 200).WithoutTags("player").Run();
-			/*
-			if (tr.Hit)
+			
+			/*if (tr.Hit)
 			{
 				/ *Vector3 hitPosition = tr.HitPosition;
 				Vector3 normal = tr.HitPosition.Normal;

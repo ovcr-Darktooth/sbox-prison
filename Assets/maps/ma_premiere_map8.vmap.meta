@@ -1,0 +1,21 @@
+{
+  "publish": {
+    "Enabled": false,
+    "ProjectConfig": {
+      "Title": "Ma Premiere Map 8",
+      "Type": "map",
+      "Org": "local",
+      "Ident": "mapremieremap8",
+      "Schema": 0,
+      "IncludeSourceFiles": false,
+      "Resources": null,
+      "PackageReferences": [],
+      "EditorReferences": [],
+      "IsStandaloneOnly": false,
+      "Metadata": {
+        "SingleAssetSource": "maps/ma_premiere_map8.vmap",
+        "ParentPackage": "overcreep.prison"
+      }
+    }
+  }
+}
