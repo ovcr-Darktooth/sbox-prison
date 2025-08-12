@@ -27,7 +27,6 @@ public sealed class Enchantments : Component
 	private WebsocketMessage getEnchantmentsMessage {get;set;} = new();
 
 	private TimeUntil nextSaveDB = 5f;
-	//private TimeUntil nextLoadEnchants = 0f;
 	public bool hasLoaded = false;
 	public bool hasLoadError = false;
 	public bool isMenuOpen = false;
@@ -40,7 +39,7 @@ public sealed class Enchantments : Component
 		if (!IsProxy && hasLoaded && OvcrServer.isAuth && nextSaveDB <= 0f)
 		{
 			try {
-				saveDB();
+				SaveDB();
 			}
 			catch
 			{
@@ -58,7 +57,10 @@ public sealed class Enchantments : Component
 		}*/
 
 		if (Input.Pressed("Enchant_menu") && !IsProxy)
+		{
 			isMenuOpen = !isMenuOpen;
+			Log.Info("Enchant menu toggled: " + isMenuOpen);
+		}
 			
 	}
 	
@@ -330,7 +332,7 @@ public sealed class Enchantments : Component
 	}
 
 
-	private void saveDB()
+	public void SaveDB()
 	{
 		if (!IsProxy && hasLoaded)
 		{

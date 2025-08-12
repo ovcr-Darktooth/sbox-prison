@@ -43,7 +43,7 @@ public sealed class Backpack : Component
         //todo: vendre le backpack, saveDB quand fini
     }
 
-    private void SaveDB()
+    public void SaveDB()
     {
         if (!IsProxy && hasLoaded)
         {
@@ -100,7 +100,7 @@ public sealed class Backpack : Component
 
             _inventory = new Dictionary<string, double>();
 
-            //AddBlock(BlockType.Normal, 0);
+            //AddBlock(BlockType.Normal, 1);
             //AddBlock("Stone", 0);
         }
     }

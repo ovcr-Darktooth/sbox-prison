@@ -1,14 +1,23 @@
 {
   "RootObject": {
     "__guid": "e856bed1-9341-4a71-ae8a-93992e83d8d7",
+    "__version": 1,
     "Flags": 0,
     "Name": "player_sdf_x",
+    "Position": "0,0,0",
+    "Rotation": "0,0,0,1",
+    "Scale": "1,1,1",
     "Tags": "player",
     "Enabled": true,
+    "NetworkMode": 2,
+    "NetworkInterpolation": true,
+    "NetworkOrphaned": 0,
+    "OwnerTransfer": 1,
     "Components": [
       {
         "__type": "Sandbox.Voice",
         "__guid": "9d7afc4a-fff8-4a6f-bc90-bea5adba76cd",
+        "__enabled": true,
         "Distance": 15000,
         "Falloff": [
           {
@@ -62,6 +71,7 @@
       {
         "__type": "Overcreep.SDFGun",
         "__guid": "8f1ad832-8ad3-4dff-b468-eca959936ef7",
+        "__enabled": true,
         "Backpack": {
           "_type": "component",
           "component_id": "511d5c6e-fcc4-480b-8b9d-eafc6dc0a800",
@@ -98,6 +108,7 @@
       {
         "__type": "Overcreep.Enchantments",
         "__guid": "a6ceff02-f4a2-4b65-be06-05b3c683edb7",
+        "__enabled": true,
         "Currencies": {
           "_type": "component",
           "component_id": "63ac087d-5529-46ef-9bf9-fb83b222f201",
@@ -120,6 +131,7 @@
       {
         "__type": "Overcreep.Currencies",
         "__guid": "63ac087d-5529-46ef-9bf9-fb83b222f201",
+        "__enabled": true,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -136,6 +148,7 @@
       {
         "__type": "Overcreep.Multiplicators",
         "__guid": "cd22f5fb-4fbd-4427-9b93-a9fbed92dab3",
+        "__enabled": true,
         "Currencies": {
           "_type": "component",
           "component_id": "63ac087d-5529-46ef-9bf9-fb83b222f201",
@@ -164,6 +177,7 @@
       {
         "__type": "Overcreep.OvcrServer",
         "__guid": "12d5f1b0-7b3d-47f6-831c-6145948a3b2e",
+        "__enabled": true,
         "Backpack": {
           "_type": "component",
           "component_id": "511d5c6e-fcc4-480b-8b9d-eafc6dc0a800",
@@ -198,6 +212,7 @@
       {
         "__type": "Overcreep.Backpack",
         "__guid": "511d5c6e-fcc4-480b-8b9d-eafc6dc0a800",
+        "__enabled": true,
         "Currencies": {
           "_type": "component",
           "component_id": "63ac087d-5529-46ef-9bf9-fb83b222f201",
@@ -226,6 +241,7 @@
       {
         "__type": "XMovement.PlayerMovement",
         "__guid": "940ec7fd-6373-4b12-b74e-aca175cad395",
+        "__enabled": true,
         "Acceleration": 60.000042,
         "AirAcceleration": 60.000042,
         "AirControl": 53.899937,
@@ -259,6 +275,7 @@
       {
         "__type": "Sandbox.VR.VRAnchor",
         "__guid": "b03e5433-3373-44ad-a406-32603ecee36d",
+        "__enabled": true,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -269,6 +286,7 @@
       {
         "__type": "Sandbox.Citizen.CitizenAnimationHelper",
         "__guid": "60bd7f2e-460e-4176-8b8a-f502d91c7b78",
+        "__enabled": true,
         "BodyWeight": 1,
         "EyeSource": null,
         "EyesWeight": 1,
@@ -296,6 +314,7 @@
       {
         "__type": "Overcreep.OvcrPlayerControllerX",
         "__guid": "d161276c-8c7c-4142-bfa5-bcf59fb31124",
+        "__enabled": true,
         "AllowPogosticking": false,
         "Body": {
           "_type": "gameobject",
@@ -394,14 +413,23 @@
     "Children": [
       {
         "__guid": "42908074-885a-4464-8133-e1e85c143c00",
+        "__version": 1,
         "Flags": 0,
         "Name": "NameTag",
         "Position": "0,0,75",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
         "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkInterpolation": true,
+        "NetworkOrphaned": 0,
+        "OwnerTransfer": 1,
         "Components": [
           {
             "__type": "Sandbox.WorldPanel",
             "__guid": "45d9cf1b-b4e4-441f-8be6-37e6dbcd9455",
+            "__enabled": true,
             "HorizontalAlign": "Center",
             "InteractionRange": 1000,
             "LookAtCamera": true,
@@ -424,6 +452,7 @@
           {
             "__type": "Facepunch.Arena.NameTag",
             "__guid": "69d57e5d-000d-4faa-8e86-ef72d2b8cdf6",
+            "__enabled": true,
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
             "OnComponentEnabled": null,
@@ -431,17 +460,28 @@
             "OnComponentStart": null,
             "OnComponentUpdate": null
           }
-        ]
+        ],
+        "Children": []
       },
       {
         "__guid": "283a77a9-97de-49da-946d-04b0a5b3beb0",
+        "__version": 1,
         "Flags": 0,
         "Name": "Body",
+        "Position": "0,0,0",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
         "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkInterpolation": true,
+        "NetworkOrphaned": 0,
+        "OwnerTransfer": 1,
         "Components": [
           {
             "__type": "Sandbox.SkinnedModelRenderer",
             "__guid": "fe16c4f1-62c4-455e-bd39-347602d0de66",
+            "__enabled": true,
             "AnimationGraph": null,
             "BodyGroups": 341,
             "BoneMergeTarget": null,
@@ -449,6 +489,7 @@
             "CreateBoneObjects": false,
             "MaterialGroup": null,
             "MaterialOverride": null,
+            "Materials": null,
             "Model": "models/citizen/citizen.vmdl",
             "Morphs": {},
             "OnComponentDestroy": null,
@@ -473,30 +514,51 @@
             },
             "RenderType": "On",
             "Sequence": {
-              "Name": null
+              "Name": null,
+              "Looping": true,
+              "Blending": false
             },
             "Tint": "1,1,1,1",
             "UseAnimGraph": true
           }
-        ]
+        ],
+        "Children": []
       },
       {
         "__guid": "82568f20-63fa-44d8-a605-26554a127705",
+        "__version": 1,
         "Flags": 0,
         "Name": "Head",
         "Position": "0,0,64",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
         "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkInterpolation": true,
+        "NetworkOrphaned": 0,
+        "OwnerTransfer": 1,
+        "Components": [],
         "Children": [
           {
             "__guid": "d5f3fb63-a048-46d4-bdb1-a5450ddceb4c",
+            "__version": 1,
             "Flags": 0,
             "Name": "Camera",
             "Position": "-180,0,0",
+            "Rotation": "0,0,0,1",
+            "Scale": "1,1,1",
+            "Tags": "",
             "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkInterpolation": true,
+            "NetworkOrphaned": 0,
+            "OwnerTransfer": 1,
             "Components": [
               {
                 "__type": "Sandbox.CameraComponent",
                 "__guid": "a0e899c4-e6ab-42bf-84f6-3c8addcefcd4",
+                "__enabled": true,
                 "BackgroundColor": "0.33333,0.46275,0.52157,1",
                 "ClearFlags": "All",
                 "FieldOfView": 111.8,
@@ -517,22 +579,61 @@
                 "Viewport": "0,0,1,1",
                 "ZFar": 10000,
                 "ZNear": 10
+              },
+              {
+                "__type": "Sandbox.ScreenPanel",
+                "__guid": "e28c63fd-3fbf-4058-8115-007e31d6d18a",
+                "__enabled": true,
+                "AutoScreenScale": true,
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "Opacity": 1,
+                "Scale": 1,
+                "ScaleStrategy": "ConsistentHeight",
+                "TargetCamera": {
+                  "_type": "component",
+                  "component_id": "a0e899c4-e6ab-42bf-84f6-3c8addcefcd4",
+                  "go": "d5f3fb63-a048-46d4-bdb1-a5450ddceb4c",
+                  "component_type": "CameraComponent"
+                },
+                "ZIndex": 100
+              },
+              {
+                "__type": "Facepunch.Arena.BoostersUI",
+                "__guid": "853c825c-4ba0-42e7-bcbc-3d171b5c0e42",
+                "__enabled": true,
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null
+              },
+              {
+                "__type": "Facepunch.Arena.Enchants",
+                "__guid": "36ccf40c-a857-4dbc-86c8-05b88527f9f7",
+                "__enabled": true,
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null
               }
-            ]
+            ],
+            "Children": []
           }
         ]
       }
     ],
-    "__variables": [],
     "__properties": {
-      "FixedUpdateFrequency": 50,
-      "MaxFixedUpdates": 5,
-      "NetworkFrequency": 30,
       "NetworkInterpolation": true,
-      "PhysicsSubSteps": 1,
-      "ThreadedAnimation": true,
       "TimeScale": 1,
-      "UseFixedUpdate": true,
+      "WantsSystemScene": true,
       "Metadata": {},
       "NavMesh": {
         "Enabled": false,
@@ -546,13 +647,14 @@
         "ExcludedBodies": "",
         "IncludedBodies": ""
       }
-    }
+    },
+    "__variables": []
   },
+  "ResourceVersion": 2,
   "ShowInMenu": false,
   "MenuPath": null,
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
-  "ResourceVersion": 1,
   "__references": [],
-  "__version": 1
+  "__version": 2
 }

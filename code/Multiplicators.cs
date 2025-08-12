@@ -32,6 +32,7 @@ public enum Multiplicator
 public sealed class Multiplicators : Component
 {
 	[Property] public OvcrServer OvcrServer { get; set; } 
+    //currencies pour chaque monnaie pour obtenir un multiplicateur sur la monnaie
 	[Property] public Currencies Currencies { get; set; } 
 	[Property] public Enchantments Enchantments { get; set; } 
     private bool activateNew = true;
@@ -53,8 +54,6 @@ public sealed class Multiplicators : Component
 	
 	//niveaux ?
 	//récupérer le composant qui va gérer les niveaux
-
-	//currencies pour chaque monnaie pour obtenir un multiplicateur sur la monnaie
 		
 
 	protected override void OnUpdate()
@@ -87,11 +86,11 @@ public sealed class Multiplicators : Component
         {
             CleanUpActiveBoosters();
 
-            if (activateNew)
+            /*if (activateNew)
             {
                 ActivateBooster(Boosters.EToken, 70f, 2f);
                 activateNew = false;
-            }
+            }*/
                 
             nextCleanUpBoosters = 1f;
             //SendActiveBoosters();
@@ -166,7 +165,7 @@ public sealed class Multiplicators : Component
         base.OnDisabled();
     }
 
-	private void GetDB()
+	public void GetDB()
 	{
 		if (!IsProxy && OvcrServer.IsValid())
 			OvcrServer.SendMessage(getBoostersMessage);
@@ -376,6 +375,7 @@ public sealed class Multiplicators : Component
 
 	public void LoadBoosters(JsonElement rootElement)
     {
+        Log.Info("Loading boosters");
         if (rootElement.TryGetProperty("boosters", out var boostersElement) &&
             boostersElement.ValueKind == JsonValueKind.Object)
         {
@@ -570,7 +570,7 @@ public sealed class Multiplicators : Component
     public void ToggleMenu()
     {
         isMenuOpen = !isMenuOpen;
-        Log.Info("togglemenu" + isMenuOpen);
+        Log.Info("Booster menu toggled: " + isMenuOpen);
     }
 
     public bool CanActivateBooster(Boosters boosterType, float multiplicator)

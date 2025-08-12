@@ -1,5 +1,7 @@
 using Sandbox;
 using System;
+using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,12 +19,12 @@ public sealed class OvcrServer : Component
 	private WebsocketTools Websocket;
 	public WebSocket Socket { get; set; }
 	public string ConnectionUri { get; set; }
-	private TimeUntil nextAuth = 2f;
+	private TimeUntil nextAuth = 1f;
 	private TimeUntil nextActiveBoosterCopy = 1f;
 	private TimeUntil nextLoadEnchants = 0f;
-	private TimeUntil nextLoadCurrencies = 3f;
-	private TimeUntil nextLoadMultiplicators = 5f;
-	private TimeUntil nextLoadInventory = 8f;
+	private TimeUntil nextLoadCurrencies = 1f;
+	private TimeUntil nextLoadMultiplicators = 2f;
+	private TimeUntil nextLoadInventory = 3f;
 	public bool isAuth = false;
 	public bool hasLoadError = false;
 	private string authToken = "";
@@ -77,21 +79,20 @@ public sealed class OvcrServer : Component
 			Log.Info("Trying to load player boosters");
 			//Websocket.message = getCurrenciesMessage;
 
-			//boosters not yet implemented
-			//GetDB();
+			Multiplicators.GetDB();
 
 			//DEBUG:
             //AddActiveBooster(Boosters.Dollars, 10f, 2f);
             //AddActiveBooster(Boosters.EToken, 12f, 2f);
 
-            Multiplicators.GiveBooster(Boosters.Dollars, 50f, 2f);
+            //Multiplicators.GiveBooster(Boosters.Dollars, 50f, 2f);
             //GiveBooster(Boosters.Dollars, 60f, 2f);
-            Multiplicators.GiveBooster(Boosters.EToken, 70f, 2f);
+            //Multiplicators.GiveBooster(Boosters.EToken, 70f, 2f);
             //GiveBooster(Boosters.EToken, 80f, 2f);
-            Multiplicators.hasLoaded = true;
+            //Multiplicators.hasLoaded = true;
             //END OF DEBUG  
 
-			nextLoadMultiplicators = 999f;
+			nextLoadMultiplicators = 5f;
 		}
 
 
@@ -132,6 +133,23 @@ public sealed class OvcrServer : Component
 		}
 	}
 
+	//Lors de la déconnexion du joueur
+	protected override void OnDisabled()
+	{
+		if (!IsProxy)
+		{
+			string jsonActiveBoosters = ConvertActiveBoostersToJson();
+			DisplayBoosters();
+			WebSocketUtility.ChangeJsonTagValue(updateActiveBoostersMessage, "activeBoosters", jsonActiveBoosters);
+			SendMessage(updateActiveBoostersMessage);
+
+			Backpack.SaveDB();
+			Enchantments.SaveDB();
+			//TODO: ajouter les autres trucs a sauvegarder
+
+		}
+		base.OnDisabled();
+	}
 
 	private async void WSAuth()
 	{
@@ -175,10 +193,32 @@ public sealed class OvcrServer : Component
 
 	public async void SendMessage(WebsocketMessage message)
 	{
-		//Log.Info("Tentative d'envoi du message"); 
 		if (!IsProxy && isAuth && !hasLoadError)
 		{
-			Websocket.message = message;
+			var clonedWs = new WebsocketTools
+			{
+				url = Websocket.url,
+				onMessageReceived = Websocket.onMessageReceived,
+				webSocket = Websocket.webSocket,
+				isConnected = Websocket.isConnected,
+				isSubscribed = Websocket.isSubscribed,
+				message = CloneMessage(message)
+			};
+
+			await Task.RunInThreadAsync(async () =>
+			{
+				try
+				{
+					await WebSocketUtility.SendAsync(clonedWs);
+				}
+				catch (Exception ex)
+				{
+					hasLoadError = true;
+					Log.Info($"[OvcrServer]SendMessage error: {ex.Message}");
+				}
+			});
+
+			/*Websocket.message = message;
 			await Task.RunInThreadAsync( async () =>
 			{
 				try
@@ -190,7 +230,7 @@ public sealed class OvcrServer : Component
 					hasLoadError = true;
 					Log.Info($"[OvcrServer]WSAuth, error on websocket: {ex.Message}");
 				}
-			} );
+			} );*/
 		}
 		else 
 		{
@@ -199,44 +239,71 @@ public sealed class OvcrServer : Component
 	}
 
 	public async Task SendMessageAsync(WebsocketMessage message)
-{
-    if (!IsProxy && isAuth && !hasLoadError)
-    {
-        Websocket.message = message;
-        try
-        {
-            await WebSocketUtility.SendAsync(Websocket);
-        }
-        catch (Exception ex)
-        {
-            hasLoadError = true;
-            Log.Info($"[OvcrServer]SendMessageAsync, erreur sur websocket: {ex.Message}");
-        }
-    }
-    else 
-    {
-        Log.Info("Message pas envoyé");
-    }
-}
-
-	protected override void OnDisabled()
 	{
-		Log.Info("OnDisabled ovcrserver");
-		if (!IsProxy)
+		if (!IsProxy && isAuth && !hasLoadError)
 		{
-			Log.Info("ovcrserver SendActiveboosters");
-			string jsonActiveBoosters = ConvertActiveBoostersToJson();
+			var localWs = new WebsocketTools
+			{
+				url = Websocket.url,
+				onMessageReceived = Websocket.onMessageReceived,
+				webSocket = Websocket.webSocket,
+				isConnected = Websocket.isConnected,
+				isSubscribed = Websocket.isSubscribed,
+				message = CloneMessage(message) // copie profonde
+			};
 
-			DisplayBoosters();
+			try
+			{
+				await WebSocketUtility.SendAsync(localWs);
+			}
+			catch (Exception ex)
+			{
+				hasLoadError = true;
+				Log.Info($"[OvcrServer]SendMessageAsync error: {ex.Message}");
+			}
 
-			WebSocketUtility.ChangeJsonTagValue(updateActiveBoostersMessage, "activeBoosters", jsonActiveBoosters);
-
-			Log.Info("json envoyé:" + jsonActiveBoosters);
-
-			SendMessage(updateActiveBoostersMessage);
+			/*Websocket.message = message;
+			try
+			{
+				await WebSocketUtility.SendAsync(Websocket);
+			}
+			catch (Exception ex)
+			{
+				hasLoadError = true;
+				Log.Info($"[OvcrServer]SendMessageAsync, erreur sur websocket: {ex.Message}");
+			}*/
 		}
-		base.OnDisabled();
+		else 
+		{
+			Log.Info("Message pas envoyé");
+		}
 	}
+
+	private WebsocketMessage CloneMessage(WebsocketMessage original)
+	{
+		if (original == null)
+			return null;
+
+		var clone = new WebsocketMessage
+		{
+			UseJsonTags = original.UseJsonTags,
+			message = original.message
+		};
+
+		if (original.jsonTags != null)
+		{
+			clone.jsonTags = original.jsonTags
+				.Select(tag => new JsonTags
+				{
+					tag = tag.tag,
+					value = tag.value
+				})
+				.ToList();
+		}
+
+		return clone;
+	}
+
 
 	public string ConvertActiveBoostersToJson()
 	{
@@ -320,6 +387,11 @@ public sealed class OvcrServer : Component
                                 Log.Info("Boosters property is missing");
 							break;
 						case "giveBooster":
+							break;
+						case "useBooster":
+							break;
+						case "updateActiveBoosters":
+							//Do nothing
 							break;
 						case "backpackUpdated":
 							break;						

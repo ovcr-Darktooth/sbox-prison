@@ -23,9 +23,9 @@ public abstract class WeaponComponent : Component
 	[Property] public SoundEvent FireSound { get; set; }
 	[Property] public SoundEvent EmptyClipSound { get; set; }
 	[Property] public SoundSequenceData ReloadSoundSequence { get; set; }
-	[Property] public ParticleSystem MuzzleFlash { get; set; }
+	/*[Property] public ParticleSystem MuzzleFlash { get; set; }
 	[Property] public ParticleSystem ImpactEffect { get; set; }
-	[Property] public ParticleSystem MuzzleSmoke { get; set; }
+	[Property] public ParticleSystem MuzzleSmoke { get; set; }*/
 	[Property] public bool IsDeployed { get; set; }
 	
 	[Sync] public bool IsReloading { get; set; }
@@ -268,7 +268,7 @@ public abstract class WeaponComponent : Component
 	[Rpc.Broadcast]
 	private void SendImpactMessage( Vector3 position, Vector3 normal )
 	{
-		if ( ImpactEffect is null ) return;
+		//if ( ImpactEffect is null ) return;
 
 	}
 
