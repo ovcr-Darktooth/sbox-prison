@@ -24,6 +24,7 @@ code/Editor/.vscode/*
 *.*_c
 *.los
 *.vpk
+*.png
 sounds/*
 Assets/sounds/*
 Libraries/*
