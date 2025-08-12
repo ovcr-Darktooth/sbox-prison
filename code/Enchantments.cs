@@ -1,5 +1,6 @@
 using Sandbox;
 using System.Collections.Generic;
+using System.Numerics;
 using static WebSocketUtility;
 using System.Text.Json;
 using System;
@@ -26,7 +27,7 @@ public sealed class Enchantments : Component
 	private WebsocketMessage getEnchantmentsMessage {get;set;} = new();
 
 	private TimeUntil nextSaveDB = 5f;
-	private TimeUntil nextLoadEnchants = 0f;
+	//private TimeUntil nextLoadEnchants = 0f;
 	public bool hasLoaded = false;
 	public bool hasLoadError = false;
 	public bool isMenuOpen = false;
@@ -49,12 +50,12 @@ public sealed class Enchantments : Component
 			nextSaveDB = 5f;
 		}
 
-		if (!IsProxy && !hasLoaded && OvcrServer.isAuth && nextLoadEnchants <= 0f)
-		{
+		/*if (!IsProxy && !hasLoaded && OvcrServer.isAuth && nextLoadEnchants <= 0f)
+		{ 
 			Log.Info("Trying to load player enchants");
 			GetDB();			
 			nextLoadEnchants = 5f;
-		}
+		}*/
 
 		if (Input.Pressed("Enchant_menu") && !IsProxy)
 			isMenuOpen = !isMenuOpen;
@@ -120,10 +121,10 @@ public sealed class Enchantments : Component
 			}
 
 			// Définir le coût d'amélioration pour cet enchantement
-			float cost = GetEnchantUpgradeCost(enchantDbName,nbLevel);
+			BigInteger cost = GetEnchantUpgradeCost(enchantDbName,nbLevel);
 
 			// Vérifier si le joueur a assez d'etokens
-			double currentBalance = Currencies.GetBalance(CurrenciesEnum.EToken);
+			BigInteger currentBalance = Currencies.GetBalance(CurrenciesEnum.EToken);
 			if (currentBalance < cost)
 			{
 				Log.Info($"Not enough E-Tokens to upgrade {enchantDbName}. Required: {cost}, Available: {currentBalance}");
@@ -131,7 +132,8 @@ public sealed class Enchantments : Component
 			}
 
 			// Retirer les E-Tokens nécessaires
-			bool withdrawalSuccess = Currencies.WithdrawCurrency(CurrenciesEnum.EToken, cost);
+			//cost is a BigInteger
+			bool withdrawalSuccess = Currencies.WithdrawCurrency(CurrenciesEnum.EToken, (BigInteger)cost);
 			if (!withdrawalSuccess)
 			{
 				Log.Info($"Failed to withdraw E-Tokens for upgrading {enchantDbName}.");
@@ -179,16 +181,16 @@ public sealed class Enchantments : Component
 			case Enchants.Efficiency:
 				return getDefaultChanceOfEnchant(Enchants.Efficiency) * _enchants[GetEnchantmentTextSaveDB(Enchants.Efficiency)];
 			default:
-				return 0.0f;
+				return 0;
 		} 
 	}
 
-	private float GetEnchantUpgradeCost(string enchantmentKey, int nbOfLevel = 1)
+	private BigInteger GetEnchantUpgradeCost(string enchantmentKey, int nbOfLevel = 1)
 	{
-		float total = 0f;
+		BigInteger total = 0;
 		for(int i=1 ; i <= nbOfLevel; i++)
 		{
-			float tmpTotal = 0f;
+			float tmpTotal = 0;
 			float enchantRule = GetEnchantUpgradeRule(enchantmentKey, _enchants[enchantmentKey]+i);
 			switch (enchantmentKey)
 			{
@@ -209,7 +211,7 @@ public sealed class Enchantments : Component
 					tmpTotal = 0f;
 					break;
 			}
-			total += (tmpTotal + enchantRule);
+			total += (BigInteger)(tmpTotal + enchantRule);
 		}
 		return total;
 	}
@@ -343,7 +345,7 @@ public sealed class Enchantments : Component
 		}
 	}
 
-	private void GetDB()
+	public void GetDB()
 	{
 		if (!IsProxy && OvcrServer.IsValid())
 			OvcrServer.SendMessage(getEnchantmentsMessage);
@@ -358,7 +360,6 @@ public sealed class Enchantments : Component
 				Enchants enchantEnum = GetEnchantEnumFromString(enchantProperty.Name);
                 if (enchantEnum != Enchants.Invalid)
                 {
-                    // Convertir la valeur en double, ou utiliser une valeur par défaut en cas d'erreur
                     if (int.TryParse(enchantProperty.Value.GetString(), out var amount))
                         SetEnchant(enchantEnum, amount);
                     else

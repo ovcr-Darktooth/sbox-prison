@@ -226,7 +226,7 @@
       {
         "__type": "XMovement.PlayerMovement",
         "__guid": "940ec7fd-6373-4b12-b74e-aca175cad395",
-        "Acceleration": 10,
+        "Acceleration": 60.000042,
         "AirAcceleration": 60.000042,
         "AirControl": 53.899937,
         "BaseAcceleration": 10,
@@ -254,7 +254,7 @@
         "StepHeight": 18,
         "StopSpeed": 100,
         "UseCollisionRules": false,
-        "Velocity": "0,0,-27168"
+        "Velocity": "0,0,-27552"
       },
       {
         "__type": "Sandbox.VR.VRAnchor",
@@ -484,6 +484,7 @@
         "__guid": "82568f20-63fa-44d8-a605-26554a127705",
         "Flags": 0,
         "Name": "Head",
+        "Position": "0,0,64",
         "Enabled": true,
         "Children": [
           {
@@ -496,7 +497,6 @@
               {
                 "__type": "Sandbox.CameraComponent",
                 "__guid": "a0e899c4-e6ab-42bf-84f6-3c8addcefcd4",
-                "__enabled": false,
                 "BackgroundColor": "0.33333,0.46275,0.52157,1",
                 "ClearFlags": "All",
                 "FieldOfView": 111.8,

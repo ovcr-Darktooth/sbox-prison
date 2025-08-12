@@ -18,7 +18,7 @@ public enum CurrenciesEnum
 
 public sealed class Currencies : Component
 {
-	public Dictionary<string, double> _balances;
+	public Dictionary<string, BigInteger> _balances;
 	private TimeUntil nextSaveDB = 5f;
 	private TimeUntil nextLoadCurrencies = 3f;
 	[Property] public OvcrServer OvcrServer { get; set; } 
@@ -60,7 +60,7 @@ public sealed class Currencies : Component
 		}
 	}
 
-	private void GetDB()
+	public void GetDB()
 	{
 		if (!IsProxy && OvcrServer.IsValid())
 			OvcrServer.SendMessage(getCurrenciesMessage);
@@ -76,7 +76,7 @@ public sealed class Currencies : Component
                 if (currencyEnum != CurrenciesEnum.Invalid)
                 {
                     // Convertir la valeur en double, ou utiliser une valeur par défaut en cas d'erreur
-                    if (double.TryParse(currencyProperty.Value.GetString(), out var amount))
+                    if (BigInteger.TryParse(currencyProperty.Value.GetString(), out var amount))
                         AddCurrency(currencyEnum, amount);
                     else
                         Log.Info($"Invalid amount for currency '{currencyProperty.Name}': {currencyProperty.Value}");
@@ -104,7 +104,7 @@ public sealed class Currencies : Component
 			WebSocketUtility.AddJsonTag(getCurrenciesMessage, "action", "getBalances");
 			WebSocketUtility.AddJsonTag(getCurrenciesMessage, "playerId", GameObject.Network.Owner.SteamId.ToString());
 
-			_balances = new Dictionary<string, double>();
+			_balances = new Dictionary<string, BigInteger>();
 
 			AddCurrency(CurrenciesEnum.Dollars, 0);
 			AddCurrency(CurrenciesEnum.EToken, 0);
@@ -116,7 +116,7 @@ public sealed class Currencies : Component
 		base.OnDestroy();
 	}
 
-	public void AddCurrency(CurrenciesEnum currencyEnum, double amount)
+	public void AddCurrency(CurrenciesEnum currencyEnum, BigInteger amount)
     {
 		if (!IsProxy)
 		{
@@ -126,18 +126,18 @@ public sealed class Currencies : Component
 			else
 				_balances[saveDbName] = amount;
 
-			_balances[saveDbName] = Math.Round(_balances[saveDbName], 2);
+			_balances[saveDbName] = _balances[saveDbName];
 		}
     }
 
-    public bool WithdrawCurrency(CurrenciesEnum currencyEnum, double amount)
+    public bool WithdrawCurrency(CurrenciesEnum currencyEnum, BigInteger amount)
     {
 		if (!IsProxy)
 		{
 			string saveDbName = GetCurrencyTextSaveDB(currencyEnum);
 			if (_balances.ContainsKey(saveDbName) && _balances[saveDbName] >= amount)
 			{
-				_balances[saveDbName] = Math.Round(_balances[saveDbName] - amount, 2);
+				_balances[saveDbName] = _balances[saveDbName] - amount;
 				return true;
 			}
 			return false;
@@ -145,7 +145,7 @@ public sealed class Currencies : Component
 		return false;
     }
 
-    public double GetBalance(CurrenciesEnum currencyEnum)
+    public BigInteger GetBalance(CurrenciesEnum currencyEnum)
     {
 		if(!IsProxy)
 		{

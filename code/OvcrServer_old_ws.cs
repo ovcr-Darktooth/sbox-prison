@@ -6,23 +6,17 @@ using System.Threading.Tasks;
 namespace Overcreep;
 
 
-public class ActiveBoosterDTO
+public class ActiveBoosterDTOOld
 {
     public float TimeRemaining { get; set; }
     public float Multiplicator { get; set; }
 }
 
-public sealed class OvcrServer : Component
+public sealed class OvcrServerOld : Component
 {
 	private WebsocketTools Websocket;
-	public WebSocket Socket { get; set; }
-	public string ConnectionUri { get; set; }
-	private TimeUntil nextAuth = 2f;
+	private TimeUntil nextAuth = 3f;
 	private TimeUntil nextActiveBoosterCopy = 1f;
-	private TimeUntil nextLoadEnchants = 0f;
-	private TimeUntil nextLoadCurrencies = 3f;
-	private TimeUntil nextLoadMultiplicators = 5f;
-	private TimeUntil nextLoadInventory = 8f;
 	public bool isAuth = false;
 	public bool hasLoadError = false;
 	private string authToken = "";
@@ -56,51 +50,7 @@ public sealed class OvcrServer : Component
 
 			nextActiveBoosterCopy = 1f;
 		}
-
-		//Now loading everything
-		if (!IsProxy && !Enchantments.hasLoaded && isAuth && nextLoadEnchants <= 0f)
-		{ 
-			Log.Info("Trying to load player enchants");
-			Enchantments.GetDB();
-			nextLoadEnchants = 5f;
-		}
-
-		if (!IsProxy && Enchantments.hasLoaded && !Currencies.hasLoaded && isAuth && nextLoadCurrencies <= 0f)
-		{
-			Log.Info("Trying to load player currencies");
-			Currencies.GetDB();
-			nextLoadCurrencies = 5f;
-		}
-
-		if (!IsProxy && Currencies.hasLoaded && !Multiplicators.hasLoaded && isAuth && nextLoadMultiplicators <= 0f)
-		{
-			Log.Info("Trying to load player boosters");
-			//Websocket.message = getCurrenciesMessage;
-
-			//boosters not yet implemented
-			//GetDB();
-
-			//DEBUG:
-            //AddActiveBooster(Boosters.Dollars, 10f, 2f);
-            //AddActiveBooster(Boosters.EToken, 12f, 2f);
-
-            Multiplicators.GiveBooster(Boosters.Dollars, 50f, 2f);
-            //GiveBooster(Boosters.Dollars, 60f, 2f);
-            Multiplicators.GiveBooster(Boosters.EToken, 70f, 2f);
-            //GiveBooster(Boosters.EToken, 80f, 2f);
-            Multiplicators.hasLoaded = true;
-            //END OF DEBUG  
-
-			nextLoadMultiplicators = 999f;
-		}
-
-
-		if (!IsProxy && Multiplicators.hasLoaded && !Backpack.hasLoaded && isAuth && nextLoadInventory <= 0f)
-        {
-            Log.Info("Trying to load player backpack");
-            Backpack.GetDB();
-            nextLoadInventory = 5f;
-        }
+		
 	}
 
 	protected override async void OnStart()
@@ -127,11 +77,11 @@ public sealed class OvcrServer : Component
 
 
 			authToken = await Sandbox.Services.Auth.GetToken( "auth" );
+			Log.Info("Auth token received ;)" + authToken);
 
-			WebSocketUtility.AddJsonTag(authMessage, "token", authToken);
+			Log.Info("Websocket connected" + Websocket.isConnected);
 		}
 	}
-
 
 	private async void WSAuth()
 	{
@@ -141,10 +91,12 @@ public sealed class OvcrServer : Component
 			{
 				try
 				{
+					Log.Info("Websocket connected" + Websocket.isConnected);
 					await WebSocketUtility.SendAsync( Websocket );
 				}
 				catch ( Exception ex )
 				{
+					Log.Info("Websocket connected" + Websocket.isConnected);
 					hasLoadError = true;
 					Log.Info($"[OvcrServer]WSAuth, error on websocket: {ex.Message}");
 				}
@@ -169,6 +121,7 @@ public sealed class OvcrServer : Component
                 Log.Info($"{boosterType}: {multiplicator}x multiplier, Time left: {timeUntilExpiration.Relative:F2} seconds");
             }
         }
+
 
         Log.Info("======================");
 	}

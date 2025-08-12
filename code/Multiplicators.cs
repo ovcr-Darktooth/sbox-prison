@@ -98,7 +98,7 @@ public sealed class Multiplicators : Component
         }
             
 
-		if (!IsProxy && !hasLoaded && OvcrServer.isAuth && nextLoadMultiplicators <= 0f)
+		/*if (!IsProxy && !hasLoaded && OvcrServer.isAuth && nextLoadMultiplicators <= 0f)
 		{
 			Log.Info("Trying to load player boosters");
 			//Websocket.message = getCurrenciesMessage;
@@ -118,7 +118,7 @@ public sealed class Multiplicators : Component
             //END OF DEBUG  
 
 			nextLoadMultiplicators = 999f;
-		}
+		}*/
 	}
 
 	protected override void OnStart()

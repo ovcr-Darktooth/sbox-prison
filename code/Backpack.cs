@@ -33,12 +33,12 @@ public sealed class Backpack : Component
             nextSaveDB = 5f;
         }
 
-        if (!IsProxy && !hasLoaded && OvcrServer.isAuth && nextLoadInventory <= 0f)
+        /*if (!IsProxy && !hasLoaded && OvcrServer.isAuth && nextLoadInventory <= 0f)
         {
-            Log.Info("Trying to load player inventory");
+            Log.Info("Trying to load player backpack");
             GetDB();
             nextLoadInventory = 5f;
-        }
+        }*/
 
         //todo: vendre le backpack, saveDB quand fini
     }
@@ -58,7 +58,7 @@ public sealed class Backpack : Component
         }
     }
 
-    private void GetDB()
+    public void GetDB()
     {
         if (!IsProxy && OvcrServer.IsValid())
             OvcrServer.SendMessage(getInventoryMessage);

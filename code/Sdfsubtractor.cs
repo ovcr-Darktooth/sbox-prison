@@ -169,8 +169,8 @@ public sealed class SDFGun : Component
 				//Backpack.AddBlock(BlockType.Normal, nbBlocsSupp);
 				//Chance to add 2x blocs (pickaxe enchant)
 				//Chance to sell to 2x (backpack enchant)
-				Currencies.AddCurrency(CurrenciesEnum.Dollars, 3 * multiplicator * nbBlocsSupp);
-				Currencies.AddCurrency(CurrenciesEnum.EToken, nbBlocsSupp);
+				Currencies.AddCurrency(CurrenciesEnum.Dollars, (BigInteger)(3 * multiplicator * nbBlocsSupp));
+				Currencies.AddCurrency(CurrenciesEnum.EToken, (BigInteger)nbBlocsSupp);
 			}
 		}
 		//World.SubtractAsync(cube);
